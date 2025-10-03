@@ -3,25 +3,28 @@
 import React from "react";
 import { Modal, Form, Input, Checkbox, Button } from "antd";
 import { MailOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
+import apiService from "@/app/services/apiService";
 
 type RegisterModalProps = {
   open: boolean;
-  onClose: () => void;
-  onRegister: (values: { email: string; password: string }) => void;
+  close: () => void;
+  success: () => void;
 };
 
-function RegisterModal({ open, onClose, onRegister }: RegisterModalProps) {
+function RegisterModal({ open, close, success }: RegisterModalProps) {
   const [form] = Form.useForm();
 
-  const onFinish = (values: {
+  const onFinish = async (formData: {
     email: string;
-    username: string;
-    password: string;
-    re_password: string;
-    agreement: boolean;
+    password1: string;
+    password2: string;
   }) => {
-    onRegister(values);
-    form.resetFields();
+    const response = await apiService.post("/register", formData);
+    if (response.access) {
+      success();
+    } else {
+      console.log("error");
+    }
   };
 
   return (
@@ -31,7 +34,7 @@ function RegisterModal({ open, onClose, onRegister }: RegisterModalProps) {
       centered
       getContainer={false}
       footer={null}
-      onCancel={onClose}
+      onCancel={close}
       destroyOnHidden
     >
       <Form
@@ -40,7 +43,6 @@ function RegisterModal({ open, onClose, onRegister }: RegisterModalProps) {
         style={{ maxWidth: 275, margin: "auto" }}
         onFinish={onFinish}
       >
-        {/* Email */}
         <Form.Item
           name="email"
           rules={[
@@ -51,7 +53,6 @@ function RegisterModal({ open, onClose, onRegister }: RegisterModalProps) {
           <Input prefix={<MailOutlined />} placeholder="Email" />
         </Form.Item>
 
-        {/* Username */}
         <Form.Item
           name="username"
           rules={[{ required: true, message: "Please input your username!" }]}
@@ -59,25 +60,23 @@ function RegisterModal({ open, onClose, onRegister }: RegisterModalProps) {
           <Input prefix={<UserOutlined />} placeholder="Username" />
         </Form.Item>
 
-        {/* Password */}
         <Form.Item
-          name="password"
+          name="password1"
           rules={[{ required: true, message: "Please input your password!" }]}
           hasFeedback
         >
           <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
 
-        {/* Confirm Password */}
         <Form.Item
-          name="re_password"
-          dependencies={["password"]}
+          name="password2"
+          dependencies={["password1"]}
           hasFeedback
           rules={[
             { required: true, message: "Please confirm your password!" },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
+                if (!value || getFieldValue("password1") === value) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
@@ -93,7 +92,6 @@ function RegisterModal({ open, onClose, onRegister }: RegisterModalProps) {
           />
         </Form.Item>
 
-        {/* Agreement */}
         <Form.Item
           name="agreement"
           valuePropName="checked"
@@ -111,7 +109,6 @@ function RegisterModal({ open, onClose, onRegister }: RegisterModalProps) {
           </Checkbox>
         </Form.Item>
 
-        {/* Submit */}
         <Form.Item>
           <Button block type="primary" htmlType="submit">
             Register

@@ -3,25 +3,23 @@
 import React from "react";
 import { Modal, Form, Input, Button } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
+import apiService from "@/app/services/apiService";
 
 type LoginModalProps = {
   open: boolean;
-  onClose: () => void;
-  onLogin: (values: { email: string; password: string }) => void;
+  close: () => void;
+  success: () => void;
 };
 
-function LoginModal({ open, onClose, onLogin }: LoginModalProps) {
+function LoginModal({ open, close, success }: LoginModalProps) {
   const [form] = Form.useForm();
 
-  const onFinish = (values: {
+  const onFinish = async (formData: {
     email: string;
-    username: string;
-    password: string;
-    re_password: string;
-    agreement: boolean;
+    password1: string;
+    password2: string;
   }) => {
-    onLogin(values);
-    form.resetFields();
+    success();
   };
 
   return (
@@ -31,7 +29,7 @@ function LoginModal({ open, onClose, onLogin }: LoginModalProps) {
       centered
       getContainer={false}
       footer={null}
-      onCancel={onClose}
+      onCancel={close}
       destroyOnHidden
     >
       <Form
@@ -40,7 +38,6 @@ function LoginModal({ open, onClose, onLogin }: LoginModalProps) {
         style={{ maxWidth: 275, margin: "auto" }}
         onFinish={onFinish}
       >
-        {/* Email */}
         <Form.Item
           name="email"
           rules={[
@@ -51,18 +48,16 @@ function LoginModal({ open, onClose, onLogin }: LoginModalProps) {
           <Input prefix={<MailOutlined />} placeholder="Email" />
         </Form.Item>
 
-        {/* Password */}
         <Form.Item
           name="password"
           rules={[{ required: true, message: "Please input your password!" }]}
-          hasFeedback
         >
           <Input.Password prefix={<LockOutlined />} placeholder="Password" />
         </Form.Item>
 
         <Form.Item>
           <Button block type="primary" htmlType="submit">
-            Register
+            Login
           </Button>
         </Form.Item>
       </Form>

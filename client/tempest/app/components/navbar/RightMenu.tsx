@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { MenuProps } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { Menu } from "antd";
 import RegisterModal from "../modals/RegisterModal";
 import LoginModal from "../modals/LoginModal";
+import apiService from "@/app/services/apiService";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -27,12 +29,12 @@ const items: MenuItem[] = [
 ];
 
 function RightMenu() {
+  const router = useRouter();
   const [current, setCurrent] = useState("login");
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
 
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
     setCurrent(e.key);
 
     if (e.key === "login") {
@@ -41,14 +43,6 @@ function RightMenu() {
     if (e.key === "register") {
       setIsRegisterOpen(true);
     }
-  };
-
-  const handleLogin = (values: { email: string; password: string }) => {
-    console.log("Register form values:", values);
-  };
-
-  const handleRegister = (values: { email: string; password: string }) => {
-    console.log("Register form values:", values);
   };
 
   return (
@@ -65,13 +59,17 @@ function RightMenu() {
       />
       <LoginModal
         open={isLoginOpen}
-        onClose={() => setIsLoginOpen(false)}
-        onLogin={handleLogin}
+        close={() => setIsLoginOpen(false)}
+        success={() => {
+          setIsLoginOpen(false), router.push("/");
+        }}
       />
       <RegisterModal
         open={isRegisterOpen}
-        onClose={() => setIsRegisterOpen(false)}
-        onRegister={handleRegister}
+        close={() => setIsRegisterOpen(false)}
+        success={() => {
+          setIsLoginOpen(false), router.push("/");
+        }}
       />
     </div>
   );
