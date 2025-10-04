@@ -6,7 +6,7 @@ function LeftImage() {
     <Link href={"/"}>
       <img
         className="w-24 h-auto object-contain"
-        src=""
+        src="asd"
         alt="Mita"
       />
     </Link>

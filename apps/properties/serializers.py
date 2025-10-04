@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from .models import Property, Reservation
 
-from apps.users.serializers import UserDetailSerializer
+from apps.profiles.serializers import ProfileSerializer
 
 
 class PropertyListSerializer(serializers.ModelSerializer):
@@ -17,7 +17,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
         ]
 
 class PropertyDetailSerializer(serializers.ModelSerializer):
-    user = UserDetailSerializer(read_only=True, many=False)
+    user = ProfileSerializer(read_only=True, many=False)
 
     class Meta:
         model = Property

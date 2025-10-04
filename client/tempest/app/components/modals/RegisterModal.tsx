@@ -3,7 +3,6 @@
 import React from "react";
 import { Modal, Form, Input, Checkbox, Button } from "antd";
 import { MailOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
-import apiService from "@/app/services/apiService";
 
 type RegisterModalProps = {
   open: boolean;
@@ -18,14 +17,7 @@ function RegisterModal({ open, close, success }: RegisterModalProps) {
     email: string;
     password1: string;
     password2: string;
-  }) => {
-    const response = await apiService.post("/register", formData);
-    if (response.access) {
-      success();
-    } else {
-      console.log("error");
-    }
-  };
+  }) => {};
 
   return (
     <Modal

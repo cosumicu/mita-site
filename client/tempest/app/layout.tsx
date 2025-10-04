@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import StoreProvider from "./StoreProvider";
 import Navbar from "./components/navbar/Navbar";
 
 const geistSans = Geist({
@@ -29,10 +30,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar />
-        <div className="pt-16">
-          <AntdRegistry>{children}</AntdRegistry>
-        </div>
+        <StoreProvider>
+          <AntdRegistry>
+            <Navbar />
+            <div className="pt-16">{children}</div>
+          </AntdRegistry>
+        </StoreProvider>
       </body>
     </html>
   );

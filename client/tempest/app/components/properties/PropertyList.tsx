@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Card, Button, Skeleton } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
-import apiService from "@/app/services/apiService";
+import axios from "axios";
 
 const { Meta } = Card;
 
@@ -25,8 +25,8 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
   const [loading, setLoading] = useState(true);
 
   const getProperties = async () => {
-    const result = await apiService.get("/api/v1/properties/");
-    setProperties(result);
+    const result = await axios.get("http://localhost:8000/api/v1/properties/");
+    setProperties(result.data);
     setLoading(false);
   };
 

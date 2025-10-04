@@ -3,7 +3,9 @@
 import React from "react";
 import { Modal, Form, Input, Button } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
-import apiService from "@/app/services/apiService";
+import { useDispatch, useSelector } from "react-redux";
+import { login, reset } from "../../lib/features/auth/authSlice";
+import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 
 type LoginModalProps = {
   open: boolean;
@@ -12,14 +14,14 @@ type LoginModalProps = {
 };
 
 function LoginModal({ open, close, success }: LoginModalProps) {
-  const [form] = Form.useForm();
+  
+  const dispatch = useAppDispatch();
 
-  const onFinish = async (formData: {
-    email: string;
-    password1: string;
-    password2: string;
-  }) => {
-    success();
+  const [form] = Form.useForm();
+  const { user } = useAppSelector((state) => state.auth);
+
+  const onFinish = async (formData: { email: string; password: string }) => {
+    dispatch(login(formData));
   };
 
   return (
