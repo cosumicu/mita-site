@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -o errexit
+
+set -o nounset
+
+watchmedo auto-restart \
+  -d /app/booking_site/ \
+  -p "*.py" \
+  -- celery -A booking_site worker -l INFO

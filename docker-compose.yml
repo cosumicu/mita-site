@@ -12,7 +12,9 @@ services:
       - 8000:8000
     depends_on:
       - db
-  
+    networks:
+      - booking-site
+
   db:
     image: postgres:15
     volumes:
@@ -21,6 +23,50 @@ services:
       - POSTGRES_USER=${SQL_USER}
       - POSTGRES_PASSWORD=${SQL_PASSWORD}
       - POSTGRES_DB=${SQL_DATABASE}
+    networks:
+      - booking-site
+
+  redis:
+    image: redis:8.2.1-alpine
+    networks:
+      - booking-site
+
+  celery-worker:
+    build:
+      context: .
+      dockerfile: ./docker/local/django/Dockerfile
+    command: /start-celeryworker
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+    networks:
+      - booking-site
+
+  flower:
+    build:
+      context: .
+      dockerfile: ./docker/local/django/Dockerfile
+    command: /start-flower
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    ports:
+      - "5557:5555"
+    depends_on:
+      - redis
+      - celery-worker
+      - db
+    networks:
+      - booking-site
+  
+networks:
+  booking-site:
+    driver: bridge
 
 volumes:
   postgres_data:

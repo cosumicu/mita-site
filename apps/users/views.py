@@ -27,7 +27,7 @@ class LoginView(APIView):
                                 httponly=True,
                                 secure=True,
                                 samesite="Strict",
-                                max_age=timedelta(minutes=2))
+                                max_age=timedelta(minutes=1))
             
             response.set_cookie(key="refresh_token",
                                 value=str(refresh),
@@ -74,7 +74,7 @@ class CookieTokenRefreshView(TokenRefreshView):
                                 httponly=True,
                                 secure=True,
                                 samesite="Strict",
-                                max_age=timedelta(minutes=2))
+                                max_age=timedelta(minutes=1))
             return response
         
         except InvalidToken:

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -o errexit
+set -o nounset
+
+worker_ready(){
+    celery -A booking_site inspect ping
+}
+
+until worker_ready; do
+    >&2 echo 'Celery workers are not yet available...'
+    sleep 1
+done
+
+>&2 echo 'Celery workers are available and ready.'
+
+exec celery --app=booking_site --broker="${CELERY_BROKER}" flower --port=5555

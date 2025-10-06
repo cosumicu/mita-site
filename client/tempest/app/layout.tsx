@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import StoreProvider from "./StoreProvider";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from 'react-toastify';
 import Navbar from "./components/navbar/Navbar";
 import { InitUser } from "./components/users/InitUser";
 
@@ -38,6 +40,16 @@ export default function RootLayout({
             <div className="pt-16">{children}</div>
           </AntdRegistry>
         </StoreProvider>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={3000}
+          newestOnTop={false}
+          closeOnClick={false}
+          hideProgressBar={true}
+          pauseOnFocusLoss
+          pauseOnHover
+          theme="light"
+        />
       </body>
     </html>
   );

@@ -35,8 +35,11 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
-
+    'rest_framework_simplejwt.token_blacklist',
+    
     "djoser",
+
+    "djcelery_email",
 
     'corsheaders',
 
@@ -149,7 +152,7 @@ SITE_ID = 1
 WEBSITE_URL = 'http://localhost:8000'
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=2),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
@@ -242,3 +245,22 @@ logging.config.dictConfig({
             "django.server": DEFAULT_LOGGING["loggers"]["django.server"],
     }
 })
+
+SITE_NAME = "Booking Site"
+DOMAIN="localhost:3000"
+
+EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
+EMAIL_USE_TLS = True
+
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
+CELERY_EMAIL_BACKEND = os.environ.get("CELERY_EMAIL_BACKEND")
+
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))

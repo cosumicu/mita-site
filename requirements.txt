@@ -10,5 +10,13 @@ phonenumbers==9.0.3
 django-countries==7.6.1
 phonenumbers==9.0.3
 pillow==11.3.0
+redis==6.0.0
+celery==5.5.3
+flower==2.0.1
+django-celery-email==3.0.0
+argh==0.31.3
+pyYAML==6.0.2
+watchdog==6.0.0
+resend==2.15.0
 channels==4.3.1
 daphne==4.2.1
