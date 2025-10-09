@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { MenuOutlined } from "@ant-design/icons";
-import { Avatar, Drawer, Menu } from "antd";
+import { Avatar, Drawer, Menu, Button, Modal } from "antd";
 import type { MenuProps } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ import LoginForm from "../forms/LoginForm";
 import { logout, reset as resetAuth } from "../../lib/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { toast } from "react-toastify";
+import CreatePropertyModal from "../modals/CreatePropertyModal";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -78,6 +79,8 @@ function RightMenu() {
   const [openMain, setOpenMain] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
+  const [isCreatePropertyModalOpen, setIsCreatePropertyModalOpen] =
+    useState(false);
 
   const showMain = () => {
     setOpenMain(true);
@@ -114,14 +117,27 @@ function RightMenu() {
       dispatch(logout());
       router.push("/");
       window.location.reload();
-      toast.success("Logout Successful"); {/* Remove this in production */}
+      toast.success("Logout Successful");
+      {
+        /* Remove this in production */
+      }
       dispatch(resetAuth());
     }
   };
 
   return (
     <div className="flex items-center gap-4">
-      {user ? <Avatar size="large" src={user?.profile_picture} /> : <></>}
+      {user ? (
+        <>
+          {" "}
+          <Button onClick={() => setIsCreatePropertyModalOpen(true)}>
+            Create Property
+          </Button>
+          <Avatar size="large" src={user?.profile_picture} />
+        </>
+      ) : (
+        <></>
+      )}
       <div onClick={showMain} style={{ outline: "none" }} tabIndex={-1}>
         {" "}
         {/* style={{ outline: "none" }} tabIndex={-1} solves the issue of border showing when drawer is opened */}
@@ -179,6 +195,22 @@ function RightMenu() {
           )}
         </Drawer>
       </Drawer>
+      <Modal
+        title={
+          <div style={{ textAlign: "center", width: "100%" }}>Create Property</div>
+        }
+        open={isCreatePropertyModalOpen}
+        footer={null}
+        onCancel={() => {
+          setIsCreatePropertyModalOpen(false);
+        }}
+        width={1100}
+        destroyOnHidden
+      >
+        <CreatePropertyModal
+          onSuccess={() => setIsCreatePropertyModalOpen(false)}
+        />
+      </Modal>
     </div>
   );
 }

@@ -4,10 +4,10 @@ import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import StoreProvider from "./StoreProvider";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import Navbar from "./components/navbar/Navbar";
-import { InitUser } from "./components/users/InitUser";
-
+import { InitUser } from "./users/InitUser";
+import Loading from "./components/common/Loading";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -35,6 +35,7 @@ export default function RootLayout({
       >
         <StoreProvider>
           <AntdRegistry>
+            <Loading />
             <InitUser />
             <Navbar />
             <div className="pt-16">{children}</div>

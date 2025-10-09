@@ -5,8 +5,6 @@ import { Card, Button, Skeleton } from "antd";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-const { Meta } = Card;
-
 type PropertyType = {
   id: string;
   title: string;
@@ -80,26 +78,25 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
         className="flex gap-4 overflow-x-auto mt-2 p-2 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none]"
       >
         {loading
-          ? Array.from({ length: 4 }).map((_, i) => (
+          ? Array.from({ length: 8 }).map((_, i) => (
               <Card
-                className="flex-shrink-0 w-40 md:w-60 snap-start"
+                className="flex-shrink-0 w-40 md:w-60 snap-start !shadow-none"
                 size="small"
-                hoverable
+                variant="borderless"
                 cover={
-                  <Skeleton.Image
-                    active
-                    style={{
-                      width: "100%",
-                      height: "150px",
-                    }}
-                  />
+                  <div className="w-full h-[200px]">
+                    <Skeleton.Image
+                      active
+                      className="!w-full !h-full !rounded-xl"
+                    />
+                  </div>
                 }
               >
                 <Skeleton
                   active
                   loading={true}
-                  title={{ width: "80%" }}
-                  paragraph={{ rows: 1, width: "60%" }}
+                  title={false}
+                  paragraph={{ rows: 1, width: "100%"}}
                 />
               </Card>
             ))
@@ -116,7 +113,7 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
                       src={property.image_url}
                       style={{
                         width: "100%",
-                        height: "auto",
+                        height: "200px",
                         borderRadius: 12,
                       }}
                     />

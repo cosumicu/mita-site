@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../lib/hooks";
-import { getCurrentUser } from "../../lib/features/users/userSlice";
+import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
+import { getCurrentUser } from "@/app/lib/features/users/userSlice";
 
 export function InitUser() {
   const dispatch = useAppDispatch();

@@ -175,11 +175,11 @@ DJOSER = {
     "USERNAME_CHANGED_EMAIL_CONFIRMATION": True,
     "PASSWORD_CHANGED_EMAIL_CONFIRMATION": True,
     "SEND_CONFIRMATION_EMAIL": True,
-    "PASSWORD_RESET_CONFIRM_URL": "password/reset/confirm/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "users/password/reset/confirm/{uid}/{token}",
     "SET_PASSWORD_RETYPE": True,
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
-    "USERNAME_RESET_CONFIRM_URL": "email/reset/confirm/{uid}/{token}",
-    "ACTIVATION_URL": "activate/{uid}/{token}",
+    "USERNAME_RESET_CONFIRM_URL": "users/email/reset/confirm/{uid}/{token}",
+    "ACTIVATION_URL": "users/activate/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": True,
     "SERIALIZERS": {
         "user_create": "apps.users.serializers.CreateUserSerializer",
@@ -246,7 +246,14 @@ logging.config.dictConfig({
     }
 })
 
-SITE_NAME = "Booking Site"
+"""
+So basically, what s happening here is that I used celery email backends to handle emails
+asynchronously. And to implement sendgrid service, you need to set CELERY_EMAIL_BACKEND
+so that celery would know what email service you would use. Also, setting up the email service
+you would use depends on the service itsself.
+"""
+
+SITE_NAME = "Mita Site"
 DOMAIN="localhost:3000"
 
 EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
