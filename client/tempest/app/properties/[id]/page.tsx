@@ -30,17 +30,17 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <div className="max-w-[1100px] mx-auto">
-      <div className="w-full">
+      <p className="text-2xl my-4">{property.title}</p>
+      <div className="bg-100 w-full h-[450px] rounded-xl flex justify-center items-center">
         <img
-          className="w-full md:rounded-xl mx-auto object-cover"
           src={property.image_url}
-          alt=""
+          alt={property.title}
+          className="h-full w-auto object-contain rounded-xl"
         />
       </div>
       <div className="flex flex-col sm:flex-row">
         <div className="w-full sm:basis-[60%] py-4">
           <div className="text-center sm:text-left">
-            <p className="text-2xl">{property.title}</p>
             <p className="text-lg">{`${property.category} in ${property.location}`}</p>
           </div>
           <div className="flex sm:block justify-center text-center">
