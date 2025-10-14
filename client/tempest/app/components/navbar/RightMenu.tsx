@@ -1,10 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
-import { MenuOutlined } from "@ant-design/icons";
 import { Avatar, Drawer, Menu, Button, Modal } from "antd";
 import type { MenuProps } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import {
+  MenuOutlined,
+  QuestionCircleOutlined,
+  HomeOutlined,
+  UserOutlined,
+  SettingOutlined,
+  LogoutOutlined,
+  GiftOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import RegisterForm from "../forms/RegisterForm";
 import LoginForm from "../forms/LoginForm";
@@ -18,55 +26,48 @@ type MenuItem = Required<MenuProps>["items"][number];
 const items2: MenuItem[] = [
   {
     key: "help",
-    label: "Help",
+    label: "Help & Support",
     icon: <QuestionCircleOutlined />,
-  },
-  {
-    type: "divider",
-    className: "w-9/10 mx-auto",
   },
   {
     key: "gift-cards",
     label: "Gift Cards",
+    icon: <GiftOutlined />,
   },
-  {
-    type: "divider",
-    className: "w-9/10 mx-auto",
-  },
+  { type: "divider" },
   {
     key: "login",
     label: "Login",
+    icon: <UserOutlined />,
   },
   {
     key: "register",
     label: "Register",
+    icon: <PlusOutlined />,
   },
+  { type: "divider" },
   {
-    type: "divider",
-    className: "w-9/10 mx-auto",
-  },
-  {
-    key: "settigs",
+    key: "settings",
     label: "Settings",
+    icon: <SettingOutlined />,
     children: [
-      { key: "5", label: "Language" },
-      { key: "6", label: "Theme" },
+      { key: "language", label: "Language" },
+      { key: "theme", label: "Theme" },
     ],
   },
 ];
 
 const items1: MenuItem[] = [
-  {
-    key: "profile",
-    label: "Profile",
-  },
+  { key: "profile", label: "Profile", icon: <UserOutlined /> },
+  { key: "properties", label: "My Properties", icon: <HomeOutlined /> },
+  { key: "reservations", label: "Reservations", icon: <GiftOutlined /> },
+  { key: "settings", label: "Settings", icon: <SettingOutlined /> },
+  { type: "divider" },
   {
     key: "logout",
     label: "Logout",
-  },
-  {
-    key: "settings",
-    label: "Settings",
+    icon: <LogoutOutlined />,
+    className: "text-red-500 font-semibold",
   },
 ];
 
@@ -130,8 +131,12 @@ function RightMenu() {
       {user ? (
         <>
           {" "}
-          <Button onClick={() => setIsCreatePropertyModalOpen(true)}>
-            Create Property
+          <Button
+            type="primary"
+            icon={<HomeOutlined />}
+            onClick={() => setIsCreatePropertyModalOpen(true)}
+          >
+            Host Property
           </Button>
           <Avatar size="large" src={user?.profile_picture} />
         </>
@@ -197,7 +202,9 @@ function RightMenu() {
       </Drawer>
       <Modal
         title={
-          <div style={{ textAlign: "center", width: "100%" }}>Create Property</div>
+          <div style={{ textAlign: "center", width: "100%" }}>
+            Create Property
+          </div>
         }
         open={isCreatePropertyModalOpen}
         footer={null}

@@ -10,14 +10,6 @@ import {
 } from "@/app/lib/features/properties/propertySlice";
 import { toast } from "react-toastify";
 
-type PropertyType = {
-  id: string;
-  title: string;
-  price_per_night: number;
-  image_url: string;
-  views: number;
-};
-
 type PropertyListProps = {
   label: string;
   location: string;
@@ -91,6 +83,7 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
         {isLoading
           ? Array.from({ length: 8 }).map((_, i) => (
               <Card
+                key={i} // ← ADD THIS
                 className="flex-shrink-0 w-40 md:w-60 snap-start !shadow-none"
                 size="small"
                 variant="borderless"
@@ -112,7 +105,7 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
               </Card>
             ))
           : propertyList.map((property) => (
-              <Link href={`/properties/${property.id}`}>
+              <Link href={`/properties/${property.id}`} key={property.id}>
                 <Card
                   className="flex-shrink-0 w-40 md:w-60 snap-start !shadow-none"
                   key={property.id}

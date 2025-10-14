@@ -1,10 +1,12 @@
-import React, { useEffect } from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   createReservation,
   reset as resetProperty,
 } from "@/app/lib/features/properties/propertySlice";
-import { Avatar, Button, Form, InputNumber, DatePicker } from "antd";
+import { Button, Form, InputNumber, DatePicker } from "antd";
 import { toast } from "react-toastify";
 import { Property } from "@/app/lib/features/properties/propertyService";
 import dayjs from "dayjs";
@@ -20,10 +22,30 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
   const { isError, isSuccess, isLoading, message } = useAppSelector(
     (state) => state.property
   );
+  const [form] = Form.useForm();
+  const [nights, setNights] = useState<number>(0);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+
+  const handleDateChange = (dates: any) => {
+    if (dates && dates[0] && dates[1]) {
+      const start = dayjs(dates[0]);
+      const end = dayjs(dates[1]);
+      const numNights = end.diff(start, "day");
+      const total = numNights * Number(property.price_per_night);
+      setNights(numNights);
+      setTotalPrice(total);
+    } else {
+      setNights(0);
+      setTotalPrice(0);
+    }
+  };
 
   useEffect(() => {
     if (isSuccess) {
       toast.success("Reservation created successfully");
+      form.resetFields();
+      setNights(0);
+      setTotalPrice(0);
       dispatch(resetProperty());
     }
     if (isError) {
@@ -46,62 +68,67 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
   };
 
   return (
-    <div className="flex flex-col space-y-4">
-      {/* Price section */}
-      <div className="text-2xl font-semibold text-gray-800 text-center">
-        ₱{property.price_per_night}
-        <span className="text-gray-500 text-base font-normal"> / night</span>
-      </div>
-
-      {/* Guest selectors */}
+    <div className="flex flex-col">
       <Form
-        className="flex flex-col items-center"
+        form={form}
         layout="vertical"
         onFinish={onFinish}
+        className="flex flex-col space-y-5"
       >
-        <div className="flex items-center justify-center">
-          <Form.Item
-            name="dates"
-            rules={[{ required: true, message: "Please select a date range" }]}
-          >
-            <RangePicker />
-          </Form.Item>
-        </div>
-        <div className="w-[300px] grid grid-cols-2 items-center">
-          <span className="ml-2">Guests</span>
-          <div>
-            <Form.Item
-              name="guests"
-              initialValue={1}
-              noStyle
-              rules={[{ required: true, message: "Guests required" }]}
-            >
-              <InputNumber
-                className=""
-                min={1}
-                max={property.guests}
-                step={1}
-                style={{ width: "145px" }}
-              />
-            </Form.Item>
-          </div>
+        {/* Price per night */}
+        <div className="text-left text-2xl font-semibold text-gray-800">
+          ₱{property.price_per_night}
+          <span className="text-gray-500 text-base font-normal"> / night</span>
         </div>
 
-        {/* Reserve button */}
-        <div className="pt-6">
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={isLoading}
-            style={{
-              backgroundColor: "rgb(236 72 153)",
-              border: "none",
-            }}
-            className="h-11 text-white font-semibold text-lg rounded-lg hover:bg-pink-500"
-          >
-            Reserve
-          </Button>
-        </div>
+        {/* Date picker */}
+        <Form.Item
+          name="dates"
+          label="Select Dates"
+          rules={[{ required: true, message: "Please select a date range" }]}
+        >
+          <RangePicker className="w-full" onChange={handleDateChange} />
+        </Form.Item>
+
+        {/* Guests */}
+        <Form.Item
+          name="guests"
+          label="Guests"
+          initialValue={1}
+          rules={[{ required: true, message: "Please select number of guests" }]}
+        >
+          <InputNumber
+            min={1}
+            max={property.guests}
+            step={1}
+            className="w-full"
+          />
+        </Form.Item>
+
+        {nights > 0 && (
+          <div className="text-right text-gray-700 border-t pt-3 space-y-1">
+            <div>
+              ₱{property.price_per_night} × {nights}{" "}
+              {nights === 1 ? "night" : "nights"}
+            </div>
+            <div className="text-lg font-semibold text-pink-600">
+              Total: ₱{totalPrice.toLocaleString()}
+            </div>
+          </div>
+        )}
+
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={isLoading}
+          className="h-11 text-white font-semibold text-lg rounded-lg hover:bg-pink-500"
+          style={{
+            backgroundColor: "rgb(236 72 153)",
+            border: "none",
+          }}
+        >
+          Reserve
+        </Button>
       </Form>
     </div>
   );
