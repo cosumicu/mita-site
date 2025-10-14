@@ -1,29 +1,55 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   getUserProfile,
   reset as resetUser,
 } from "@/app/lib/features/users/userSlice";
+import { getUserPropertyList } from "@/app/lib/features/properties/propertySlice";
 import { useParams } from "next/navigation";
-import { Avatar, Card, Skeleton, Rate, Button } from "antd";
+import {
+  Avatar,
+  Card,
+  Skeleton,
+  Rate,
+  Button,
+  Empty,
+} from "antd";
 import {
   MailOutlined,
   PhoneOutlined,
   EnvironmentOutlined,
   EditOutlined,
+  LeftOutlined,
+  RightOutlined,
 } from "@ant-design/icons";
 import { toast } from "react-toastify";
 
 function UserProfilePage() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const { userDetail, isError, isSuccess, isLoading, message } =
-    useAppSelector((state) => state.user);
 
+  const {
+    userDetail,
+    isError,
+    isSuccess,
+    isLoading,
+    message,
+  } = useAppSelector((state) => state.user);
+
+  const {
+    userPropertyList,
+    isLoading: isPropertyLoading,
+  } = useAppSelector((state) => state.property);
+
+  // 🔹 Fetch user profile and property list
   useEffect(() => {
-    if (id) dispatch(getUserProfile(id));
+    if (id) {
+      dispatch(getUserProfile(id));
+      dispatch(getUserPropertyList(id));
+    }
   }, [id, dispatch]);
 
   useEffect(() => {
@@ -47,10 +73,9 @@ function UserProfilePage() {
 
   return (
     <div className="max-w-5xl mx-auto mt-10 px-4">
+      {/* =================== PROFILE CARD =================== */}
       <Card className="rounded-2xl shadow-md border border-gray-100 p-6 sm:p-10 bg-white">
-        {/* Header Section */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          {/* Left: Avatar + Info */}
           <div className="flex items-center space-x-6">
             <Avatar
               src={user.profile_picture}
@@ -61,7 +86,9 @@ function UserProfilePage() {
               <h1 className="text-2xl font-semibold text-gray-800">
                 {user.username}
               </h1>
-              <p className="text-gray-500 text-sm">{user.about_me || "No bio yet."}</p>
+              <p className="text-gray-500 text-sm">
+                {user.about_me || "No bio yet."}
+              </p>
               <div className="flex items-center text-gray-500 mt-2">
                 <EnvironmentOutlined className="mr-1" />
                 <span>
@@ -77,7 +104,6 @@ function UserProfilePage() {
             </div>
           </div>
 
-          {/* Right: Edit Button (visible for owner or admin) */}
           <div className="mt-6 sm:mt-0">
             <Button
               type="default"
@@ -89,51 +115,174 @@ function UserProfilePage() {
           </div>
         </div>
 
-        {/* Divider */}
         <hr className="my-8 border-gray-100" />
 
         {/* Contact Info */}
         <div className="grid sm:grid-cols-2 gap-6">
-          <div className="flex items-center gap-3 text-gray-700">
-            <MailOutlined className="text-pink-500 text-lg" />
-            <div>
-              <p className="text-sm text-gray-500">Email</p>
-              <p className="font-medium">{user.email}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 text-gray-700">
-            <PhoneOutlined className="text-pink-500 text-lg" />
-            <div>
-              <p className="text-sm text-gray-500">Phone</p>
-              <p className="font-medium">{user.phone_number || "Not provided"}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 text-gray-700">
-            <EnvironmentOutlined className="text-pink-500 text-lg" />
-            <div>
-              <p className="text-sm text-gray-500">Location</p>
-              <p className="font-medium">
-                {user.city}, {user.country}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-3 text-gray-700">
-            <UserIcon />
-            <div>
-              <p className="text-sm text-gray-500">Gender</p>
-              <p className="font-medium">{user.gender || "Unspecified"}</p>
-            </div>
-          </div>
+          <ContactInfo
+            icon={<MailOutlined className="text-pink-500 text-lg" />}
+            label="Email"
+            value={user.email}
+          />
+          <ContactInfo
+            icon={<PhoneOutlined className="text-pink-500 text-lg" />}
+            label="Phone"
+            value={user.phone_number || "Not provided"}
+          />
+          <ContactInfo
+            icon={<EnvironmentOutlined className="text-pink-500 text-lg" />}
+            label="Location"
+            value={`${user.city}, ${user.country}`}
+          />
+          <ContactInfo
+            icon={<UserIcon />}
+            label="Gender"
+            value={user.gender || "Unspecified"}
+          />
         </div>
       </Card>
+
+      {/* =================== PROPERTY LIST =================== */}
+      <UserPropertyList
+        label="Your Properties"
+        propertyList={userPropertyList}
+        isLoading={isPropertyLoading}
+      />
     </div>
   );
 }
 
-// A simple icon for gender display
+function ContactInfo({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="flex items-center gap-3 text-gray-700">
+      {icon}
+      <div>
+        <p className="text-sm text-gray-500">{label}</p>
+        <p className="font-medium">{value}</p>
+      </div>
+    </div>
+  );
+}
+
+function UserPropertyList({
+  label,
+  propertyList,
+  isLoading,
+}: {
+  label: string;
+  propertyList: any[];
+  isLoading: boolean;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (!scrollRef.current) return;
+    const amount = 300;
+    scrollRef.current.scrollBy({
+      left: direction === "left" ? -amount : amount,
+      behavior: "smooth",
+    });
+  };
+
+  return (
+    <div className="my-10">
+      <div className="flex justify-between items-center">
+        <h2 className="text-lg font-semibold">{label}</h2>
+        <div className="hidden sm:flex gap-1">
+          <Button
+            shape="circle"
+            size="small"
+            icon={<LeftOutlined />}
+            onClick={() => scroll("left")}
+          />
+          <Button
+            shape="circle"
+            size="small"
+            icon={<RightOutlined />}
+            onClick={() => scroll("right")}
+          />
+        </div>
+      </div>
+
+      <div
+        ref={scrollRef}
+        className="flex gap-4 overflow-x-auto mt-4 p-2 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none]"
+      >
+        {isLoading ? (
+          Array.from({ length: 6 }).map((_, i) => (
+            <Card
+              key={i}
+              className="flex-shrink-0 w-40 md:w-60 snap-start !shadow-none"
+              size="small"
+              variant="borderless"
+              cover={
+                <div className="w-full h-[200px]">
+                  <Skeleton.Image
+                    active
+                    className="!w-full !h-full !rounded-xl"
+                  />
+                </div>
+              }
+            >
+              <Skeleton
+                active
+                loading={true}
+                title={false}
+                paragraph={{ rows: 1, width: "100%" }}
+              />
+            </Card>
+          ))
+        ) : propertyList && propertyList.length > 0 ? (
+          propertyList.map((property) => (
+            <Link href={`/properties/${property.id}`} key={property.id}>
+              <Card
+                className="flex-shrink-0 w-40 md:w-60 snap-start !shadow-none"
+                size="small"
+                variant="borderless"
+                cover={
+                  <img
+                    alt={property.title}
+                    src={property.image_url}
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      borderRadius: 12,
+                    }}
+                  />
+                }
+              >
+                <div>
+                  <h3 className="text-[.75rem] font-semibold truncate">
+                    {property.title}
+                  </h3>
+                  <p className="text-[.75rem] text-gray-500">
+                    ₱{property.price_per_night}/night
+                  </p>
+                </div>
+              </Card>
+            </Link>
+          ))
+        ) : (
+          <Empty
+            description="No properties yet"
+            className="mx-auto my-6"
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+// Simple gender icon
 function UserIcon() {
   return (
     <svg
