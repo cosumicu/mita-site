@@ -7,7 +7,7 @@ import {
   getUserProfile,
   reset as resetUser,
 } from "@/app/lib/features/users/userSlice";
-import { getUserPropertyList, getReservationList } from "@/app/lib/features/properties/propertySlice";
+import { getUserPropertyList } from "@/app/lib/features/properties/propertySlice";
 import { useParams } from "next/navigation";
 import {
   Avatar,
@@ -49,7 +49,6 @@ function UserProfilePage() {
     if (id) {
       dispatch(getUserProfile(id));
       dispatch(getUserPropertyList(id));
-      dispatch(getReservationList())
     }
   }, [id, dispatch]);
 
@@ -145,7 +144,7 @@ function UserProfilePage() {
 
       {/* =================== PROPERTY LIST =================== */}
       <UserPropertyList
-        label="Your Properties"
+        label={`${user.username}'s Properties`}
         propertyList={userPropertyList}
         isLoading={isPropertyLoading}
       />

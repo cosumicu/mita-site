@@ -115,8 +115,14 @@ function RightMenu() {
       showRegister();
     }
 
-    if (e.key === "reservations") {
-      setOpenMain(false)
+    if (e.key === "profile") {
+      setOpenMain(false);
+      router.push(`/users/profile/${user?.id}`);
+    } else if (e.key === "properties") {
+      setOpenMain(false);
+      router.push(`/myproperties`);
+    } else if (e.key === "reservations") {
+      setOpenMain(false);
       router.push(`/reservations`);
     } else if (e.key === "logout") {
       dispatch(logout());
