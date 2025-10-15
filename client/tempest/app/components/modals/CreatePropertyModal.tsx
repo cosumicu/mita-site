@@ -121,7 +121,7 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
   return (
     <Form form={form} layout="vertical" onFinish={onFinish}>
       <Steps current={current} items={items} />
-      <div style={{ marginTop: 24 }}>
+      <div>
         <div style={{ display: current === 0 ? "block" : "none" }}>
           <div className="flex justify-center items-center sm:h-[200px] md:h-[500px]">
             <Form.Item
@@ -153,6 +153,7 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
                   <Radio.Button value="Hotel">Hotel</Radio.Button>
                   <Radio.Button value="Treehouse">Tree House</Radio.Button>
                   <Radio.Button value="Barn">Barn</Radio.Button>
+                  <Radio.Button value="Container">Container</Radio.Button>
                 </div>
               </Radio.Group>
             </Form.Item>
@@ -161,7 +162,7 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
         <div style={{ display: current === 1 ? "block" : "none" }}>
           <div className="flex justify-center items-center sm:h-[200px] md:h-[500px]">
             <div className="flex flex-col w-[400px]">
-              <span className="text-lg font-bold my-4">Describe you place</span>
+              <span className="text-lg font-bold my-4">Describe your place</span>
               <Form.Item
                 name="title"
                 label="Title"
@@ -293,7 +294,6 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
 
               <Form.Item
                 name="image"
-                label="Image"
                 valuePropName="fileList"
                 getValueFromEvent={(e) => e?.fileList}
                 rules={[{ required: true, message: "Please upload an image" }]}
@@ -310,7 +310,12 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
           </div>
         </div>
       </div>
-      <div style={{ marginTop: 24 }}>
+      <div className="flex items-center justify-center gap-4">
+        {current > 0 && (
+          <Button onClick={() => prev()}>
+            Previous
+          </Button>
+        )}
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
             Next
@@ -319,11 +324,6 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
         {current === steps.length - 1 && (
           <Button type="primary" htmlType="submit">
             Done
-          </Button>
-        )}
-        {current > 0 && (
-          <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-            Previous
           </Button>
         )}
       </div>

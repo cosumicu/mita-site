@@ -107,17 +107,16 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
           : propertyList.map((property) => (
               <Link href={`/properties/${property.id}`} key={property.id}>
                 <Card
-                  className="flex-shrink-0 w-40 md:w-60 snap-start !shadow-none"
+                  className="flex-shrink-0 w-40 sm:w-60 snap-start !shadow-none"
                   key={property.id}
                   size="small"
                   variant="borderless"
                   cover={
                     <img
+                      className="w-full h-[150px] sm:h-[200px]"
                       alt={property.title}
                       src={property.image_url}
                       style={{
-                        width: "100%",
-                        height: "200px",
                         borderRadius: 12,
                       }}
                     />

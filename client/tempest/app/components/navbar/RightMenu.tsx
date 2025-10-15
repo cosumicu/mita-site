@@ -158,7 +158,7 @@ function RightMenu() {
       ) : (
         <></>
       )}
-      <div onClick={showMain} style={{ outline: "none" }} tabIndex={-1}>
+      <div className="hidden sm:inline-block outline-none" onClick={showMain} tabIndex={-1}>
         {" "}
         {/* style={{ outline: "none" }} tabIndex={-1} solves the issue of border showing when drawer is opened */}
         <MenuOutlined />
