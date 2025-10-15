@@ -115,14 +115,15 @@ function RightMenu() {
       showRegister();
     }
 
-    if (e.key === "logout") {
+    if (e.key === "reservations") {
+      setOpenMain(false)
+      router.push(`/reservations`);
+    } else if (e.key === "logout") {
       dispatch(logout());
       router.push("/");
       window.location.reload();
       toast.success("Logout Successful");
-      {
-        /* Remove this in production */
-      }
+      // Remove this in production
       dispatch(resetAuth());
     }
   };
@@ -139,7 +140,9 @@ function RightMenu() {
           >
             Host Property
           </Button>
-          <Link href={`/users/profile/${user.id}`}><Avatar size="large" src={user?.profile_picture} /></Link>
+          <Link href={`/users/profile/${user.id}`}>
+            <Avatar size="large" src={user?.profile_picture} />
+          </Link>
         </>
       ) : (
         <></>

@@ -47,6 +47,7 @@ class ReservationListCreateView(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
+        print("Current user:", self.request.user)
         return Reservation.objects.filter(user=self.request.user).order_by('-created_at')
     
     def perform_create(self, serializer):
