@@ -5,6 +5,8 @@ from .models import Property, Reservation, PropertyLike
 from apps.profiles.serializers import ProfileSerializer
 
 class PropertyListSerializer(serializers.ModelSerializer):
+    liked = serializers.SerializerMethodField()
+
     class Meta:
         model = Property
         fields = [
@@ -13,6 +15,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
             'location',
             'price_per_night',
             'image_url',
+            'liked',
             'views_count',
             'likes_count',
             'reservations_count',
@@ -23,10 +26,17 @@ class PropertyListSerializer(serializers.ModelSerializer):
         if obj.image:
             return obj.image.url
         return None
+    
+    def get_liked(self, obj):
+        user = self.context["request"].user
+        if user.is_authenticated:
+            return obj.likes.filter(user=user).exists()
+        return False
 
 class PropertyDetailSerializer(serializers.ModelSerializer):
     user = ProfileSerializer(source="user.profile")
-
+    liked = serializers.SerializerMethodField()
+    
     class Meta:
         model = Property
         fields = [
@@ -42,10 +52,17 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
             'location',
             'category',
             'image_url',
+            'liked',
             'views_count',
             'likes_count',
             'reservations_count',
         ]
+
+    def get_liked(self, obj):
+        user = self.context["request"].user
+        if user.is_authenticated:
+            return obj.likes.filter(user=user).exists()
+        return False
 
 class PropertyCreateSerializer(serializers.ModelSerializer):
     class Meta:

@@ -24,6 +24,7 @@ type PropertyListProps = {
 
 const PropertyList = ({ label, location }: PropertyListProps) => {
   const dispatch = useAppDispatch();
+  const {user} = useAppSelector((state) => state.user)
   const { propertyList, isError, isSuccess, isLoading, message } =
     useAppSelector((state) => state.property);
 
@@ -62,7 +63,7 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>,
     propertyId: string
   ) => {
-    e.preventDefault(); // prevent Link navigation
+    e.preventDefault();
     e.stopPropagation();
     dispatch(toggleFavorite(propertyId));
   };
@@ -134,16 +135,33 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
                         alt={property.title}
                         src={property.image_url}
                       />
-                      <div
-                        onClick={(e) => handleToggleFavorite(e, property.id)}
-                        className="absolute top-2 right-2 bg-white bg-opacity-70 hover:bg-opacity-100 rounded-full p-1 cursor-pointer transition"
+
+                      {user && (<div
+                        className={`absolute top-2 right-2 action-button-detail like-button ${
+                          property.liked ? "liked" : ""
+                        }`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          dispatch(toggleFavorite(property.id));
+                        }}
                       >
-                        {property.favorited ? (
-                          <HeartFilled className="text-red-500 text-lg" />
-                        ) : (
-                          <HeartOutlined className="text-gray-700 text-lg" />
-                        )}
-                      </div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill={property.liked ? "currentColor" : "none"}
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="icon icon-tabler icon-tabler-heart transition-transform duration-150"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                        </svg>
+                      </div>)}
                     </div>
                   }
                 >

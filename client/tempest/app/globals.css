@@ -48,3 +48,25 @@ body {
   width: 100%;
   height: 3px;
 }
+
+.action-button-detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: white;
+  transition: color 0.18s ease, transform 0.12s ease;
+  background: transparent;
+}
+
+.like-button:hover {
+  color: #ff4d4f;
+  transform: scale(1.08);
+}
+
+.like-button.liked {
+  color: #ff4d4f;
+}

@@ -110,7 +110,11 @@ class ToggleFavoriteView(APIView):
         if not created:
             like.delete()
 
+        liked = property.likes.filter(user=request.user).exists()
         property.likes_count = property.likes.count()
         property.save(update_fields=["likes_count"])
 
-        return Response(status=status.HTTP_200_OK)
+        return Response(
+            {"is_liked": liked},
+            status=status.HTTP_200_OK,
+        )
