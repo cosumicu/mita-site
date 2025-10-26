@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'apps.properties',
     'apps.ratings',
     'apps.inquiries',
+    'apps.chat',
 ]
 
 MIDDLEWARE = [

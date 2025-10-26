@@ -12,6 +12,7 @@ import {
   LogoutOutlined,
   GiftOutlined,
   PlusOutlined,
+  HeartFilled,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
 import RegisterForm from "../forms/RegisterForm";
@@ -61,7 +62,8 @@ const items2: MenuItem[] = [
 const items1: MenuItem[] = [
   { key: "profile", label: "Profile", icon: <UserOutlined /> },
   { key: "properties", label: "My Properties", icon: <HomeOutlined /> },
-  { key: "reservations", label: "Reservations", icon: <GiftOutlined /> },
+  { key: "favorites", label: "My Favorites", icon: <HeartFilled /> },
+  { key: "reservations", label: "My Reservations", icon: <GiftOutlined /> },
   { key: "settings", label: "Settings", icon: <SettingOutlined /> },
   { type: "divider" },
   {
@@ -158,7 +160,11 @@ function RightMenu() {
       ) : (
         <></>
       )}
-      <div className="hidden sm:inline-block outline-none" onClick={showMain} tabIndex={-1}>
+      <div
+        className="hidden sm:inline-block outline-none"
+        onClick={showMain}
+        tabIndex={-1}
+      >
         {" "}
         {/* style={{ outline: "none" }} tabIndex={-1} solves the issue of border showing when drawer is opened */}
         <MenuOutlined />
