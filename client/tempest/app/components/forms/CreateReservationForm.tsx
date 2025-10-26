@@ -19,31 +19,31 @@ const { RangePicker } = DatePicker;
 
 function CreateReservationForm({ property }: CreateReservationFormProps) {
   const dispatch = useAppDispatch();
-  const { reservationPropertyList, isError, isSuccess, isLoading, message } = useAppSelector(
-    (state) => state.property
-  );
+  const { reservationPropertyList, isError, isSuccess, isLoading, message } =
+    useAppSelector((state) => state.property);
   const [form] = Form.useForm();
   const [nights, setNights] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  useEffect(()=> {
-    dispatch(getReservationPropertyList(property.id))
-  }, [dispatch])
+  useEffect(() => {
+    dispatch(getReservationPropertyList(property.id));
+  }, [dispatch]);
 
-  // 🧠 Build list of disabled date ranges
+  // Build list of disabled date ranges
   const reservedRanges =
     reservationPropertyList?.map((r) => ({
       start: dayjs(r.start_date),
       end: dayjs(r.end_date),
     })) || [];
 
-  // 🚫 Disable any date that falls inside a reserved range
+  // Disable any date that falls inside a reserved range
   const disabledDate = (current: Dayjs) => {
     if (!current) return false;
     return reservedRanges.some(
       (range) =>
         current.isSame(range.start, "day") ||
         current.isSame(range.end, "day") ||
-        current.isAfter(range.start, "day") && current.isBefore(range.end, "day")
+        (current.isAfter(range.start, "day") &&
+          current.isBefore(range.end, "day"))
     );
   };
 
@@ -67,6 +67,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
       form.resetFields();
       setNights(0);
       setTotalPrice(0);
+
       dispatch(resetProperty());
     }
     if (isError) {
@@ -99,7 +100,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
           <span className="text-gray-500 text-base font-normal"> / night</span>
         </div>
 
-        {/* 📅 Date picker with disabled dates */}
+        {/* Date picker with disabled dates */}
         <Form.Item
           name="dates"
           label="Select Dates"
@@ -116,7 +117,9 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
           name="guests"
           label="Guests"
           initialValue={1}
-          rules={[{ required: true, message: "Please select number of guests" }]}
+          rules={[
+            { required: true, message: "Please select number of guests" },
+          ]}
         >
           <InputNumber
             min={1}
