@@ -24,6 +24,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         conversation_id = data.get("conversation_id")
         sender_id = data.get("sender_id")
         text = data.get("text")
+        print(text)
 
         if not text or not sender_id:
             return
@@ -35,11 +36,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                "type": "chat_message",  # must match method name
-                "id": str(message.id),
-                "conversation_id": str(message.conversation.id),
+                "type": "chat_message",  # method name
+                "id": str(message.id),  # convert UUID to string
+                "conversation_id": str(message.conversation.id),  # UUID → str
                 "sender": {
-                    "id": message.sender.id,
+                    "id": str(message.sender.id),  # if UUID, convert
                     "username": message.sender.username,
                 },
                 "text": message.text,
