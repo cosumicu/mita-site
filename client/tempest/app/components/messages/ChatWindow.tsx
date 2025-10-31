@@ -4,53 +4,99 @@ import { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import {
   getConversationMessages,
-  createMessage,
+  addMessage,
 } from "@/app/lib/features/messages/messageSlice";
 
-type Props = {
-  conversationId: string | null;
-};
+type Props = { conversationId: string | null };
 
 export default function ChatWindow({ conversationId }: Props) {
+  const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const { messageList, isLoading } = useAppSelector((state) => state.message);
-  const { user } = useAppSelector((state) => state.user);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [text, setText] = useState("");
+  const socketRef = useRef<WebSocket | null>(null);
 
-  // Load messages when conversation changes
+  // -------------------------------
+  // 🔌 Connect WebSocket
+  // -------------------------------
   useEffect(() => {
-    if (conversationId) {
-      dispatch(getConversationMessages(conversationId));
-    }
-  }, [dispatch, conversationId]);
+    if (!conversationId) return;
 
-  // Auto-scroll to bottom
+    dispatch(getConversationMessages(conversationId));
+
+    const ws = new WebSocket(`ws://localhost:8000/ws/chat/${conversationId}/`);
+
+    ws.onopen = () => console.log("WebSocket connected!");
+    ws.onclose = () => console.log("WebSocket closed.");
+    ws.onerror = (e) => console.error("WebSocket error:", e);
+
+    ws.onmessage = (event) => {
+      const { type, ...message } = JSON.parse(event.data); // remove `type`
+      dispatch(addMessage(message));
+    };
+
+    socketRef.current = ws;
+    return () => ws.close();
+  }, [conversationId, dispatch]);
+
+  // -------------------------------
+  // 🧠 Helper to check WS connection
+  // -------------------------------
+  const isConnected = () => socketRef.current?.readyState === WebSocket.OPEN;
+
+  // Optional debug check
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("WebSocket connected?", isConnected());
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // -------------------------------
+  // 📨 Send message
+  // -------------------------------
+  const handleSend = () => {
+    if (!socketRef.current || !text.trim() || !user) return;
+
+    const tempMessage = {
+      id: Date.now().toString(),
+      conversation_id: conversationId!,
+      text,
+      sender: user,
+      created_at: new Date().toISOString(),
+    };
+
+    dispatch(addMessage(tempMessage)); // show message immediately
+
+    socketRef.current.send(
+      JSON.stringify({
+        conversation_id: conversationId,
+        sender_id: user.id,
+        text,
+      })
+    );
+
+    setText("");
+  };
+
+  // -------------------------------
+  // 🧷 Auto-scroll on new messages
+  // -------------------------------
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messageList]);
 
-  const handleSend = async () => {
-    if (!conversationId || !text.trim()) return;
-
-    await dispatch(createMessage({ conversationId, text }));
-    setText("");
-  };
-
-  if (!conversationId)
-    return (
-      <div className="flex items-center justify-center w-full h-full text-gray-500">
-        Select a conversation to start chatting
-      </div>
-    );
-
+  // -------------------------------
+  // 💬 UI
+  // -------------------------------
   return (
     <div className="flex flex-col w-full h-full">
-      {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {isLoading && <div>Loading messages...</div>}
+
         {messageList.map((msg) => {
-          const isMine = msg.sender?.id === user?.id;
+          const isMine = msg.sender.id === user?.id;
           return (
             <div
               key={msg.id}
@@ -71,17 +117,14 @@ export default function ChatWindow({ conversationId }: Props) {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input Box */}
       <div className="border-t p-3 flex items-center gap-2">
         <input
           type="text"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Type a message..."
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
           className="flex-1 border rounded-full px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-          onKeyDown={(e) => {
-            if (e.key === "Enter") handleSend(); // send on Enter
-          }}
+          placeholder="Type a message..."
         />
         <button
           onClick={handleSend}

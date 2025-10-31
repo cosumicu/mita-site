@@ -21,6 +21,19 @@ DEBUG = bool(os.environ.get("DEBUG", default = 0))
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
+# This is for live chat feature
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [{"host": "redis", "port": 6379}], # Service name from docker compose
+                                            # Add 1 to prevent celery and channels
+                                            # from using the same redis db index
+            'capacity': 10000,
+            'expiry': 60,
+        }
+    }
+}
 
 # Application definition
 
@@ -30,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'daphne',
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
@@ -83,7 +97,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'booking_site.wsgi.application'
-
+# this for live chat
+ASGI_APPLICATION = 'booking_site.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

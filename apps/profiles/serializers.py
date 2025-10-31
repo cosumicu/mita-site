@@ -7,6 +7,7 @@ from apps.ratings.serializers import RatingSerializer
 
 
 class ProfileSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(source="user.id")
     username = serializers.CharField(source="user.username")
     email = serializers.EmailField(source="user.email")
     full_name = serializers.SerializerMethodField(read_only=True)

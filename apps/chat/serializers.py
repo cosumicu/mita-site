@@ -20,11 +20,13 @@ class ConversationSerializer(serializers.ModelSerializer):
 
 class MessageSerializer(serializers.ModelSerializer):
     sender = ProfileSerializer(source='sender.profile', read_only=True)
+    conversation_id = serializers.CharField(source='conversation.id')
 
     class Meta:
         model = Message
         fields = [
             'id',
+            'conversation_id',
             'sender',
             'text',
             'created_at',
