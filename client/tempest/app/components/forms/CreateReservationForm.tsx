@@ -5,12 +5,13 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   getReservationPropertyList,
   createReservation,
-  reset as resetProperty,
+  resetReservationPropertyList,
+  resetCreateReservation,
 } from "@/app/lib/features/properties/propertySlice";
 import { Button, Form, InputNumber, DatePicker } from "antd";
 import { toast } from "react-toastify";
-import { Property } from "@/app/lib/features/properties/propertyService";
 import dayjs, { Dayjs } from "dayjs";
+import { Property } from "@/app/lib/definitions";
 
 interface CreateReservationFormProps {
   property: Property;
@@ -19,8 +20,19 @@ const { RangePicker } = DatePicker;
 
 function CreateReservationForm({ property }: CreateReservationFormProps) {
   const dispatch = useAppDispatch();
-  const { reservationPropertyList, isError, isSuccess, isLoading, message } =
-    useAppSelector((state) => state.property);
+  const {
+    data: reservationPropertyList,
+    loading: reservationPropertyListLoading,
+    success: reservationPropertyListSuccess,
+    error: reservationPropertyListError,
+    message: reservationPropertyListMessage,
+  } = useAppSelector((state) => state.property.reservationPropertyList);
+  const {
+    loading: createReservationLoading,
+    success: createReservationSuccess,
+    error: createReservationError,
+    message: createReservationMessage,
+  } = useAppSelector((state) => state.property.createReservation);
   const [form] = Form.useForm();
   const [nights, setNights] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -62,19 +74,21 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
   };
 
   useEffect(() => {
-    if (isSuccess) {
+    if (createReservationSuccess) {
       toast.success("Reservation created successfully");
       form.resetFields();
       setNights(0);
       setTotalPrice(0);
-
-      dispatch(resetProperty());
     }
-    if (isError) {
-      toast.error(message);
-      dispatch(resetProperty());
+    if (createReservationError) {
+      toast.error(createReservationMessage);
     }
-  }, [isSuccess, isError, message, dispatch]);
+  }, [
+    createReservationSuccess,
+    createReservationError,
+    createReservationMessage,
+    dispatch,
+  ]);
 
   const onFinish = (values: any) => {
     const [start, end] = values.dates;
@@ -85,6 +99,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
       guests: values.guests,
     };
     dispatch(createReservation(formData as any));
+    dispatch(resetCreateReservation());
   };
 
   return (
@@ -144,7 +159,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
         <Button
           type="primary"
           htmlType="submit"
-          loading={isLoading}
+          loading={reservationPropertyListLoading}
           className="!text-lg"
         >
           Reserve

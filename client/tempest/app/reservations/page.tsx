@@ -8,13 +8,14 @@ import Link from "next/link";
 
 export default function ReservationListPage() {
   const dispatch = useAppDispatch();
-  const { reservationList, isLoading } = useAppSelector((state) => state.property);
+  const { data: reservationList, loading: reservationListLoading } =
+    useAppSelector((state) => state.property.reservationList);
 
   useEffect(() => {
     dispatch(getReservationList());
   }, [dispatch]);
 
-  if (isLoading) {
+  if (reservationListLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Spin size="large" />

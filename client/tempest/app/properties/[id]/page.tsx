@@ -2,10 +2,7 @@
 
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
-import {
-  getPropertyDetail,
-  reset as resetProperty,
-} from "@/app/lib/features/properties/propertySlice";
+import { getPropertyDetail } from "@/app/lib/features/properties/propertySlice";
 import { Avatar } from "antd";
 import CreateReservationForm from "@/app/components/forms/CreateReservationForm";
 import Link from "next/link";
@@ -13,8 +10,13 @@ import Link from "next/link";
 function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
   const dispatch = useAppDispatch();
-  const { propertyDetail, isError, isSuccess, isLoading, message } =
-    useAppSelector((state) => state.property);
+  const {
+    data: propertyDetail,
+    loading: propertyDetailLoading,
+    success: propertyDetailSuccess,
+    error: propertyDetailError,
+    message: propertyDetailMessage,
+  } = useAppSelector((state) => state.property.propertyDetail);
 
   useEffect(() => {
     if (id) dispatch(getPropertyDetail(id));
@@ -73,7 +75,9 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
           </div>
 
           <div className="flex items-center justify-center sm:justify-start w-full py-4">
-            <Link href={`/users/profile/${property.user.id}`}><Avatar size="large" src={property.user.profile_picture} /></Link>
+            <Link href={`/users/profile/${property.user.id}`}>
+              <Avatar size="large" src={property.user.profile_picture} />
+            </Link>
             <div className="ml-2">
               <p>{`Hosted by ${property.user.username}`}</p>
             </div>

@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   getPropertyList,
   toggleFavorite,
-  reset as resetProperty,
+  resetPropertyList,
 } from "@/app/lib/features/properties/propertySlice";
 
 import { toast } from "react-toastify";
@@ -24,24 +24,27 @@ type PropertyListProps = {
 
 const PropertyList = ({ label, location }: PropertyListProps) => {
   const dispatch = useAppDispatch();
-  const {user} = useAppSelector((state) => state.user)
-  const { propertyList, isError, isSuccess, isLoading, message } =
-    useAppSelector((state) => state.property);
+  const { user } = useAppSelector((state) => state.user);
+  const {
+    data: propertyListData,
+    loading: propertyListLoading,
+    success: propertyListSuccess,
+    error: propertyListError,
+    message: propertyListMessage,
+  } = useAppSelector((state) => state.property.propertyList);
 
   useEffect(() => {
     dispatch(getPropertyList());
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   useEffect(() => {
-    if (isSuccess) {
-      dispatch(resetProperty());
+    if (propertyListSuccess) {
     }
 
-    if (isError) {
-      toast.error(message);
-      dispatch(resetProperty());
+    if (propertyListError) {
+      toast.error(propertyListMessage);
     }
-  }, [isSuccess, isError, message, dispatch]);
+  }, [propertyListSuccess, propertyListError, propertyListMessage, dispatch]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -97,7 +100,7 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
         ref={scrollRef}
         className="flex gap-4 overflow-x-auto mt-2 p-2 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none]"
       >
-        {isLoading
+        {propertyListLoading
           ? Array.from({ length: 8 }).map((_, i) => (
               <Card
                 key={i} // ← ADD THIS
@@ -121,7 +124,7 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
                 />
               </Card>
             ))
-          : propertyList.map((property) => (
+          : propertyListData.map((property) => (
               <Link href={`/properties/${property.id}`} key={property.id}>
                 <Card
                   className="flex-shrink-0 w-40 sm:w-60 snap-start !shadow-none"
@@ -136,32 +139,34 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
                         src={property.image_url}
                       />
 
-                      {user && (<div
-                        className={`absolute top-2 right-2 action-button-detail like-button ${
-                          property.liked ? "liked" : ""
-                        }`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          dispatch(toggleFavorite(property.id));
-                        }}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill={property.liked ? "currentColor" : "none"}
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="icon icon-tabler icon-tabler-heart transition-transform duration-150"
+                      {user && (
+                        <div
+                          className={`absolute top-2 right-2 action-button-detail like-button ${
+                            property.liked ? "liked" : ""
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            dispatch(toggleFavorite(property.id));
+                          }}
                         >
-                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                          <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
-                        </svg>
-                      </div>)}
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill={property.liked ? "currentColor" : "none"}
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="icon icon-tabler icon-tabler-heart transition-transform duration-150"
+                          >
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                            <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
+                          </svg>
+                        </div>
+                      )}
                     </div>
                   }
                 >

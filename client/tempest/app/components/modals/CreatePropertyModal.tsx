@@ -12,7 +12,9 @@ import {
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import {
   createProperty,
-  reset as resetProperty,
+  getPropertyList,
+  resetCreateProperty,
+  resetPropertyList,
 } from "@/app/lib/features/properties/propertySlice";
 import { toast } from "react-toastify";
 
@@ -44,9 +46,12 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
-  const { isError, isLoading, isSuccess, message } = useAppSelector(
-    (state) => state.property
-  );
+  const {
+    error: createPropertyError,
+    loading: createPropertyLoading,
+    success: createPropertySuccess,
+    message: createPropertyMessage,
+  } = useAppSelector((state) => state.property.createProperty);
   const dispatch = useAppDispatch();
 
   const next = async () => {
@@ -88,18 +93,24 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
   useEffect(() => {
-    if (isSuccess) {
+    if (createPropertySuccess) {
       toast.success("Property created successfully");
-
+      dispatch(getPropertyList());
+      dispatch(resetPropertyList());
       if (onSuccess) onSuccess(); // close modal
-
-      dispatch(resetProperty());
+      dispatch(resetCreateProperty());
     }
-    if (isError) {
-      toast.error(message);
-      resetProperty();
+    if (createPropertyError) {
+      toast.error(createPropertyMessage);
+      resetCreateProperty();
     }
-  });
+  }, [
+    createPropertySuccess,
+    createPropertyError,
+    createPropertyMessage,
+    dispatch,
+    onSuccess,
+  ]);
 
   const onFinish = (values: any) => {
     const formData = new FormData();
@@ -162,7 +173,9 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
         <div style={{ display: current === 1 ? "block" : "none" }}>
           <div className="flex justify-center items-center sm:h-[200px] md:h-[500px]">
             <div className="flex flex-col w-[400px]">
-              <span className="text-lg font-bold my-4">Describe your place</span>
+              <span className="text-lg font-bold my-4">
+                Describe your place
+              </span>
               <Form.Item
                 name="title"
                 label="Title"
@@ -311,11 +324,7 @@ function CreatePropertyModal({ onSuccess }: CreatePropertyModalProps) {
         </div>
       </div>
       <div className="flex items-center justify-center gap-4">
-        {current > 0 && (
-          <Button onClick={() => prev()}>
-            Previous
-          </Button>
-        )}
+        {current > 0 && <Button onClick={() => prev()}>Previous</Button>}
         {current < steps.length - 1 && (
           <Button type="primary" onClick={() => next()}>
             Next

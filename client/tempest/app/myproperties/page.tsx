@@ -8,7 +8,8 @@ import Link from "next/link";
 
 export default function MyPropertiesPage() {
   const dispatch = useAppDispatch();
-  const { userPropertyList, isLoading } = useAppSelector((state) => state.property);
+  const { data: userPropertyList, loading: userPropertyListLoading } =
+    useAppSelector((state) => state.property.userPropertyList);
   const { user } = useAppSelector((state) => state.user);
 
   useEffect(() => {
@@ -17,7 +18,7 @@ export default function MyPropertiesPage() {
     }
   }, [dispatch, user]);
 
-  if (isLoading) {
+  if (userPropertyListLoading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Spin size="large" />
