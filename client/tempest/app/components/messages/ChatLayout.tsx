@@ -1,21 +1,42 @@
 "use client";
+
 import { useState } from "react";
 import ChatSidebar from "./ChatSideBar";
 import ChatWindow from "./ChatWindow";
 
 export default function ChatLayout() {
-  const [selectedConversationId, setSelectedConversationId] = useState<
-    string | null
-  >(null);
+  const [selectedConversation, setSelectedConversation] = useState<any | null>(
+    null
+  );
 
   return (
-    <div className="fixed top-25 left-0 right-0 bottom-0 flex border rounded-none overflow-hidden bg-gradient-to-br from-gray-50 to-white shadow-xl">
-      <ChatSidebar
-        onSelectConversation={(id) => setSelectedConversationId(id)}
-        selectedId={selectedConversationId || undefined}
-      />
-      <div className="flex-1 flex flex-col">
-        <ChatWindow conversationId={selectedConversationId} />
+    <div className="fixed left-0 right-0 top-[100px] bottom-15 sm:bottom-1 flex bg-gradient-to-br from-gray-50 to-white">
+      {/* Sidebar */}
+      <div
+        className={`absolute inset-0 transform transition-transform duration-300 md:static md:translate-x-0 md:w-1/3 bg-gradient-to-b from-gray-100 to-gray-200 shadow-inner z-10 ${
+          selectedConversation
+            ? "-translate-x-full md:translate-x-0"
+            : "translate-x-0"
+        }`}
+      >
+        <ChatSidebar
+          onSelectConversation={(conv) => setSelectedConversation(conv)}
+          selectedConversation={selectedConversation}
+        />
+      </div>
+
+      {/* Chat window */}
+      <div
+        className={`absolute inset-0 transform transition-transform duration-300 md:static md:flex-1 ${
+          selectedConversation
+            ? "translate-x-0"
+            : "translate-x-full md:translate-x-0"
+        }`}
+      >
+        <ChatWindow
+          conversation={selectedConversation}
+          onBack={() => setSelectedConversation(null)}
+        />
       </div>
     </div>
   );
