@@ -16,25 +16,40 @@ from apps.chat.models import Conversation
 from .serializers import PropertyListSerializer, PropertyDetailSerializer, PropertyCreateSerializer, ReservationSerializer
 
 class PropertyFilter(django_filters.FilterSet):
-    # [lookup_expr], iexact looks for the exact string(case insensitive)
-    # icontains looks for the value that contains the string
-
-    # user filter is used on user property list
     user = django_filters.UUIDFilter(field_name='user__id')
-
     location = django_filters.CharFilter(method='filter_search')
-    guests = django_filters.NumberFilter(field_name='guests')
+    guests = django_filters.NumberFilter(field_name='guests', lookup_expr='gte')
     min_price_per_night = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='gte')
     max_price_per_night = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='lte')
 
+    start_date = django_filters.DateFilter(method='filter_by_dates')
+    end_date = django_filters.DateFilter(method='filter_by_dates')
+
     class Meta:
         model = Property
-        fields = ['user', 'location', 'guests', 'min_price_per_night', 'max_price_per_night']
+        fields = ['user', 'location', 'guests', 'min_price_per_night', 'max_price_per_night', 'start_date', 'end_date']
 
     def filter_search(self, queryset, name, value):
         return queryset.filter(
-            Q(location__icontains=value) | Q(title__icontains=value)
+            Q(location__icontains=value)
+            | Q(title__icontains=value)
+            | Q(category__icontains=value)
         )
+
+    def filter_by_dates(self, queryset, name, value):
+        """
+        Exclude properties that have reservations overlapping with the search range.
+        """
+        start_date = self.data.get('start_date')
+        end_date = self.data.get('end_date')
+
+        if start_date and end_date:
+            # Exclude properties that have conflicting reservations
+            queryset = queryset.exclude(
+                reservations__start_date__lt=end_date,
+                reservations__end_date__gt=start_date
+            )
+        return queryset
 
 class PropertyListView(generics.ListAPIView):
     queryset = Property.objects.all().order_by('-created_at')

@@ -9,7 +9,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { Input, Modal, DatePicker, InputNumber, Button } from "antd";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 const { RangePicker } = DatePicker;
 
@@ -23,6 +23,11 @@ const SearchBar: React.FC = () => {
   ]);
   const [guests, setGuests] = useState<number>(1);
 
+  const disabledDate = (current: Dayjs) => {
+    // Disable all dates before today
+    return current && current.isBefore(dayjs().startOf("day"));
+  };
+
   const onSearch = () => {
     const query = new URLSearchParams();
 
@@ -31,14 +36,15 @@ const SearchBar: React.FC = () => {
     if (dates[1]) query.set("end_date", dates[1].format("YYYY-MM-DD"));
     if (guests) query.set("guests", guests.toString());
     console.log(query.toString());
-    router.push(`/s?${query.toString()}`);
+    router.push(query ? `/s?${query}` : "/s"); // 👈 if empty, just list all
+
     setIsModalOpen(false);
   };
 
   return (
     <>
       {/* DESKTOP / LARGE SCREENS */}
-      <div className="hidden sm:flex justify-center items-center bg-white rounded-full shadow-md px-4 py-2 w-[90%] sm:w-auto md:w-[700px] lg:w-[800px] transition-all duration-200 divide-x divide-gray-200 hover:shadow-lg">
+      <div className="hidden sm:flex justify-center items-center bg-white rounded-full shadow-md px-3 py-2 w-[90%] sm:w-auto md:w-[700px] lg:w-[800px] transition-all duration-200 divide-x divide-gray-200 hover:shadow-lg">
         {/* Location */}
         <div className="flex items-center w-4/12 px-3 gap-2">
           <EnvironmentOutlined className="text-gray-500 text-lg" />
@@ -58,6 +64,7 @@ const SearchBar: React.FC = () => {
             onChange={(values) =>
               setDates(values as [dayjs.Dayjs | null, dayjs.Dayjs | null])
             }
+            disabledDate={disabledDate}
           />
         </div>
 

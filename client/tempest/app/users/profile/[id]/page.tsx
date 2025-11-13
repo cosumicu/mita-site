@@ -63,7 +63,7 @@ function UserProfilePage() {
       {/* =================== PROFILE CARD =================== */}
       <Card className="rounded-2xl shadow-md border border-gray-100 p-6 sm:p-10 bg-white">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-6 gap-4">
             <Avatar
               src={user.profile_picture}
               size={110}

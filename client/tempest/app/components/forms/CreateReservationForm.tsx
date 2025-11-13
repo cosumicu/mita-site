@@ -38,7 +38,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   useEffect(() => {
     dispatch(getReservationPropertyList(property.id));
-  }, [dispatch]);
+  }, [dispatch, property.id]);
 
   // Build list of disabled date ranges
   const reservedRanges =
@@ -47,16 +47,22 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
       end: dayjs(r.end_date),
     })) || [];
 
-  // Disable any date that falls inside a reserved range
   const disabledDate = (current: Dayjs) => {
     if (!current) return false;
-    return reservedRanges.some(
+
+    // Disable past days
+    const isPast = current.isBefore(dayjs().startOf("day"));
+
+    // Disable reserved ranges
+    const isReserved = reservedRanges.some(
       (range) =>
         current.isSame(range.start, "day") ||
         current.isSame(range.end, "day") ||
         (current.isAfter(range.start, "day") &&
           current.isBefore(range.end, "day"))
     );
+
+    return isPast || isReserved;
   };
 
   const handleDateChange = (dates: any) => {
@@ -79,9 +85,11 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
       form.resetFields();
       setNights(0);
       setTotalPrice(0);
+      dispatch(resetCreateReservation());
     }
     if (createReservationError) {
       toast.error(createReservationMessage);
+      dispatch(resetCreateReservation());
     }
   }, [
     createReservationSuccess,
@@ -99,7 +107,6 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
       guests: values.guests,
     };
     dispatch(createReservation(formData as any));
-    dispatch(resetCreateReservation());
   };
 
   return (
@@ -119,7 +126,23 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
         <Form.Item
           name="dates"
           label="Select Dates"
-          rules={[{ required: true, message: "Please select a date range" }]}
+          rules={[
+            { required: true, message: "Please select a date range" },
+            {
+              validator: (_, value) => {
+                if (!value || value.length !== 2) return Promise.resolve();
+                const [start, end] = value;
+                if (dayjs(start).isSame(dayjs(end), "day")) {
+                  return Promise.reject(
+                    new Error(
+                      "Check-out date must be at least one day after check-in."
+                    )
+                  );
+                }
+                return Promise.resolve();
+              },
+            },
+          ]}
         >
           <RangePicker
             className="w-full"

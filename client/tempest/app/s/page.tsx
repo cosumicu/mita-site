@@ -48,20 +48,6 @@ const SearchPage = () => {
 
   return (
     <div className="p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold mb-1">Search Results</h1>
-        <p className="text-gray-600 text-sm">
-          {location && <span>📍 {location}</span>}{" "}
-          {start_date && end_date && (
-            <span>
-              • {start_date} → {end_date}
-            </span>
-          )}{" "}
-          {guests && <span>• {guests} guest(s)</span>}
-        </p>
-      </div>
-
       {/* Property list */}
       {propertyListLoading ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
