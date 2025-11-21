@@ -122,7 +122,6 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
           <span className="text-gray-500 text-base font-normal"> / night</span>
         </div>
 
-        {/* Date picker with disabled dates */}
         <Form.Item
           name="dates"
           label="Select Dates"
@@ -131,6 +130,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
             {
               validator: (_, value) => {
                 if (!value || value.length !== 2) return Promise.resolve();
+
                 const [start, end] = value;
                 if (dayjs(start).isSame(dayjs(end), "day")) {
                   return Promise.reject(
@@ -139,6 +139,22 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                     )
                   );
                 }
+
+                // Check for overlap with existing reservations
+                const hasOverlap = reservedRanges.some(
+                  (range) =>
+                    dayjs(start).isBefore(range.end.add(1, "day")) &&
+                    dayjs(end).isAfter(range.start.subtract(1, "day"))
+                );
+
+                if (hasOverlap) {
+                  return Promise.reject(
+                    new Error(
+                      "Selected dates overlap with existing reservations."
+                    )
+                  );
+                }
+
                 return Promise.resolve();
               },
             },
@@ -147,7 +163,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
           <RangePicker
             className="w-full"
             onChange={handleDateChange}
-            disabledDate={disabledDate}
+            disabledDate={disabledDate} // keeps existing visual greying
           />
         </Form.Item>
 
