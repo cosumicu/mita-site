@@ -23,10 +23,24 @@ export const register = createAsyncThunk<
   try {
     await authService.register(userData);
   } catch (err) {
-    const error = err as AxiosError<{ message?: string }>;
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
-    );
+    const error = err as AxiosError<any>;
+
+    // This is a temporary solution for informing user about errors when signing up
+    // A toast will show the error sent by the backend password validator
+
+    // Example: { password: ["The password is too similar to the email."] }
+    const data = error.response?.data;
+
+    // 1. If Django DRF returns field errors
+    if (data && typeof data === "object") {
+      // Take the FIRST error message
+      const firstKey = Object.keys(data)[0];
+      const firstError = data[firstKey][0];
+      return thunkAPI.rejectWithValue(firstError);
+    }
+
+    // 2. If there’s a `message` field
+    return thunkAPI.rejectWithValue(data?.message || error.message);
   }
 });
 
