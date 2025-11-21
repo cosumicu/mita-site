@@ -7,41 +7,40 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   getPropertyList,
   toggleFavorite,
-  resetPropertyList,
 } from "@/app/lib/features/properties/propertySlice";
-
 import { toast } from "react-toastify";
 
 type PropertyListProps = {
   label: string;
-  location: string;
+  location?: string;
 };
 
 const PropertyList = ({ label, location }: PropertyListProps) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
-  const {
-    data: propertyListData,
-    loading: propertyListLoading,
-    success: propertyListSuccess,
-    error: propertyListError,
-    message: propertyListMessage,
-  } = useAppSelector((state) => state.property.propertyList);
 
-  useEffect(() => {
-    dispatch(getPropertyList());
-  }, [dispatch, user]);
-
-  useEffect(() => {
-    if (propertyListSuccess) {
-    }
-
-    if (propertyListError) {
-      toast.error(propertyListMessage);
-    }
-  }, [propertyListSuccess, propertyListError, propertyListMessage, dispatch]);
+  // Local state to store this component's list independently
+  const [properties, setProperties] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      setLoading(true);
+      try {
+        const filters = location ? { location } : undefined;
+        const response = await dispatch(getPropertyList(filters)).unwrap();
+        setProperties(response);
+      } catch (error: any) {
+        toast.error(error || "Failed to fetch properties");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProperties();
+  }, [dispatch, location]);
 
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
@@ -57,10 +56,7 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
     }
   };
 
-  const handleToggleFavorite = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    propertyId: string
-  ) => {
+  const handleToggleFavorite = (e: React.MouseEvent, propertyId: string) => {
     e.preventDefault();
     e.stopPropagation();
     dispatch(toggleFavorite(propertyId));
@@ -68,12 +64,8 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
 
   return (
     <div className="my-2">
-      {/* Label + arrows row */}
       <div className="flex justify-between items-center">
-        {/* Left: Label */}
         <h2>{label}</h2>
-
-        {/* Right: Arrow buttons */}
         <div className="hidden sm:flex gap-1">
           <Button
             shape="circle"
@@ -90,15 +82,14 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
         </div>
       </div>
 
-      {/* Scrollable container */}
       <div
         ref={scrollRef}
         className="flex gap-4 overflow-x-auto mt-2 p-2 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none]"
       >
-        {propertyListLoading
+        {loading
           ? Array.from({ length: 8 }).map((_, i) => (
               <Card
-                key={i} // ← ADD THIS
+                key={i}
                 className="flex-shrink-0 w-40 md:w-60 snap-start !shadow-none"
                 size="small"
                 variant="borderless"
@@ -113,17 +104,16 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
               >
                 <Skeleton
                   active
-                  loading={true}
+                  loading
                   title={false}
                   paragraph={{ rows: 1, width: "100%" }}
                 />
               </Card>
             ))
-          : propertyListData.map((property) => (
+          : properties.map((property) => (
               <Link href={`/properties/${property.id}`} key={property.id}>
                 <Card
                   className="flex-shrink-0 w-40 sm:w-60 snap-start !shadow-none"
-                  key={property.id}
                   size="small"
                   variant="borderless"
                   cover={
@@ -139,11 +129,7 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
                           className={`absolute top-2 right-2 action-button-detail like-button ${
                             property.liked ? "liked" : ""
                           }`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            dispatch(toggleFavorite(property.id));
-                          }}
+                          onClick={(e) => handleToggleFavorite(e, property.id)}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
