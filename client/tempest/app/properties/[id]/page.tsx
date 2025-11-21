@@ -35,7 +35,7 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
       <p className="text-2xl my-4">{property.title}</p>
 
       {/* Image section */}
-      <div className="bg-gray-100 w-full h-[450px] rounded-xl flex justify-center items-center">
+      <div className="w-full h-[450px] rounded-xl flex justify-center items-center">
         <img
           src={property.image_url}
           alt={property.title}
