@@ -1,8 +1,8 @@
 import api from "../axiosInstance";
 import { User } from "../../definitions";
 
-const BASE_USER_URL = `${process.env.NEXT_PUBLIC_API_HOST}profile/`;
-const GET_CURRENT_USER_URL = `${BASE_USER_URL}me/`;
+const BASE_USER_URL = `${process.env.NEXT_PUBLIC_API_HOST}/profile`;
+const GET_CURRENT_USER_URL = `${BASE_USER_URL}/me`;
 
 const getCurrentUser = async (): Promise<User> => {
   const response = await api.get<User>(GET_CURRENT_USER_URL);
@@ -10,7 +10,7 @@ const getCurrentUser = async (): Promise<User> => {
 };
 
 const getUserProfile = async (userId: string) => {
-  const response = await api.get<User>(`${BASE_USER_URL}${userId}/`);
+  const response = await api.get<User>(`${BASE_USER_URL}/${userId}/`);
   return response.data;
 };
 

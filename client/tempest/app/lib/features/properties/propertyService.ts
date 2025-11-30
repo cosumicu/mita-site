@@ -1,53 +1,53 @@
 import api from "../axiosInstance";
-import { Property, Reservation, Paginated } from "../../definitions";
+import {
+  Property,
+  Reservation,
+  Paginated,
+  PropertyFilterParams,
+  PaginationParams,
+} from "../../definitions";
 
-const PROPERTY_BASE_URL = `${process.env.NEXT_PUBLIC_API_HOST}properties/`;
+const PROPERTY_BASE_URL = `${process.env.NEXT_PUBLIC_API_HOST}/properties`;
+const RESERVATION_BASE_URL = `${process.env.NEXT_PUBLIC_API_HOST}/properties/reservation`;
 
-const GET_PROPERTY_LIST_URL = PROPERTY_BASE_URL;
-const CREATE_PROPERTY_URL = `${PROPERTY_BASE_URL}create/`;
-const LIST_CREATE_RESERVATION_URL = `${PROPERTY_BASE_URL}reservation/`;
-const GET_USER_LIKES_URL = `${PROPERTY_BASE_URL}likes/`;
-const GET_RESERVATION_REQUESTS_LIST_URL = `${PROPERTY_BASE_URL}reservation/requests/`;
+const getPropertyList = async (
+  filters: PropertyFilterParams,
+  pagination: PaginationParams
+) => {
+  const response = await api.get<Paginated<Property>>(PROPERTY_BASE_URL, {
+    params: { ...filters, ...pagination },
+  });
+  return response.data;
+};
+// usage: getPropertyList({ location: "Manila" }, { page: 1, page_size: 10 });
 
-const getPropertyList = async (filters?: {
-  location?: string;
-  start_date?: string;
-  end_date?: string;
-  guests?: string;
-}) => {
-  const response = await api.get<Property[]>(GET_PROPERTY_LIST_URL, {
-    params: filters,
+const getUserPropertyList = async (
+  userId: string,
+  pagination: PaginationParams
+) => {
+  const response = await api.get<Paginated<Property>>(PROPERTY_BASE_URL, {
+    params: { user: userId, ...pagination },
   });
   return response.data;
 };
 
-const getUserPropertyList = async (userId: string) => {
-  const response = await api.get<Property[]>(GET_PROPERTY_LIST_URL, {
-    params: { user: userId },
+const getReservationList = async (pagination: PaginationParams) => {
+  const response = await api.get<Paginated<Reservation>>(RESERVATION_BASE_URL, {
+    params: pagination,
   });
-  return response.data;
-};
-
-const getReservationList = async ({ page = 1, pageSize = 10 } = {}) => {
-  const response = await api.get<Paginated<Reservation>>(
-    LIST_CREATE_RESERVATION_URL,
-    {
-      params: { page, page_size: pageSize },
-    }
-  );
   return response.data;
 };
 
 const getReservationPropertyList = async (propertyId: string) => {
   const response = await api.get<Reservation[]>(
-    `${LIST_CREATE_RESERVATION_URL}p/${propertyId}`
+    `${RESERVATION_BASE_URL}p/${propertyId}`
   );
   return response.data;
 };
 
 const getReservationRequestsList = async ({ page = 1, pageSize = 10 } = {}) => {
   const response = await api.get<Paginated<Reservation>>(
-    GET_RESERVATION_REQUESTS_LIST_URL,
+    `${RESERVATION_BASE_URL}/requests`,
     {
       params: { page, page_size: pageSize },
     }
@@ -57,57 +57,57 @@ const getReservationRequestsList = async ({ page = 1, pageSize = 10 } = {}) => {
 
 const approveReservation = async (reservationId: string) => {
   const response = await api.post(
-    `${PROPERTY_BASE_URL}reservation/${reservationId}/approve/`
+    `${RESERVATION_BASE_URL}/requests/${reservationId}/approve/`
   );
   return response.data;
 };
 
 const declineReservation = async (reservationId: string) => {
   const response = await api.post(
-    `${PROPERTY_BASE_URL}reservation/${reservationId}/decline/`
+    `${RESERVATION_BASE_URL}/requests/${reservationId}/decline/`
   );
   return response.data;
 };
 
 const createProperty = async (formData: Property) => {
-  const response = await api.post(CREATE_PROPERTY_URL, formData);
+  const response = await api.post(`${PROPERTY_BASE_URL}/create/`, formData);
   return response.data;
 };
 
 const getPropertyDetail = async (propertyId: string) => {
   const response = await api.get<Property>(
-    `${PROPERTY_BASE_URL}${propertyId}/`
+    `${PROPERTY_BASE_URL}/${propertyId}`
   );
   return response.data;
 };
 
 const updateProperty = async (propertyId: string) => {
   const response = await api.get<Property>(
-    `${PROPERTY_BASE_URL}${propertyId}/update/`
+    `${PROPERTY_BASE_URL}/${propertyId}/update/`
   );
   return response.data;
 };
 
 const deleteProperty = async (propertyId: string) => {
   const response = await api.get<Property>(
-    `${PROPERTY_BASE_URL}${propertyId}/delete/`
+    `${PROPERTY_BASE_URL}/${propertyId}/delete/`
   );
   return response.data;
 };
 
 const createReservation = async (formData: Reservation) => {
-  const response = await api.post(LIST_CREATE_RESERVATION_URL, formData);
+  const response = await api.post(`${RESERVATION_BASE_URL}/`, formData);
   return response.data;
 };
 
 const getUserLikesList = async () => {
-  const response = await api.get<Property[]>(GET_USER_LIKES_URL);
+  const response = await api.get<Property[]>(`${PROPERTY_BASE_URL}/likes`);
   return response.data;
 };
 
 const toggleFavorite = async (propertyId: string) => {
   const response = await api.post(
-    `${PROPERTY_BASE_URL}${propertyId}/toggle-favorite/`
+    `${PROPERTY_BASE_URL}/${propertyId}/toggle-favorite/`
   );
   return response.data;
 };

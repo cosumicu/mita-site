@@ -1,61 +1,48 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
+import {
+  getUserLikesList,
+  toggleFavorite,
+} from "@/app/lib/features/properties/propertySlice";
 import Link from "next/link";
 import { Card, Skeleton } from "antd";
-import { useSearchParams } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "../lib/hooks";
-import {
-  getPropertyList,
-  toggleFavorite,
-} from "../lib/features/properties/propertySlice";
-import { toast } from "react-toastify";
 
-const SearchPage = () => {
-  const searchParams = useSearchParams();
+export default function FavoritesPage() {
   const dispatch = useAppDispatch();
-
-  const {
-    data: propertyListData,
-    loading: propertyListLoading,
-    error: propertyListError,
-    message: propertyListMessage,
-  } = useAppSelector((state) => state.property.propertyList);
-
-  const { user } = useAppSelector((state) => state.user);
-
-  const location = searchParams.get("location") || "";
-  const start_date = searchParams.get("start_date") || "";
-  const end_date = searchParams.get("end_date") || "";
-  const guests = searchParams.get("guests") || "";
+  const user = useAppSelector((state) => state.user);
+  const { data: userLikesList, loading: userLikesListLoading } = useAppSelector(
+    (state) => state.property.likedList
+  );
 
   useEffect(() => {
-    const queryParams = {
-      location,
-      start_date,
-      end_date,
-      guests,
-    };
+    dispatch(getUserLikesList());
+  }, [dispatch]);
 
-    dispatch(
-      getPropertyList({
-        filters: queryParams,
-        pagination: { page: 1, page_size: 10 },
-      })
+  if (userLikesListLoading) {
+    return (
+      <div className="flex justify-center mt-20 text-gray-600 text-lg">
+        Loading favorites...
+      </div>
     );
-  }, [dispatch, location, start_date, end_date, guests]);
+  }
 
-  useEffect(() => {
-    if (propertyListError) toast.error(propertyListMessage);
-  }, [propertyListError, propertyListMessage]);
+  if (!userLikesList.length) {
+    return (
+      <div className="flex flex-col items-center mt-24 text-gray-600">
+        <h2 className="text-2xl font-semibold mb-3">No Favorites Yet</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="px-4 sm:px-10">
       {" "}
       {/* Mobile padding */}
-      <h2 className="font-bold my-4 text-lg sm:text-xl">Search Results</h2>
+      <h2 className="font-bold my-4 text-lg sm:text-xl">My Favorites</h2>
       {/* Loading State */}
-      {propertyListLoading ? (
+      {userLikesListLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
             <Card
@@ -79,9 +66,9 @@ const SearchPage = () => {
             </Card>
           ))}
         </div>
-      ) : propertyListData?.length ? (
+      ) : userLikesList?.length ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-4 gap-4">
-          {propertyListData.map((property: any) => (
+          {userLikesList.map((property: any) => (
             <Link href={`/properties/${property.id}`} key={property.id}>
               <Card
                 className="rounded-xl !shadow-none hover:shadow-md transition-all"
@@ -151,6 +138,4 @@ const SearchPage = () => {
       )}
     </div>
   );
-};
-
-export default SearchPage;
+}

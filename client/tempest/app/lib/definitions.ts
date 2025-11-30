@@ -98,3 +98,17 @@ export type Paginated<T> = {
   previous: string | null;
   results: T[];
 };
+
+// URL PARAMETERS
+
+export interface PropertyFilterParams {
+  location?: string;
+  start_date?: string;
+  end_date?: string;
+  guests?: string;
+}
+
+export interface PaginationParams {
+  page?: number;
+  page_size?: number;
+}

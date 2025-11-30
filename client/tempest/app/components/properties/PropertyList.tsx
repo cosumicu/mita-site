@@ -9,6 +9,7 @@ import {
   toggleFavorite,
 } from "@/app/lib/features/properties/propertySlice";
 import { toast } from "react-toastify";
+import useApp from "antd/es/app/useApp";
 
 type PropertyListProps = {
   label: string;
@@ -18,6 +19,9 @@ type PropertyListProps = {
 const PropertyList = ({ label, location }: PropertyListProps) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
+  const { data: propertyList, loading: propertyListLoading } = useAppSelector(
+    (state) => state.property.propertyList
+  );
 
   // Local state for properties
   const [properties, setProperties] = useState<any[]>([]);
@@ -34,8 +38,13 @@ const PropertyList = ({ label, location }: PropertyListProps) => {
       setLoading(true);
       try {
         const filters = location ? { location } : undefined;
-        const response = await dispatch(getPropertyList(filters)).unwrap();
-        setProperties(response);
+        const response = await dispatch(
+          getPropertyList({
+            filters: { location },
+            pagination: { page: 1, page_size: 10 },
+          })
+        ).unwrap();
+        setProperties(response.results);
       } catch (error: any) {
         toast.error(error || "Failed to fetch properties");
       } finally {

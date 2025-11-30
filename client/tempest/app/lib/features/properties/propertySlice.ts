@@ -1,14 +1,13 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AxiosError } from "axios";
 import propertyService from "./propertyService";
-import { Property, Reservation, Paginated } from "../../definitions";
-
-type PropertyFilters = {
-  location?: string;
-  start_date?: string;
-  end_date?: string;
-  guests?: string;
-};
+import {
+  Property,
+  Reservation,
+  Paginated,
+  PropertyFilterParams,
+  PaginationParams,
+} from "../../definitions";
 
 type AsyncState<T> = {
   data: T;
@@ -36,8 +35,8 @@ type PropertyState = {
   reservationPropertyList: AsyncState<Reservation[]>;
 
   // PAGINATED LIST
-  propertyList: AsyncState<Property[]>;
-  userPropertyList: AsyncState<Property[]>;
+  propertyList: PaginatedAsyncState<Property>;
+  userPropertyList: PaginatedAsyncState<Property>;
   reservationList: PaginatedAsyncState<Reservation>;
   likedList: AsyncState<Property[]>;
   reservationRequestsList: PaginatedAsyncState<Reservation>;
@@ -74,8 +73,8 @@ const initialPaginatedAsyncState = <T>(): PaginatedAsyncState<T> => ({
 });
 
 const initialState: PropertyState = {
-  propertyList: initialAsyncState([]),
-  userPropertyList: initialAsyncState([]),
+  propertyList: initialPaginatedAsyncState(),
+  userPropertyList: initialPaginatedAsyncState(),
   reservationList: initialPaginatedAsyncState(),
   reservationPropertyList: initialAsyncState([]),
   propertyDetail: initialAsyncState(null),
@@ -92,12 +91,12 @@ const initialState: PropertyState = {
 };
 
 export const getPropertyList = createAsyncThunk<
-  Property[],
-  PropertyFilters | undefined,
-  { rejectValue: string }
->("property/getPropertyList", async (filters, thunkAPI) => {
+  Paginated<Property>, // returns
+  { filters: PropertyFilterParams; pagination: PaginationParams }, // accepts
+  { rejectValue: string } // reject with value
+>("property/getPropertyList", async ({ filters, pagination }, thunkAPI) => {
   try {
-    const response = await propertyService.getPropertyList(filters);
+    const response = await propertyService.getPropertyList(filters, pagination);
     return response;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
@@ -108,12 +107,15 @@ export const getPropertyList = createAsyncThunk<
 });
 
 export const getUserPropertyList = createAsyncThunk<
-  Property[],
-  string,
+  Paginated<Property>,
+  { userId: string; pagination: PaginationParams },
   { rejectValue: string }
->("property/getUserPropertyList", async (userId, thunkAPI) => {
+>("property/getUserPropertyList", async ({ userId, pagination }, thunkAPI) => {
   try {
-    const response = await propertyService.getUserPropertyList(userId);
+    const response = await propertyService.getUserPropertyList(
+      userId,
+      pagination
+    );
     return response;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
@@ -205,25 +207,17 @@ export const createReservation = createAsyncThunk<
 });
 
 export const getReservationList = createAsyncThunk<
-  Paginated<Reservation>, // return type
-  { page?: number; pageSize?: number }, // argument type
+  Paginated<Reservation>,
+  PaginationParams,
   { rejectValue: string }
->(
-  "property/getReservationList",
-  async ({ page = 1, pageSize = 10 }, thunkAPI) => {
-    try {
-      const response = await propertyService.getReservationList({
-        page,
-        pageSize,
-      });
-      return response;
-    } catch (err: any) {
-      return thunkAPI.rejectWithValue(
-        err.message || "Failed to fetch reservations"
-      );
-    }
+>("property/getReservationList", async (pagination, thunkAPI) => {
+  try {
+    const response = await propertyService.getReservationList(pagination);
+    return response;
+  } catch (err: any) {
+    return thunkAPI.rejectWithValue(err.message || "An error has occured.");
   }
-);
+});
 
 export const getReservationPropertyList = createAsyncThunk<
   Reservation[],
@@ -344,10 +338,10 @@ export const propertySlice = createSlice({
   initialState,
   reducers: {
     resetPropertyList: (state) => {
-      state.propertyList = initialAsyncState([]);
+      state.propertyList = initialPaginatedAsyncState();
     },
     resetUserPropertyList: (state) => {
-      state.userPropertyList = initialAsyncState([]);
+      state.userPropertyList = initialPaginatedAsyncState();
     },
     resetReservationList: (state) => {
       state.reservationList = initialPaginatedAsyncState();
@@ -382,10 +376,13 @@ export const propertySlice = createSlice({
       })
       .addCase(
         getPropertyList.fulfilled,
-        (state, action: PayloadAction<Property[]>) => {
+        (state, action: PayloadAction<Paginated<Property>>) => {
           state.propertyList.loading = false;
           state.propertyList.success = true;
-          state.propertyList.data = action.payload;
+          state.propertyList.data = action.payload.results;
+          state.propertyList.count = action.payload.count;
+          state.propertyList.next = action.payload.next;
+          state.propertyList.previous = action.payload.previous;
         }
       )
       .addCase(getPropertyList.rejected, (state, action) => {
@@ -399,10 +396,13 @@ export const propertySlice = createSlice({
       })
       .addCase(
         getUserPropertyList.fulfilled,
-        (state, action: PayloadAction<Property[]>) => {
+        (state, action: PayloadAction<Paginated<Property>>) => {
           state.userPropertyList.loading = false;
           state.userPropertyList.success = true;
-          state.userPropertyList.data = action.payload;
+          state.userPropertyList.data = action.payload.results;
+          state.userPropertyList.count = action.payload.count;
+          state.userPropertyList.next = action.payload.next;
+          state.userPropertyList.previous = action.payload.previous;
         }
       )
       .addCase(getUserPropertyList.rejected, (state, action) => {

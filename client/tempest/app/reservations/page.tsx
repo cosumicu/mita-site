@@ -20,7 +20,7 @@ export default function ReservationListPage() {
   const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
-    dispatch(getReservationList({ page: currentPage, pageSize }));
+    dispatch(getReservationList({ page: currentPage, page_size: pageSize }));
   }, [dispatch, currentPage, pageSize]);
 
   if (reservationListLoading) {

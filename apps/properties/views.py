@@ -57,7 +57,7 @@ class PropertyListView(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     filter_backends = [DjangoFilterBackend]
     filterset_class = PropertyFilter
-    # pagination_class = PropertyPagination
+    pagination_class = PropertyPagination
 
 class PropertyDetailView(generics.RetrieveAPIView):
     serializer_class = PropertyDetailSerializer
