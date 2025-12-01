@@ -6,7 +6,7 @@ import {
   getUserPropertyList,
   toggleFavorite,
 } from "@/app/lib/features/properties/propertySlice";
-import { Table, Spin, Image, Tag } from "antd";
+import { Table, Spin, Image, Tag, Switch } from "antd";
 import Link from "next/link";
 
 export default function MyPropertiesPage() {
@@ -21,7 +21,7 @@ export default function MyPropertiesPage() {
   const { user } = useAppSelector((state) => state.user);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     if (user?.id) {
@@ -70,37 +70,39 @@ export default function MyPropertiesPage() {
       dataIndex: "category",
     },
     {
+      title: "Guests",
+      dataIndex: "guests",
+      align: "center",
+    },
+    {
       title: "Price / Night",
       dataIndex: "price_per_night",
       render: (price: number) => `₱${Number(price).toLocaleString()}`,
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      render: (status: string) => {
-        const colorMap: any = {
-          ACTIVE: "green",
-          INACTIVE: "gray",
-        };
-        return <Tag color={colorMap[status] || "blue"}>{status}</Tag>;
-      },
+      title: "Views",
+      dataIndex: "views_count",
+      align: "center",
     },
     {
-      title: "Favorite",
-      dataIndex: "liked",
+      title: "Likes",
+      dataIndex: "likes_count",
       align: "center",
-      render: (liked: boolean, record: any) => (
-        <span
-          className={`cursor-pointer text-xl transition ${
-            liked ? "text-red-500" : "text-gray-400"
-          }`}
-          onClick={(e) => {
-            e.stopPropagation();
-            dispatch(toggleFavorite(record.id));
-          }}
-        >
-          {liked ? "❤️" : "🤍"}
-        </span>
+    },
+    {
+      title: "Reservations",
+      dataIndex: "reservations_count",
+      align: "center",
+    },
+    {
+      title: "Instant Booking",
+      dataIndex: "instant_booking",
+      align: "center",
+      // TODO: Add instant booking feature
+      render: () => (
+        <div onClick={(e) => e.stopPropagation()}>
+          <Switch />
+        </div>
       ),
     },
   ];
