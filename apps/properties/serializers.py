@@ -15,6 +15,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
             'category',
             'location',
             'guests',
+            'status',
             'price_per_night',
             'image_url',
             'liked',

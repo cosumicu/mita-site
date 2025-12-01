@@ -95,6 +95,19 @@ export default function MyPropertiesPage() {
       align: "center",
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      render: (status: string) => {
+        const colorMap: any = {
+          ACTIVE: "green",
+          INACTIVE: "gray",
+          PENDING: "gold",
+          SUSPENDED: "red",
+        };
+        return <Tag color={colorMap[status] || "blue"}>{status}</Tag>;
+      },
+    },
+    {
       title: "Instant Booking",
       dataIndex: "instant_booking",
       align: "center",

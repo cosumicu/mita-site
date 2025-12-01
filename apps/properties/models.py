@@ -10,6 +10,12 @@ from apps.common.models import TimeStampedUUIDModel
 
 User = get_user_model()
 
+class PropertyStatus(models.TextChoices):
+    ACTIVE = "ACTIVE", "Active"
+    INACTIVE = "INACTIVE", "Inactive"
+    PENDING = "PENDING", "Pending"
+    SUSPENDED = "SUSPENDED", "Suspended"
+
 class ReservationStatus(models.TextChoices):
     PENDING = "PENDING", "Pending"
     APPROVED = "APPROVED", "Approved"
@@ -30,6 +36,11 @@ class Property(TimeStampedUUIDModel):
     guests = models.IntegerField()
     location = models.CharField(max_length=255)
     category = models.CharField(max_length=255)
+    status = models.CharField(
+        max_length=20,
+        choices=PropertyStatus.choices,
+        default=PropertyStatus.ACTIVE
+    )
     views_count = models.PositiveIntegerField(default=0)
     likes_count = models.PositiveIntegerField(default=0)
     reservations_count = models.PositiveIntegerField(default=0)
