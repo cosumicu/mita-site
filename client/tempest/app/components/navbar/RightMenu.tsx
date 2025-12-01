@@ -90,6 +90,7 @@ const items1: MenuItem[] = [
     label: "Host",
     type: "group",
     children: [
+      { key: "dashboard", label: "Dashboard" },
       { key: "properties", label: "My Properties" },
       {
         key: "requests",
@@ -152,37 +153,71 @@ function RightMenu() {
     console.log("click ", e);
     setCurrent(e.key);
 
-    if (e.key === "login") {
-      showLogin();
-    } else if (e.key === "register") {
-      showRegister();
-    }
+    switch (e.key) {
+      case "login":
+        showLogin();
+        break;
 
-    if (e.key === "profile") {
-      setOpenMain(false);
-      router.push(`/users/profile/${user?.id}`);
-    } else if (e.key === "inbox") {
-      setOpenMain(false);
-      router.push(`/messages`);
-    } else if (e.key === "properties") {
-      setOpenMain(false);
-      router.push(`/myproperties`);
-    } else if (e.key === "requests") {
-      setOpenMain(false);
-      router.push(`/requests`);
-    } else if (e.key === "favorites") {
-      setOpenMain(false);
-      router.push(`/liked`);
-    } else if (e.key === "reservations") {
-      setOpenMain(false);
-      router.push(`/reservations`);
-    } else if (e.key === "logout") {
-      dispatch(logout());
-      router.push("/");
-      window.location.reload();
-      toast.success("Logout Successful");
-      // Remove this in production
-      dispatch(resetAuth());
+      case "register":
+        showRegister();
+        break;
+
+      case "help":
+        setOpenMain(false);
+        router.push(`/help`);
+        break;
+
+      case "gift-cards":
+        setOpenMain(false);
+        router.push(`/gift2cards`);
+        break;
+
+      case "profile":
+        setOpenMain(false);
+        router.push(`/users/profile/${user?.id}`);
+        break;
+
+      case "inbox":
+        setOpenMain(false);
+        router.push(`/messages`);
+        break;
+
+      case "dashboard":
+        setOpenMain(false);
+        router.push(`/hostdashboard`);
+        break;
+
+      case "properties":
+        setOpenMain(false);
+        router.push(`/myproperties`);
+        break;
+
+      case "requests":
+        setOpenMain(false);
+        router.push(`/requests`);
+        break;
+
+      case "favorites":
+        setOpenMain(false);
+        router.push(`/liked`);
+        break;
+
+      case "reservations":
+        setOpenMain(false);
+        router.push(`/reservations`);
+        break;
+
+      case "logout":
+        dispatch(logout());
+        router.push("/");
+        window.location.reload();
+        toast.success("Logout Successful");
+        dispatch(resetAuth());
+        break;
+
+      default:
+        console.warn(`Unhandled menu key: ${e.key}`);
+        break;
     }
   };
 

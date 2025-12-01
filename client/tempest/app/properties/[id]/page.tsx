@@ -152,7 +152,7 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
         onCancel={() => {
           setIsDeletePropertyModalOpen(false);
         }}
-        width={1100}
+        width={400}
         centered
         destroyOnHidden
       >

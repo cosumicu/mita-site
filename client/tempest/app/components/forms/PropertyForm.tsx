@@ -50,9 +50,9 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
   const [current, setCurrent] = useState(0);
   const [form] = Form.useForm();
   const { error, loading, success, message } = useAppSelector((state) =>
-    mode === "edit"
+    mode === "create"
       ? state.property.createProperty
-      : state.property.createProperty
+      : state.property.updateProperty
   );
   const dispatch = useAppDispatch();
 
@@ -95,12 +95,6 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
   // SLIDER CODE END
-
-  useEffect(() => {
-    if (mode === "edit" && initialValues) {
-      form.setFieldsValue(initialValues);
-    }
-  }, [mode, initialValues]);
 
   useEffect(() => {
     if (mode === "edit" && initialValues) {
@@ -174,7 +168,7 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
       <Steps current={current} items={items} />
       <div>
         <div style={{ display: current === 0 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[500px]">
+          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
             <Form.Item
               name="category"
               preserve={true}
@@ -211,7 +205,7 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
           </div>
         </div>
         <div style={{ display: current === 1 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[500px]">
+          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
             <div className="flex flex-col w-[400px]">
               <span className="text-lg font-bold my-4">
                 Describe your place
@@ -237,7 +231,7 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
           </div>
         </div>
         <div style={{ display: current === 2 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[500px]">
+          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
             <div className="w-[400px]">
               <span className="text-lg font-bold my-4">
                 Which of these best describes your place?
@@ -325,7 +319,7 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
           </div>
         </div>
         <div style={{ display: current === 3 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[500px]">
+          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
             <div className="flex flex-col w-[400px]">
               <span className="text-lg font-bold my-4">
                 Where's your place located?
@@ -341,7 +335,7 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
           </div>
         </div>
         <div style={{ display: current === 4 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[500px]">
+          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
             <div className="flex flex-col w-[400px]">
               <span className="text-lg font-bold my-4">Add images</span>
 
