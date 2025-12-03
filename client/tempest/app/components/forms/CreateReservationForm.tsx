@@ -35,6 +35,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
   } = useAppSelector((state) => state.property.createReservation);
   const [form] = Form.useForm();
   const [nights, setNights] = useState<number>(0);
+  const [taxAmount, setTaxAmount] = useState<number>(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
   useEffect(() => {
@@ -98,6 +99,37 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
     createReservationMessage,
     dispatch,
   ]);
+
+  useEffect(() => {
+    if (!property || nights <= 0) return;
+
+    const price = Number(property.price_per_night);
+    const cleaning = Number(property.cleaning_fee || 0);
+    const weekly = Number(property.weekly_discount_rate || 0);
+    const monthly = Number(property.monthly_discount_rate || 0);
+    const service = Number(property.service_fee_rate || 0);
+    const tax = Number(property.tax_rate || 0);
+
+    const subtotal = price * nights;
+
+    const discount =
+      nights >= 28 ? subtotal * monthly : nights >= 7 ? subtotal * weekly : 0;
+
+    const afterDiscount = subtotal - discount;
+
+    const afterCleaning = afterDiscount + cleaning;
+
+    const serviceFee = afterCleaning * service;
+
+    const afterService = afterCleaning + serviceFee;
+
+    const taxAmount = afterService * tax;
+    setTaxAmount(taxAmount);
+
+    const finalTotal = afterService + taxAmount;
+
+    setTotalPrice(finalTotal);
+  }, [property, nights]);
 
   const onFinish = (values: any) => {
     const [start, end] = values.dates;
@@ -196,87 +228,103 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
         </Button>
 
         {nights > 0 && (
-          <div className="text-right text-gray-700 space-y-1 border-t pt-3">
+          <div className="text-gray-700 space-y-2">
             {/* Subtotal */}
-            <div>
-              ₱{property.price_per_night.toLocaleString()} × {nights}{" "}
-              {nights === 1 ? "night" : "nights"} = ₱
-              {(property.price_per_night * nights).toLocaleString()}
+            <div className="flex justify-between">
+              <div>
+                ₱{Number(property.price_per_night).toLocaleString()} × {nights}{" "}
+                {nights === 1 ? "night" : "nights"}
+              </div>
+              <div>
+                ₱{(Number(property.price_per_night) * nights).toLocaleString()}
+              </div>
             </div>
 
-            {/* Long-stay discount */}
+            {/* Monthly discount */}
             {nights >= 28 && property.monthly_discount_rate > 0 && (
-              <div>
-                Monthly discount (
-                {(property.monthly_discount_rate * 100).toFixed(0)}%): -₱
-                {Math.round(
-                  property.price_per_night *
+              <div className="flex justify-between text-green-600">
+                <div>
+                  Monthly discount (
+                  {(Number(property.monthly_discount_rate) * 100).toFixed(0)}%)
+                </div>
+                <div>
+                  -₱
+                  {(
+                    Number(property.price_per_night) *
                     nights *
-                    property.monthly_discount_rate
-                ).toLocaleString()}
+                    Number(property.monthly_discount_rate)
+                  ).toLocaleString()}
+                </div>
               </div>
             )}
+
+            {/* Weekly discount */}
             {nights >= 7 &&
               nights < 28 &&
               property.weekly_discount_rate > 0 && (
-                <div>
-                  Weekly discount (
-                  {(property.weekly_discount_rate * 100).toFixed(0)}%): -₱
-                  {Math.round(
-                    property.price_per_night *
+                <div className="flex justify-between text-green-600">
+                  <div>
+                    Weekly discount (
+                    {(Number(property.weekly_discount_rate) * 100).toFixed(0)}%)
+                  </div>
+                  <div>
+                    -₱
+                    {(
+                      Number(property.price_per_night) *
                       nights *
-                      property.weekly_discount_rate
-                  ).toLocaleString()}
+                      Number(property.weekly_discount_rate)
+                    ).toLocaleString()}
+                  </div>
                 </div>
               )}
 
             {/* Cleaning fee */}
-            {property.cleaning_fee > 0 && (
-              <div>
-                Cleaning fee: ₱{Number(property.cleaning_fee).toLocaleString()}
+            {Number(property.cleaning_fee) > 0 && (
+              <div className="flex justify-between">
+                <div>Cleaning fee</div>
+                <div>₱{Number(property.cleaning_fee).toLocaleString()}</div>
               </div>
             )}
 
             {/* Service fee */}
-            {property.service_fee_rate > 0 && (
-              <div>
-                Service fee ({(property.service_fee_rate * 100).toFixed(0)}%): ₱
-                {Math.round(
-                  property.price_per_night *
-                    nights *
-                    (nights >= 28
-                      ? property.monthly_discount_rate
-                      : nights >= 7
-                      ? property.weekly_discount_rate
-                      : 0) *
-                    property.service_fee_rate
-                ).toLocaleString()}
+            {Number(property.service_fee_rate) > 0 && (
+              <div className="flex justify-between">
+                <div>
+                  Service fee (
+                  {(Number(property.service_fee_rate) * 100).toFixed(0)}%)
+                </div>
+                <div>
+                  ₱
+                  {(
+                    (Number(property.price_per_night) * nights -
+                      (nights >= 28
+                        ? Number(property.price_per_night) *
+                          nights *
+                          Number(property.monthly_discount_rate)
+                        : nights >= 7
+                        ? Number(property.price_per_night) *
+                          nights *
+                          Number(property.weekly_discount_rate)
+                        : 0) +
+                      Number(property.cleaning_fee)) *
+                    Number(property.service_fee_rate)
+                  ).toLocaleString()}
+                </div>
               </div>
             )}
 
             {/* Tax */}
-            {property.tax_rate > 0 && (
-              <div>
-                Tax ({(property.tax_rate * 100).toFixed(0)}%): ₱
-                {Math.round(
-                  (property.price_per_night *
-                    nights *
-                    (1 -
-                      (nights >= 28
-                        ? property.monthly_discount_rate
-                        : nights >= 7
-                        ? property.weekly_discount_rate
-                        : 0)) +
-                    Number(property.cleaning_fee || 0)) *
-                    (1 + property.service_fee_rate) *
-                    property.tax_rate
-                ).toLocaleString()}
+            {Number(property.tax_rate) > 0 && (
+              <div className="flex justify-between">
+                <div>Tax ({(Number(property.tax_rate) * 100).toFixed(0)}%)</div>
+                <div>₱{Number(taxAmount).toLocaleString()}</div>
               </div>
             )}
 
             {/* Total */}
-            <div className="text-lg font-semibold text-pink-600">
-              Total: ₱{totalPrice.toLocaleString()}
+            <div className="flex justify-between text-lg font-semibold text-pink-600 border-t pt-2">
+              <div>Total</div>
+              <div>₱{Number(totalPrice).toLocaleString()}</div>
             </div>
           </div>
         )}

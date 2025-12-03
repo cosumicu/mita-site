@@ -46,8 +46,8 @@ class Property(TimeStampedUUIDModel):
     reservations_count = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='uploads/properties', default='/uploads/properties/default_property.png')
 
-    weekly_discount_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.00'))
-    monthly_discount_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.00'))
+    weekly_discount_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.10'))
+    monthly_discount_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.20'))
     cleaning_fee = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('0.00'))
     service_fee_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.10'))
     tax_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.03'))
