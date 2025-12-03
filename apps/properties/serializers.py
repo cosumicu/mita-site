@@ -16,13 +16,19 @@ class PropertyListSerializer(serializers.ModelSerializer):
             'location',
             'guests',
             'status',
-            'price_per_night',
             'image_url',
             'liked',
             'views_count',
             'likes_count',
             'reservations_count',
+            'price_per_night',
+            'weekly_discount_rate',
+            'monthly_discount_rate',
+            'cleaning_fee',
+            'service_fee_rate',
+            'tax_rate',
             'created_at',
+            'updated_at',
         ]
 
     def get_image(self, obj):
@@ -87,7 +93,6 @@ class PropertyCreateSerializer(serializers.ModelSerializer):
 class ReservationSerializer(serializers.ModelSerializer):
     user = ProfileSerializer(source="user.profile", read_only=True)
     property = PropertyDetailSerializer(read_only=True)
-    total_amount = serializers.SerializerMethodField()
 
     class Meta:
         model = Reservation
@@ -99,14 +104,28 @@ class ReservationSerializer(serializers.ModelSerializer):
             'end_date',
             'guests',
             'number_of_nights',
+            'status',
+            'long_stay_discount',
+            'cleaning_fee',
+            'service_fee_rate',
+            'tax_rate',
+            'total_amount',
+            'created_at',
+            'updated_at',
+        ]
+        read_only_fields = [
+            'id',
+            'user',
+            'number_of_nights',
+            'long_stay_discount',
+            'cleaning_fee',
+            'service_fee_rate',
+            'tax_rate',
             'total_amount',
             'status',
             'created_at',
+            'updated_at',
         ]
-        read_only_fields = ['id', 'user', 'property', 'created_at', 'number_of_nights', 'total_amount', 'status',]
-    
-    def get_total_amount(self, obj):
-        return obj.total_amount()
 
 class PropertyLikeSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField()

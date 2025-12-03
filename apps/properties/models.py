@@ -46,6 +46,12 @@ class Property(TimeStampedUUIDModel):
     reservations_count = models.PositiveIntegerField(default=0)
     image = models.ImageField(upload_to='uploads/properties', default='/uploads/properties/default_property.png')
 
+    weekly_discount_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.00'))
+    monthly_discount_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.00'))
+    cleaning_fee = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('0.00'))
+    service_fee_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.10'))
+    tax_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.03'))
+
     def image_url(self):
         return f'{settings.WEBSITE_URL}{self.image.url}'
     
@@ -66,8 +72,11 @@ class Reservation(TimeStampedUUIDModel):
         default=ReservationStatus.PENDING
     )
 
-    def total_amount(self):
-        return self.property.price_per_night * self.number_of_nights
+    long_stay_discount = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.00'))
+    cleaning_fee = models.DecimalField(max_digits=6, decimal_places=2, default=Decimal('0.00'))
+    service_fee_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.10'))
+    tax_rate = models.DecimalField(max_digits=4, decimal_places=2, default=Decimal('0.03'))
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
 
 class PropertyView(TimeStampedUUIDModel):
     property = models.ForeignKey(Property, related_name="views", on_delete=models.CASCADE)

@@ -143,13 +143,34 @@ class ReservationListCreateView(generics.ListCreateAPIView):
 
         start_date_ = datetime.strptime(start_date, "%Y-%m-%d").date()
         end_date_ = datetime.strptime(end_date, "%Y-%m-%d").date()
-
         number_of_nights = (end_date_ - start_date_).days
-    
+
+        if number_of_nights >= 28:
+            long_stay_discount = property.monthly_discount_rate
+        elif number_of_nights >= 7:
+            long_stay_discount = property.weekly_discount_rate
+        else:
+            long_stay_discount = Decimal("0.00")
+        
+        cleaning_fee = property.cleaning_fee
+        service_fee_rate = property.service_fee_rate
+        tax_rate = property.tax_rate
+
+        subtotal = property.price_per_night * number_of_nights
+        discounted_subtotal = subtotal - (subtotal * long_stay_discount)
+        service_fee = discounted_subtotal * service_fee_rate
+        tax = (discounted_subtotal + cleaning_fee + service_fee) * tax_rate
+        total_amount = discounted_subtotal + cleaning_fee + service_fee + tax
+
         reservation = serializer.save(
             user=self.request.user,
             property=property,
             number_of_nights=number_of_nights,
+            long_stay_discount=long_stay_discount,
+            cleaning_fee=cleaning_fee, 
+            service_fee_rate=service_fee_rate,
+            tax_rate=tax_rate,
+            total_amount=total_amount,
         )
 
         Conversation.objects.create(
