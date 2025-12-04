@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Card, Button, Skeleton } from "antd";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { formatCurrency } from "@/app/lib/utils/format";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   getPropertyList,
@@ -164,15 +164,8 @@ const PropertyList = ({ label, properties, loading }: PropertyListProps) => {
                       {property.category} in {property.location}
                     </h3>
                     <p className="text-[.75rem] text-gray-500">
-                      ₱
-                      {Number(property.price_per_night).toLocaleString(
-                        undefined,
-                        {
-                          minimumFractionDigits: 0,
-                          maximumFractionDigits: 2,
-                        }
-                      )}{" "}
-                      / night
+                      ₱{formatCurrency(Number(property.price_per_night))} /
+                      night
                     </p>
                   </div>
                 </Card>

@@ -12,6 +12,7 @@ import { Button, Form, InputNumber, DatePicker } from "antd";
 import { toast } from "react-toastify";
 import dayjs, { Dayjs } from "dayjs";
 import { Property } from "@/app/lib/definitions";
+import { formatCurrency } from "@/app/lib/utils/format";
 
 interface CreateReservationFormProps {
   property: Property;
@@ -154,7 +155,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
         className="flex flex-col space-y-5"
       >
         <div className="text-left text-2xl font-semibold text-gray-800">
-          ₱{Number(property.price_per_night).toLocaleString()}
+          ₱{formatCurrency(Number(property.price_per_night))}
           <span className="text-gray-500 text-base font-normal"> / night</span>
         </div>
 
@@ -235,11 +236,11 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
             {/* Subtotal */}
             <div className="flex justify-between">
               <div>
-                ₱{Number(property.price_per_night).toLocaleString()} × {nights}{" "}
+                ₱{formatCurrency(Number(property.price_per_night))} × {nights}{" "}
                 {nights === 1 ? "night" : "nights"}
               </div>
               <div>
-                ₱{(Number(property.price_per_night) * nights).toLocaleString()}
+                ₱{formatCurrency(Number(property.price_per_night) * nights)}
               </div>
             </div>
 
@@ -252,11 +253,11 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                 </div>
                 <div>
                   -₱
-                  {(
+                  {formatCurrency(
                     Number(property.price_per_night) *
-                    nights *
-                    Number(property.monthly_discount_rate)
-                  ).toLocaleString()}
+                      nights *
+                      Number(property.monthly_discount_rate)
+                  )}
                 </div>
               </div>
             )}
@@ -272,11 +273,11 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                   </div>
                   <div>
                     -₱
-                    {(
+                    {formatCurrency(
                       Number(property.price_per_night) *
-                      nights *
-                      Number(property.weekly_discount_rate)
-                    ).toLocaleString()}
+                        nights *
+                        Number(property.weekly_discount_rate)
+                    )}
                   </div>
                 </div>
               )}
@@ -285,7 +286,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
             {Number(property.cleaning_fee) > 0 && (
               <div className="flex justify-between">
                 <div>Cleaning fee</div>
-                <div>₱{Number(property.cleaning_fee).toLocaleString()}</div>
+                <div>₱{formatCurrency(Number(property.cleaning_fee))}</div>
               </div>
             )}
 
@@ -297,7 +298,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                 </div>
                 <div>
                   ₱
-                  {(
+                  {formatCurrency(
                     (Number(property.price_per_night) * nights -
                       (nights >= 28
                         ? Number(property.price_per_night) *
@@ -309,8 +310,8 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                           Number(property.weekly_discount_rate)
                         : 0) +
                       Number(property.cleaning_fee)) *
-                    GUEST_SERVICE_FEE_RATE
-                  ).toLocaleString()}
+                      GUEST_SERVICE_FEE_RATE
+                  )}
                 </div>
               </div>
             )}
@@ -319,14 +320,14 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
             {TAX_RATE > 0 && (
               <div className="flex justify-between">
                 <div>Tax ({(TAX_RATE * 100).toFixed(0)}%)</div>
-                <div>₱{Number(taxAmount).toLocaleString()}</div>
+                <div>₱{formatCurrency(Number(taxAmount))}</div>
               </div>
             )}
 
             {/* Total */}
             <div className="flex justify-between text-lg font-semibold border-t pt-2">
               <div>Total</div>
-              <div>₱{Number(totalPrice).toLocaleString()}</div>
+              <div>₱{formatCurrency(Number(totalPrice))}</div>
             </div>
           </div>
         )}

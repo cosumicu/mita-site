@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
+import { formatCurrency } from "@/app/lib/utils/format";
 import { getReservationList } from "@/app/lib/features/properties/propertySlice";
 import { Table, Spin, Image, Tag } from "antd";
 import { useRouter } from "next/navigation";
@@ -60,13 +61,13 @@ export default function ReservationListPage() {
       title: "Price / Night",
       dataIndex: "price_per_night",
       render: (_: any, record: any) =>
-        `₱${Number(record.price_per_night).toLocaleString()}`,
+        `₱${formatCurrency(Number(record.price_per_night))}`,
     },
     {
       title: "Total Amount",
       dataIndex: "total_amount",
       render: (_: any, record: any) =>
-        `₱${Number(record.total_amount).toLocaleString()}`,
+        `₱${formatCurrency(Number(record.total_amount))}`,
     },
     {
       title: "Status",

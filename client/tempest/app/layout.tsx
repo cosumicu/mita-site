@@ -33,10 +33,12 @@ export default function RootLayout({
         theme={{
           token: {
             colorPrimary: "#7289DA",
+            fontFamily:
+              "var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
           },
         }}
       >
-        <body className={`${inter.variable} ${inter.variable} antialiased`}>
+        <body className={`${inter.className} antialiased`}>
           <StoreProvider>
             <AntdRegistry>
               <Loading />
