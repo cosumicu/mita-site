@@ -31,9 +31,13 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
     message: propertyDetailMessage,
   } = useAppSelector((state) => state.property.propertyDetail);
 
+  const { success: updatePropertySuccess } = useAppSelector(
+    (state) => state.property.updateProperty
+  );
+
   useEffect(() => {
     if (id) dispatch(getPropertyDetail(id));
-  }, [dispatch, id]);
+  }, [dispatch, updatePropertySuccess, id]);
 
   const property = propertyDetail;
 
@@ -49,15 +53,23 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
         <p className="text-2xl my-4">{property.title}</p>
         {property.user.id === user?.id && (
           <div className="flex gap-1 ml-auto">
-            <Button onClick={() => setIsUpdatePropertyModalOpen(true)}>
-              Edit
+            <Button
+              color="primary"
+              variant="outlined"
+              size="small"
+              onClick={() => setIsUpdatePropertyModalOpen(true)}
+            >
+              <p className="text-xs">Edit</p>
             </Button>
             <Button
+              variant="outlined"
+              size="small"
+              danger
               onClick={() => {
                 setIsDeletePropertyModalOpen(true);
               }}
             >
-              Delete
+              <p className="text-xs">Delete</p>
             </Button>
           </div>
         )}

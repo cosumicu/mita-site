@@ -51,11 +51,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     
-    "django_filters",
+    'django_filters',
 
-    "djoser",
+    'djoser',
 
-    "djcelery_email",
+    'djcelery_email',
+    'django_celery_beat',
 
     'corsheaders',
 
