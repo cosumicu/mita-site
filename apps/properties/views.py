@@ -193,7 +193,7 @@ class ReservationListCreateView(generics.ListCreateAPIView):
             landlord=property.user
         )
 
-class ReservationListProperty(generics.ListAPIView):
+class ApprovedReservationListProperty(generics.ListAPIView):
     serializer_class = ReservationSerializer
     permission_classes = [permissions.AllowAny]
     lookup_url_kwarg = 'id'
@@ -202,6 +202,17 @@ class ReservationListProperty(generics.ListAPIView):
         return Reservation.objects.filter(
             property__id=self.kwargs.get(self.lookup_url_kwarg),
             status__in=[ReservationStatus.APPROVED, ReservationStatus.ONGOING]
+        ).order_by("-created_at")
+
+class ReservationListUserProperty(generics.ListAPIView):
+    serializer_class = ReservationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_url_kwarg = 'id'
+
+    def get_queryset(self):
+        return Reservation.objects.filter(
+            property__user=self.request.user,
+            property__id=self.kwargs.get(self.lookup_url_kwarg),
         ).order_by("-created_at")
 
 
