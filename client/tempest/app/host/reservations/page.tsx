@@ -155,7 +155,7 @@ export default function ReservationListPage() {
 
   return (
     <div className="px-4 sm:px-10">
-      <p className="my-4 text-lg sm:text-xl">Guest Reservations</p>
+      <p className="my-4 text-lg sm:text-xl">Host Reservations</p>
 
       <Table
         columns={columns}

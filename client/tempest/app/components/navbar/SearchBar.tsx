@@ -43,9 +43,8 @@ const SearchBar: React.FC = () => {
 
   return (
     <>
-      {/* DESKTOP / LARGE SCREENS */}
+      {/* LARGE SCREENS */}
       <div className="hidden sm:flex justify-center items-center bg-white rounded-full shadow-md px-3 py-2 w-[90%] sm:w-auto md:w-[700px] lg:w-[800px] transition-all duration-200 divide-x divide-gray-200 hover:shadow-lg">
-        {/* Location */}
         <div className="flex items-center w-4/12 px-3 gap-2">
           <EnvironmentOutlined className="text-gray-500 text-lg" />
           <Input
@@ -56,7 +55,6 @@ const SearchBar: React.FC = () => {
           />
         </div>
 
-        {/* Dates */}
         <div className="flex items-center w-4/12 px-3 gap-2">
           <CalendarOutlined className="text-gray-500 text-lg" />
           <RangePicker
@@ -66,10 +64,10 @@ const SearchBar: React.FC = () => {
               setDates(values as [dayjs.Dayjs | null, dayjs.Dayjs | null])
             }
             disabledDate={disabledDate}
+            placeholder={["Check-in", "Checkout"]}
           />
         </div>
 
-        {/* Guests */}
         <div className="flex items-center w-2/10 px-3 gap-2">
           <UserOutlined className="text-gray-500 text-lg" />
           <InputNumber
@@ -81,7 +79,6 @@ const SearchBar: React.FC = () => {
           />
         </div>
 
-        {/* Search button */}
         <Button
           type="primary"
           shape="round"
@@ -93,7 +90,7 @@ const SearchBar: React.FC = () => {
         </Button>
       </div>
 
-      {/* MOBILE BUTTON */}
+      {/* SMALL SCREENS */}
       <div className="flex sm:hidden justify-center w-full mt-2">
         <Button
           type="primary"
@@ -107,7 +104,6 @@ const SearchBar: React.FC = () => {
         </Button>
       </div>
 
-      {/* MOBILE MODAL */}
       <Modal
         title="Search"
         open={isModalOpen}
@@ -117,7 +113,6 @@ const SearchBar: React.FC = () => {
         centered
       >
         <div className="flex flex-col gap-4">
-          {/* Location */}
           <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
             <EnvironmentOutlined className="text-gray-500" />
             <Input
@@ -128,7 +123,6 @@ const SearchBar: React.FC = () => {
             />
           </div>
 
-          {/* Dates */}
           <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
             <CalendarOutlined className="text-gray-500" />
             <RangePicker
@@ -137,10 +131,10 @@ const SearchBar: React.FC = () => {
                 setDates(values as [dayjs.Dayjs | null, dayjs.Dayjs | null])
               }
               bordered={false}
+              placeholder={["Check-in", "Checkout"]}
             />
           </div>
 
-          {/* Guests */}
           <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
             <UserOutlined className="text-gray-500" />
             <InputNumber
