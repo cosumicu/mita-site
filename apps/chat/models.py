@@ -11,6 +11,10 @@ class Conversation(TimeStampedUUIDModel):
     guest = models.ForeignKey(User, related_name='guest_conversations', on_delete=models.DO_NOTHING)
     landlord = models.ForeignKey(User, related_name='landlord_conversations', on_delete=models.DO_NOTHING)
 
+    @property
+    def last_message(self):
+        return self.messages.order_by('-created_at').first()
+
 class Message(TimeStampedUUIDModel):
     conversation = models.ForeignKey(Conversation, related_name='messages', on_delete=models.CASCADE)
     sender = models.ForeignKey(User, on_delete=models.DO_NOTHING)

@@ -11,9 +11,9 @@ export default function ChatLayout() {
 
   return (
     <div className="fixed left-0 right-0 top-[100px] bottom-15 sm:bottom-1 flex bg-gradient-to-br from-gray-50 to-white">
-      {/* Sidebar */}
+      {/* LEFT — Chat List */}
       <div
-        className={`absolute inset-0 transform transition-transform duration-300 md:static md:translate-x-0 md:w-1/3 bg-gradient-to-b from-gray-100 to-gray-200 shadow-inner z-10 ${
+        className={`absolute inset-0 md:static transform transition-transform duration-300 md:w-[25%] bg-gradient-to-b from-gray-100 to-gray-200 shadow-inner z-10 ${
           selectedConversation
             ? "-translate-x-full md:translate-x-0"
             : "translate-x-0"
@@ -25,9 +25,9 @@ export default function ChatLayout() {
         />
       </div>
 
-      {/* Chat window */}
+      {/* MIDDLE — Chat Window */}
       <div
-        className={`absolute inset-0 transform transition-transform duration-300 md:static md:flex-1 ${
+        className={`absolute inset-0 md:static transform transition-transform duration-300 md:flex-1 ${
           selectedConversation
             ? "translate-x-0"
             : "translate-x-full md:translate-x-0"

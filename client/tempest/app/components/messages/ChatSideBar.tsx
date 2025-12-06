@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
 import { getConversationList } from "@/app/lib/features/messages/messageSlice";
 import { useEffect } from "react";
 import { Avatar, Spin } from "antd";
+import { formatTime } from "@/app/lib/utils/format";
 
 type Props = {
   onSelectConversation: (conversation: any) => void;
@@ -60,11 +61,20 @@ export default function ChatSidebar({
             >
               <Avatar size="large" src={other.profile_picture_url} />
               <div className="flex-1 min-w-0">
-                <p className="font-semibold text-gray-800 truncate">
-                  {other.username}
-                </p>
+                <div className="flex">
+                  <p className="font-semibold text-gray-800 truncate">
+                    {other.username}
+                  </p>
+                  <div className="ml-auto">
+                    <p className="text-sm text-gray-500">
+                      {conv.last_message?.created_at &&
+                        formatTime(conv.last_message.created_at)}
+                    </p>
+                  </div>
+                </div>
+
                 <p className="text-sm text-gray-500 truncate">
-                  Reservation #{conv.reservation?.id}
+                  {conv.last_message?.text}
                 </p>
               </div>
             </div>

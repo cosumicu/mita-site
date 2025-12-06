@@ -98,6 +98,7 @@ export interface Conversation {
   reservation: Reservation;
   guest: User;
   landlord: User;
+  last_message: Message;
   created_at: string;
 }
 
