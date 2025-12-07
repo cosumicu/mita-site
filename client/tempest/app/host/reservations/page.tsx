@@ -73,7 +73,7 @@ export default function ReservationListPage() {
       dataIndex: "created_at",
       render: (value: string) => formatDate(value),
     },
-    { title: "Guests", dataIndex: "guests", align: "center" },
+    { title: "Guests", dataIndex: "guests", align: "center" as const },
     {
       title: "Confirmation Code",
       dataIndex: "confirmation_code",
@@ -108,7 +108,7 @@ export default function ReservationListPage() {
     {
       title: "",
       key: "action",
-      align: "center",
+      align: "center" as const,
       render: (_: any, record: any) => (
         <div className="flex gap-4">
           <Button

@@ -33,7 +33,7 @@ export default function ChatWindow({ conversation, onBack }: Props) {
 
     dispatch(getConversationMessages(conversationId));
 
-    const ws = new WebSocket(`ws://localhost:8001/ws/chat/${conversationId}/`);
+    const ws = new WebSocket(`ws://localhost:8080/ws/chat/${conversationId}/`);
     ws.onopen = () => console.log("WebSocket connected!");
     ws.onclose = () => console.log("WebSocket closed.");
     ws.onerror = (e) => console.error("WebSocket error:", e);

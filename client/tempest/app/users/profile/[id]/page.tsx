@@ -35,7 +35,12 @@ function UserProfilePage() {
   useEffect(() => {
     if (id) {
       dispatch(getUserProfile(id));
-      dispatch(getUserPropertyList(id));
+      dispatch(
+        getUserPropertyList({
+          userId: id,
+          pagination: { page: 1, page_size: 10 },
+        })
+      );
     }
   }, [id, dispatch]);
 

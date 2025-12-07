@@ -59,7 +59,7 @@ export interface Property {
   category: string;
   favorited: string;
   image_url: string;
-  liked: string;
+  liked: boolean;
   image: string;
   views: number;
   status: string;

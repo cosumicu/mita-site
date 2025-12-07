@@ -64,20 +64,20 @@ export const getConversationMessages = createAsyncThunk<
   }
 });
 
-export const createMessage = createAsyncThunk<
-  Message,
-  { conversationId: string; text: string },
-  { rejectValue: string }
->("message/createMessage", async ({ conversationId, text }, thunkAPI) => {
-  try {
-    return await messageService.createMessage(conversationId, text);
-  } catch (err) {
-    const error = err as AxiosError<{ message?: string }>;
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
-    );
-  }
-});
+// export const createMessage = createAsyncThunk<
+//   Message,
+//   { conversationId: string; text: string },
+//   { rejectValue: string }
+// >("message/createMessage", async ({ conversationId, text }, thunkAPI) => {
+//   try {
+//     return await messageService.createMessage(conversationId, text);
+//   } catch (err) {
+//     const error = err as AxiosError<{ message?: string }>;
+//     return thunkAPI.rejectWithValue(
+//       error.response?.data?.message || error.message
+//     );
+//   }
+// });
 
 // ────────────────────────────────
 // Slice
@@ -138,24 +138,24 @@ export const messageSlice = createSlice({
         state.messageList.message = action.payload as string;
       });
 
-    // Create Message
-    builder
-      .addCase(createMessage.pending, (state) => {
-        state.createMessage.loading = true;
-      })
-      .addCase(
-        createMessage.fulfilled,
-        (state, action: PayloadAction<Message>) => {
-          state.createMessage.loading = false;
-          state.createMessage.success = true;
-          state.createMessage.data = action.payload;
-        }
-      )
-      .addCase(createMessage.rejected, (state, action) => {
-        state.createMessage.loading = false;
-        state.createMessage.error = true;
-        state.createMessage.message = action.payload as string;
-      });
+    // // Create Message
+    // builder
+    //   .addCase(createMessage.pending, (state) => {
+    //     state.createMessage.loading = true;
+    //   })
+    //   .addCase(
+    //     createMessage.fulfilled,
+    //     (state, action: PayloadAction<Message>) => {
+    //       state.createMessage.loading = false;
+    //       state.createMessage.success = true;
+    //       state.createMessage.data = action.payload;
+    //     }
+    //   )
+    //   .addCase(createMessage.rejected, (state, action) => {
+    //     state.createMessage.loading = false;
+    //     state.createMessage.error = true;
+    //     state.createMessage.message = action.payload as string;
+    //   });
   },
 });
 

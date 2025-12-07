@@ -75,7 +75,7 @@ export default function MyPropertiesPage() {
     {
       title: "Guests",
       dataIndex: "guests",
-      align: "center",
+      align: "center" as const,
     },
     {
       title: "Price / Night",
@@ -118,7 +118,7 @@ export default function MyPropertiesPage() {
     {
       title: "Instant Book",
       dataIndex: "instant_booking",
-      align: "center",
+      align: "center" as const,
       // TODO: Add instant booking feature
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>
@@ -129,7 +129,7 @@ export default function MyPropertiesPage() {
     {
       title: "",
       key: "action",
-      align: "center",
+      align: "center" as const,
       render: (_: any, record: any) => (
         <div className="flex gap-4">
           <Button

@@ -10,10 +10,11 @@ import {
 } from "@/app/lib/features/properties/propertySlice";
 import { toast } from "react-toastify";
 import useApp from "antd/es/app/useApp";
+import { Property } from "@/app/lib/definitions";
 
 type PropertyListProps = {
   label: string;
-  properties: any;
+  properties: Property[];
   loading: boolean;
 };
 
