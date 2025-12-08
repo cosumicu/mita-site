@@ -1,5 +1,6 @@
 from rest_framework import generics, permissions, status
-from django.db.models import Q
+from django.db.models import Max, Q, F, Value
+from django.db.models.functions import Coalesce
 from django.shortcuts import get_object_or_404
 from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
@@ -10,7 +11,16 @@ class ConversationListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Conversation.objects.filter(Q(guest=user) | Q(landlord=user)).order_by('-created_at')
+        
+        conversations = Conversation.objects.filter(
+            Q(guest=user) | Q(landlord=user)
+        ).annotate(
+            latest_message_time=Max('messages__created_at'),
+            # Use conversation created_at if no messages exist
+            sort_time=Coalesce('latest_message_time', 'created_at')
+        ).order_by('-sort_time')
+        
+        return conversations
 
 class MessageListCreateView(generics.ListCreateAPIView):
     serializer_class = MessageSerializer

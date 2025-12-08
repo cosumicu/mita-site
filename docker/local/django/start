@@ -7,5 +7,5 @@ set -o nounset
 python manage.py makemigrations
 python manage.py migrate
 python manage.py migrate django_celery_beat
-# python manage.py runserver 0.0.0.0:8000
-gunicorn booking_site.wsgi:application --bind 0.0.0.0:8000
+python manage.py runserver 0.0.0.0:8000
+# gunicorn booking_site.wsgi:application --bind 0.0.0.0:8000

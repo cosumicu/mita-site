@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
-import { getConversationMessages } from "@/app/lib/features/messages/messageSlice";
+import {
+  getConversationList,
+  getConversationMessages,
+  resetMessageList,
+} from "@/app/lib/features/messages/messageSlice";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { Avatar, Button } from "antd";
 import ChatReservationDetailsDrawer from "./ChatReservationDetailsDrawer";
@@ -15,9 +19,11 @@ type Props = {
 export default function ChatWindow({ conversation, onBack }: Props) {
   const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
-  const { data: messageList, loading: messageListLoading } = useAppSelector(
-    (state) => state.message.messageList
-  );
+  const {
+    data: messageList,
+    loading: messageListLoading,
+    success: messageListSuccess,
+  } = useAppSelector((state) => state.message.messageList);
   const [
     isChatReservationDetailsDrawerOpen,
     setIsChatReservationDetailsDrawerOpen,
@@ -45,8 +51,8 @@ export default function ChatWindow({ conversation, onBack }: Props) {
     // ======================================================
     ws.onmessage = (event) => {
       // const { type, ...message } = JSON.parse(event.data);
-      // dispatch(addMessage(message)); // appends the message into the [conversationMessages]
       dispatch(getConversationMessages(conversationId));
+      dispatch(getConversationList());
     };
     // ======================================================
 
@@ -70,6 +76,8 @@ export default function ChatWindow({ conversation, onBack }: Props) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messageList]);
+
+  if (!conversation) return null;
 
   return (
     <div className="flex w-full h-full">
@@ -162,7 +170,7 @@ export default function ChatWindow({ conversation, onBack }: Props) {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messageListLoading && <p>Loading messages...</p>}
+          {/* {messageListLoading && <p>Loading messages...</p>} */}
           {messageList.map((msg) => {
             const isMe = msg.sender.id === user?.id;
             return (

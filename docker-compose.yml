@@ -10,10 +10,7 @@ services:
       - media_volume:/app/media
     env_file:
       - .env
-    ports:
-      - 8000:8000
-    expose:
-      - 8000
+    restart: always
     depends_on:
       - db
       - redis
@@ -94,10 +91,6 @@ services:
       - .:/app
     env_file:
       - .env
-    ports:
-      - 8001:8001
-    expose:
-      - 8001
     depends_on:
       - db
       - redis
@@ -116,6 +109,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:80"
+      - "443:443"
     networks:
       - booking-site
 

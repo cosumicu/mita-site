@@ -34,10 +34,9 @@ export default function Loading() {
   const authLoading = useAppSelector((state) => state.auth.isLoading);
   const userLoading = useAppSelector((state) => state.user.isLoading);
   const propertyLoading = useAppSelector(selectPropertyLoading);
-  const messageLoading = useAppSelector(selectMessageLoading);
+  // const messageLoading = useAppSelector(selectMessageLoading);
 
-  const isLoading =
-    authLoading || userLoading || propertyLoading || messageLoading;
+  const isLoading = authLoading || userLoading || propertyLoading;
 
   useEffect(() => {
     if (isLoading) NProgress.start();
