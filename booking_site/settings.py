@@ -168,7 +168,7 @@ TIME_ZONE = "Asia/Manila"
 
 SITE_ID = 1
 
-WEBSITE_URL = 'http://152.42.195.164:8080'
+WEBSITE_URL = 'http://152.42.195.164'
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
@@ -213,15 +213,15 @@ DJOSER = {
 # ==============================#
 
 CORS_ALLOWED_ORIGINS = [
-    'http://152.42.195.164:8080',
+    'http://152.42.195.164',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://152.42.195.164:8080',
+    'http://152.42.195.164',
 ]
 
 CORS_ORIGINS_WHITELIST = [
-    'http://152.42.195.164:8080',
+    'http://152.42.195.164',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
