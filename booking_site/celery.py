@@ -5,7 +5,7 @@ from celery import Celery
 from django.conf import settings
 from celery.schedules import crontab
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "booking_site.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "booking_site.settings.development")
 
 app = Celery("booking_site")
 

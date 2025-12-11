@@ -1,41 +1,21 @@
-import os
 from pathlib import Path
+import environ
 from datetime import timedelta
 import logging
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env(DEBUG=(bool, False))
 
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = env("SECRET_KEY")
 
 #django-insecure-hh2(ofx#8vf&0)(0)0p1#oxcoz#3!34-qpb-#xy1a&l$pt#)8c
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get("DEBUG", default = 0))
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+DEBUG = env("DEBUG")
 
-# This is for live chat feature
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [{"host": "redis", "port": 6379}], # Service name from docker compose
-                                            # Add 1 to prevent celery and channels
-                                            # from using the same redis db index
-            'capacity': 10000,
-            'expiry': 60,
-        }
-    }
-}
-
-# Application definition
+ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(" ")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -98,26 +78,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'booking_site.wsgi.application'
-# this for live chat
+
 ASGI_APPLICATION = 'booking_site.asgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': os.environ.get("SQL_ENGINE"),
-        'NAME': os.environ.get("SQL_DATABASE"),
-        'USER': os.environ.get("SQL_USER"),
-        'PASSWORD': os.environ.get("SQL_PASSWORD"),
-        'HOST': os.environ.get("SQL_HOST"),
-        'PORT': os.environ.get("SQL_PORT"),
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -134,21 +96,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Manila'
 
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "static"
@@ -156,19 +110,13 @@ STATIC_ROOT = BASE_DIR / "static"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
 
-TIME_ZONE = "Asia/Manila"
-
 SITE_ID = 1
 
-WEBSITE_URL = 'http://152.42.195.164'
+WEBSITE_URL = env("WEBSITE_URL")
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
@@ -208,62 +156,3 @@ DJOSER = {
         "user_delete": "djoser.serializers.UserDeleteSerializer",
     },
 }
-
-# If you dont serve both client and backend in single port
-# ==============================#
-
-CORS_ALLOWED_ORIGINS = [
-    'http://152.42.195.164',
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    'http://152.42.195.164',
-]
-
-CORS_ORIGINS_WHITELIST = [
-    'http://152.42.195.164',
-]
-
-CORS_ALLOW_CREDENTIALS = True
-
-# ==============================#
-
-logger = logging.getLogger(__name__)
-
-LOG_LEVEL = "INFO"
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)-8s %(name)s %(message)s"
-)
-
-"""
-So basically, what s happening here is that I used celery email backends to handle emails
-asynchronously. And to implement sendgrid service, you need to set CELERY_EMAIL_BACKEND
-so that celery would know what email service you would use. Also, setting up the email service
-you would use depends on the service itsself.
-"""
-
-SITE_NAME = "Mita Site"
-DOMAIN="localhost:3000"
-
-EMAIL_BACKEND = 'djcelery_email.backends.CeleryEmailBackend'
-EMAIL_USE_TLS = True
-
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
-
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER")
-CELERY_RESULT_BACKEND = os.environ.get("CELERY_BACKEND")
-CELERY_EMAIL_BACKEND = os.environ.get("CELERY_EMAIL_BACKEND")
-
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_RESULT_SERIALIZER = "json"
-CELERY_TIMEZONE = "Asia/Manila"
-
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
-
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
