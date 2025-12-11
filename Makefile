@@ -1,8 +1,8 @@
 build-dev:
-	docker compose up --build -d --remove-orphans
+	docker compose -f docker-compose.dev.yml up --build -d --remove-orphans
 
 down-dev:
-	docker compose down
+	docker compose -f docker-compose.dev.yml down
 
 build-prod:
 	docker compose -f docker-compose.prod.yml up --build -d --remove-orphans
