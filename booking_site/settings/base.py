@@ -106,17 +106,18 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS =[]
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.User' # no need to have apps here since we already define apps.user in installed apps
 
 SITE_ID = 1
 
-WEBSITE_URL = env("WEBSITE_URL")
+WEBSITE_URL = env("WEBSITE_URL") # Use this for fields that contains links
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),

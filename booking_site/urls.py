@@ -32,9 +32,6 @@ urlpatterns = [
     path('api/v1/ratings/', include('apps.ratings.urls')),
     path('api/v1/chat/', include('apps.chat.urls')),
 ]
-# if settings.DEBUG:
-#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 admin.site.site_header = "Mita Site"
 admin.site.site_title = "Mita Admin Portal"

@@ -27,19 +27,15 @@ CHANNEL_LAYERS = {
 
 CORS_ALLOW_CREDENTIALS = True
 
+# Allow your frontend
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:8080',
     'http://localhost:3000',
+    'http://localhost:8080',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:8080',
     'http://localhost:3000',
-]
-
-CORS_ORIGINS_WHITELIST = [
     'http://localhost:8080',
-    'http://localhost:3000',
 ]
 
 """
@@ -70,4 +66,4 @@ SENDGRID_API_KEY = env('SENDGRID_API_KEY')
 EMAIL_HOST = env('EMAIL_HOST')
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
-EMAIL_PORT = int(env("EMAIL_PORT", 587))
+EMAIL_PORT = env("EMAIL_PORT", default=587, cast=int)
