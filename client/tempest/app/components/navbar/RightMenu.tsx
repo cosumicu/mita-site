@@ -124,8 +124,8 @@ function RightMenu() {
   const [openMain, setOpenMain] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
-  const [isCreatePropertyModalOpen, setIsCreatePropertyModalOpen] =
-    useState(false);
+  // const [isCreatePropertyModalOpen, setIsCreatePropertyModalOpen] =
+  //   useState(false);
 
   const showMain = () => {
     setOpenMain(true);
@@ -232,7 +232,7 @@ function RightMenu() {
           {" "}
           <Button
             type="primary"
-            onClick={() => setIsCreatePropertyModalOpen(true)}
+            onClick={() => router.push("/host/create-listing")}
             className="px-6 py-2 !rounded-full tracking-wide"
           >
             <div className="hidden sm:inline-block">Become a host</div>
@@ -309,7 +309,7 @@ function RightMenu() {
           )}
         </Drawer>
       </Drawer>
-      <Modal
+      {/* <Modal
         title={
           <div style={{ textAlign: "center", width: "100%" }}>
             Create Listing
@@ -327,7 +327,7 @@ function RightMenu() {
         <CreatePropertyModal
           onSuccess={() => setIsCreatePropertyModalOpen(false)}
         />
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

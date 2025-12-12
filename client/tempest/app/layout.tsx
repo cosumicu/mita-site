@@ -44,10 +44,8 @@ export default function RootLayout({
               <Loading />
               <InitUser />
               <Navbar />
-              <div className="pt-25">{children}</div>
-              <div className="sm:hidden">
-                <NavbarMobile />
-              </div>
+              <div>{children}</div>
+              <div className="sm:hidden">{/* <NavbarMobile /> */}</div>
             </AntdRegistry>
           </StoreProvider>
           <ToastContainer

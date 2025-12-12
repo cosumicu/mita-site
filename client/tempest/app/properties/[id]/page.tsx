@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   deleteProperty,
@@ -16,6 +17,7 @@ import DeletePropertyConfirmationModal from "@/app/components/modals/DeletePrope
 function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const [isUpdatePropertyModalOpen, setIsUpdatePropertyModalOpen] =
     useState(false);
@@ -50,14 +52,14 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
   return (
     <div className="max-w-[1100px] mx-auto">
       <div className="flex items-center">
-        <p className="text-2xl my-4">{property.title}</p>
+        <p className="text-2xl my-4 px-2">{property.title}</p>
         {property.user.id === user?.id && (
-          <div className="flex gap-1 ml-auto">
+          <div className="flex gap-1 ml-auto px-2">
             <Button
               color="primary"
               variant="outlined"
               size="small"
-              onClick={() => setIsUpdatePropertyModalOpen(true)}
+              onClick={() => router.push(`/host/update-listing/${property.id}`)}
             >
               <p className="text-xs">Edit</p>
             </Button>
@@ -76,7 +78,7 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
       </div>
 
       {/* Image section */}
-      <div className="w-full h-[450px] rounded-xl flex justify-center items-center">
+      <div className="w-full h-[250px] sm:h-[450px] rounded-xl flex justify-center items-center">
         <img
           src={property.image_url}
           alt={property.title}

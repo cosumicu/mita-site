@@ -19,6 +19,9 @@ import {
   resetUpdateProperty,
 } from "@/app/lib/features/properties/propertySlice";
 import { toast } from "react-toastify";
+import { div } from "framer-motion/client";
+import Navbar from "../navbar/Navbar";
+import LeftImage from "../navbar/LeftImage";
 
 const { TextArea } = Input;
 
@@ -30,19 +33,19 @@ type PropertyFormProps = {
 
 const steps = [
   {
-    title: "Category",
+    title: "",
   },
   {
-    title: "Describe your place",
+    title: "",
   },
   {
-    title: "Details",
+    title: "",
   },
   {
-    title: "Location",
+    title: "",
   },
   {
-    title: "Image",
+    title: "",
   },
 ];
 
@@ -169,181 +172,181 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
   };
 
   return (
-    <Form form={form} layout="vertical" onFinish={onFinish}>
-      <Steps current={current} items={items} />
-      <div>
-        <div style={{ display: current === 0 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
-            <Form.Item
-              name="category"
-              preserve={true}
-              label={
-                <span className="text-lg font-bold my-4">
-                  Which of these best describes your place?
-                </span>
-              }
-              rules={[{ required: true }]}
-              required={false}
-            >
-              <Radio.Group size="large">
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)", // 3 columns
-                    gap: 8, // gap between buttons
-                  }}
+    <>
+      <nav className="w-full h-25 fixed top-0 left-0 z-10 bg-secondary">
+        <div className="flex gap-2 justify-between mx-2 sm:mx-4 md:mx-6 lg:mx-8 items-center h-full">
+          <LeftImage />
+        </div>
+      </nav>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <div className="pb-24">
+          <div style={{ display: current === 0 ? "block" : "none" }}>
+            <p className="text-2xl font-bold">
+              Which of these best describes your place?
+            </p>
+            <div className="flex justify-center items-center py-10">
+              <Form.Item
+                name="category"
+                preserve={true}
+                rules={[{ required: true }]}
+                required={false}
+              >
+                <Radio.Group size="large">
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(3, 1fr)", // 3 columns
+                      gap: 8, // gap between buttons
+                    }}
+                  >
+                    <Radio.Button value="House">House</Radio.Button>
+                    <Radio.Button value="Apartment">Apartment</Radio.Button>
+                    <Radio.Button value="Bed & Breakfast">
+                      Bed & Breakfast
+                    </Radio.Button>
+                    <Radio.Button value="Cabin">Cabin</Radio.Button>
+                    <Radio.Button value="Tent">Tent</Radio.Button>
+                    <Radio.Button value="Hotel">Hotel</Radio.Button>
+                    <Radio.Button value="Treehouse">Tree House</Radio.Button>
+                    <Radio.Button value="Barn">Barn</Radio.Button>
+                    <Radio.Button value="Container">Container</Radio.Button>
+                  </div>
+                </Radio.Group>
+              </Form.Item>
+            </div>
+          </div>
+          <div style={{ display: current === 1 ? "block" : "none" }}>
+            <p className="text-2xl font-bold">Tell us more about your place</p>
+            <div className="flex justify-center items-center">
+              <div className="flex flex-col w-[90%] py-10">
+                {" "}
+                <Form.Item
+                  name="title"
+                  label="Title"
+                  rules={[{ required: true, message: "Title is required" }]}
+                  required={false}
                 >
-                  <Radio.Button value="House">House</Radio.Button>
-                  <Radio.Button value="Apartment">Apartment</Radio.Button>
-                  <Radio.Button value="Bed & Breakfast">
-                    Bed & Breakfast
-                  </Radio.Button>
-                  <Radio.Button value="Cabin">Cabin</Radio.Button>
-                  <Radio.Button value="Tent">Tent</Radio.Button>
-                  <Radio.Button value="Hotel">Hotel</Radio.Button>
-                  <Radio.Button value="Treehouse">Tree House</Radio.Button>
-                  <Radio.Button value="Barn">Barn</Radio.Button>
-                  <Radio.Button value="Container">Container</Radio.Button>
-                </div>
-              </Radio.Group>
-            </Form.Item>
-          </div>
-        </div>
-        <div style={{ display: current === 1 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
-            <div className="flex flex-col w-[400px]">
-              <span className="text-lg font-bold my-4">
-                Describe your place
-              </span>
-              <Form.Item
-                name="title"
-                label="Title"
-                rules={[{ required: true, message: "Title is required" }]}
-                required={false}
-              >
-                <Input />
-              </Form.Item>
-
-              <Form.Item
-                name="description"
-                label="Description"
-                rules={[{ required: true, message: "Description is required" }]}
-                required={false}
-              >
-                <TextArea rows={8} style={{ resize: "none" }} />
-              </Form.Item>
+                  <Input />
+                </Form.Item>
+                <Form.Item
+                  name="description"
+                  label="Description"
+                  rules={[
+                    { required: true, message: "Description is required" },
+                  ]}
+                  required={false}
+                >
+                  <TextArea rows={10} style={{ resize: "none" }} />
+                </Form.Item>
+              </div>
             </div>
           </div>
-        </div>
-        <div style={{ display: current === 2 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
-            <div className="w-[400px]">
-              <span className="text-lg font-bold my-4">
-                Which of these best describes your place?
-              </span>
-              <div className="flex items-center">
-                <label>Guests</label>
-                <div className="ml-auto my-4">
-                  <Form.Item
-                    name="guests"
-                    initialValue={1}
-                    rules={[{ required: true, message: "Guests required" }]}
-                    required={false}
-                    noStyle
-                  >
-                    <InputNumber min={1} max={99} step={1} />
-                  </Form.Item>
+          <div style={{ display: current === 2 ? "block" : "none" }}>
+            <p className="text-2xl font-bold">
+              Share some basics about your place
+            </p>
+            <div className="flex justify-center items-center">
+              <div className="w-[75%] py-10">
+                <div className="flex items-center">
+                  <label>Guests</label>
+                  <div className="ml-auto my-4">
+                    <Form.Item
+                      name="guests"
+                      initialValue={1}
+                      rules={[{ required: true, message: "Guests required" }]}
+                      required={false}
+                      noStyle
+                    >
+                      <InputNumber min={1} max={99} step={1} />
+                    </Form.Item>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center">
-                <label>Bedrooms</label>
-                <div className="ml-auto my-4">
-                  <Form.Item
-                    name="bedrooms"
-                    initialValue={0}
-                    rules={[{ required: true, message: "Guests required" }]}
-                    required={false}
-                    noStyle
-                  >
-                    <InputNumber min={0} max={99} step={1} />
-                  </Form.Item>
+                <div className="flex items-center">
+                  <label>Bedrooms</label>
+                  <div className="ml-auto my-4">
+                    <Form.Item
+                      name="bedrooms"
+                      initialValue={0}
+                      rules={[{ required: true, message: "Guests required" }]}
+                      required={false}
+                      noStyle
+                    >
+                      <InputNumber min={0} max={99} step={1} />
+                    </Form.Item>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center">
-                <label>Beds</label>
-                <div className="ml-auto my-4">
-                  <Form.Item
-                    name="beds"
-                    initialValue={1}
-                    rules={[{ required: true, message: "Guests required" }]}
-                    required={false}
-                    noStyle
-                  >
-                    <InputNumber min={1} max={99} step={1} />
-                  </Form.Item>
+                <div className="flex items-center">
+                  <label>Beds</label>
+                  <div className="ml-auto my-4">
+                    <Form.Item
+                      name="beds"
+                      initialValue={1}
+                      rules={[{ required: true, message: "Guests required" }]}
+                      required={false}
+                      noStyle
+                    >
+                      <InputNumber min={1} max={99} step={1} />
+                    </Form.Item>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center">
-                <label>Bathrooms</label>
-                <div className="ml-auto my-4">
-                  <Form.Item
-                    name="bathrooms"
-                    initialValue={1}
-                    rules={[{ required: true, message: "Guests required" }]}
-                    required={false}
-                    noStyle
-                  >
-                    <InputNumber min={1} max={99} step={1} />
-                  </Form.Item>
+                <div className="flex items-center">
+                  <label>Bathrooms</label>
+                  <div className="ml-auto my-4">
+                    <Form.Item
+                      name="bathrooms"
+                      initialValue={1}
+                      rules={[{ required: true, message: "Guests required" }]}
+                      required={false}
+                      noStyle
+                    >
+                      <InputNumber min={1} max={99} step={1} />
+                    </Form.Item>
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center">
-                <label>Price per night</label>
-                <div className="ml-auto my-4">
-                  <Form.Item
-                    name="price_per_night"
-                    initialValue={0}
-                    rules={[{ required: true, message: "required!" }]}
-                    required={true}
-                    noStyle
-                  >
-                    <InputNumber
-                      min={0}
-                      step={1}
-                      prefix="₱"
-                      style={{ width: 150 }}
-                    />
-                  </Form.Item>
+                <div className="flex items-center">
+                  <label>Price per night</label>
+                  <div className="ml-auto my-4">
+                    <Form.Item
+                      name="price_per_night"
+                      initialValue={0}
+                      rules={[{ required: true, message: "required!" }]}
+                      required={true}
+                      noStyle
+                    >
+                      <InputNumber
+                        min={0}
+                        step={1}
+                        prefix="₱"
+                        style={{ width: 150 }}
+                      />
+                    </Form.Item>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div style={{ display: current === 3 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
-            <div className="flex flex-col w-[400px]">
-              <span className="text-lg font-bold my-4">
-                Where's your place located?
-              </span>
-              <Form.Item
-                name="location"
-                rules={[{ required: true, message: "Location is required" }]}
-                required={false}
-              >
-                <Input></Input>
-              </Form.Item>
+          <div style={{ display: current === 3 ? "block" : "none" }}>
+            <p className="text-2xl font-bold">Where's your place located?</p>
+            <div className="flex justify-center items-center">
+              <div className="flex flex-col w-[90%] py-10">
+                <Form.Item
+                  name="location"
+                  label="Location"
+                  rules={[{ required: true, message: "Location is required" }]}
+                  required={false}
+                >
+                  <Input></Input>
+                </Form.Item>
+              </div>
             </div>
           </div>
-        </div>
-        <div style={{ display: current === 4 ? "block" : "none" }}>
-          <div className="flex justify-center items-center sm:h-[200px] md:h-[450px]">
-            <div className="flex flex-col w-[400px]">
-              <span className="text-lg font-bold my-4">Add images</span>
-
+          <div style={{ display: current === 4 ? "block" : "none" }}>
+            <p className="text-2xl font-bold">Attach an image</p>
+            <div className="flex justify-center items-center h-[250px]">
               <Form.Item
                 name="image"
                 valuePropName="fileList"
@@ -361,21 +364,42 @@ function PropertyForm({ mode, initialValues, onSuccess }: PropertyFormProps) {
             </div>
           </div>
         </div>
-      </div>
-      <div className="flex items-center justify-center gap-4">
-        {current > 0 && <Button onClick={() => prev()}>Previous</Button>}
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Next
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button type="primary" htmlType="submit">
-            Done
-          </Button>
-        )}
-      </div>
-    </Form>
+        <div className="w-full fixed bottom-0 left-0 z-50">
+          <div className="hidden sm:block bg-transparent">
+            <Steps
+              progressDot
+              current={current}
+              items={items}
+              responsive={false}
+            />
+          </div>
+          <div className="bg-secondary py-4">
+            <div className="w-full flex justify-around items-center">
+              <div>
+                {current > 0 && (
+                  <Button size="large" onClick={() => prev()}>
+                    Previous
+                  </Button>
+                )}
+              </div>
+
+              <div>
+                {current < steps.length - 1 && (
+                  <Button type="primary" size="large" onClick={() => next()}>
+                    Next
+                  </Button>
+                )}
+                {current === steps.length - 1 && (
+                  <Button type="primary" size="large" htmlType="submit">
+                    Done
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Form>
+    </>
   );
 }
 
