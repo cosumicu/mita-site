@@ -233,9 +233,9 @@ function RightMenu() {
           <Button
             type="primary"
             onClick={() => router.push("/host/create-listing")}
-            className="px-6 py-2 !rounded-full tracking-wide"
+            className="!hidden sm:!block px-6 py-2 !rounded-full tracking-wide"
           >
-            <div className="hidden sm:inline-block">Become a host</div>
+            <div>Become a host</div>
           </Button>
           <Link href={`/users/profile/${user.id}`}>
             <Avatar
@@ -248,11 +248,7 @@ function RightMenu() {
       ) : (
         <></>
       )}
-      <div
-        className="hidden sm:inline-block outline-none"
-        onClick={showMain}
-        tabIndex={-1}
-      >
+      <div className="outline-none" onClick={showMain} tabIndex={-1}>
         {" "}
         {/* style={{ outline: "none" }} tabIndex={-1} solves the issue of border showing when drawer is opened */}
         <MenuOutlined />

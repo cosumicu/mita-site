@@ -45,7 +45,7 @@ const SearchBar: React.FC = () => {
     <>
       {/* LARGE SCREENS */}
       <div className="hidden sm:flex justify-center items-center bg-white rounded-full shadow-md px-3 py-2 w-[90%] sm:w-auto md:w-[700px] lg:w-[800px] transition-all duration-200 divide-x divide-gray-200 hover:shadow-lg">
-        <div className="flex items-center w-4/12 px-3 gap-2">
+        <div className="flex items-center w-3/12 px-3 gap-2">
           <EnvironmentOutlined className="text-gray-500 text-lg" />
           <Input
             placeholder="Where are you going?"
@@ -55,7 +55,7 @@ const SearchBar: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center w-4/12 px-3 gap-2">
+        <div className="flex items-center w-5/12 px-3 gap-2">
           <CalendarOutlined className="text-gray-500 text-lg" />
           <RangePicker
             suffixIcon=""
@@ -90,17 +90,16 @@ const SearchBar: React.FC = () => {
         </Button>
       </div>
 
-      {/* SMALL SCREENS */}
-      <div className="flex sm:hidden justify-center w-full mt-2">
+      <div className="sm:hidden w-full">
         <Button
-          type="primary"
+          block
           shape="round"
           icon={<SearchOutlined />}
           size="large"
           onClick={() => setIsModalOpen(true)}
           className="shadow-md bg-rose-500 hover:bg-rose-600 border-none"
         >
-          Search
+          <span className="text-gray-500">Search</span>
         </Button>
       </div>
 
@@ -116,7 +115,7 @@ const SearchBar: React.FC = () => {
           <div className="flex items-center gap-2 bg-gray-50 rounded-xl px-3 py-2">
             <EnvironmentOutlined className="text-gray-500" />
             <Input
-              placeholder="Where are you going?"
+              placeholder="Location"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
               bordered={false}
