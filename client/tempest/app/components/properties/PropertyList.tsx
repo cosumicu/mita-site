@@ -4,12 +4,7 @@ import Link from "next/link";
 import { Card, Button, Skeleton } from "antd";
 import { formatCurrency } from "@/app/lib/utils/format";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
-import {
-  getPropertyList,
-  toggleFavorite,
-} from "@/app/lib/features/properties/propertySlice";
-import { toast } from "react-toastify";
-import useApp from "antd/es/app/useApp";
+import { toggleFavorite } from "@/app/lib/features/properties/propertySlice";
 import { Property } from "@/app/lib/definitions";
 
 type PropertyListProps = {
@@ -25,33 +20,19 @@ const PropertyList = ({ label, properties, loading }: PropertyListProps) => {
     (state) => state.property.propertyList
   );
 
-  // State to track if horizontal scroll is possible
   const [isScrollable, setIsScrollable] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Check if the list is scrollable
   useEffect(() => {
-    if (scrollRef.current) {
+    if (scrollRef.current && properties.length > 4) {
       const { scrollWidth, clientWidth } = scrollRef.current;
       setIsScrollable(scrollWidth > clientWidth);
+    } else {
+      setIsScrollable(false);
     }
   }, [properties]);
 
-  // Update scrollability on window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (scrollRef.current) {
-        setIsScrollable(
-          scrollRef.current.scrollWidth > scrollRef.current.clientWidth
-        );
-      }
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Scroll left or right
   const scroll = (direction: "left" | "right") => {
     if (scrollRef.current) {
       const card = scrollRef.current.querySelector<HTMLDivElement>(".ant-card");
@@ -75,22 +56,20 @@ const PropertyList = ({ label, properties, loading }: PropertyListProps) => {
 
   return (
     <div className="my-2">
-      {/* Header with label and arrows */}
       <div className="flex justify-between items-center">
         <h2 className="font-bold">{label}</h2>
         {isScrollable && (
           <div className="hidden sm:flex gap-1">
             <Button shape="circle" size="small" onClick={() => scroll("left")}>
-              &lt;
+              ‹
             </Button>
             <Button shape="circle" size="small" onClick={() => scroll("right")}>
-              &gt;
+              ›
             </Button>
           </div>
         )}
       </div>
 
-      {/* Scrollable property list */}
       <div
         ref={scrollRef}
         className="flex gap-4 overflow-x-auto mt-2 p-2 scroll-smooth snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none]"

@@ -46,7 +46,7 @@ const SearchBar: React.FC = () => {
       {/* LARGE SCREENS */}
       <div className="hidden sm:flex justify-center items-center bg-white rounded-full shadow-md px-3 py-2 w-[90%] sm:w-auto md:w-[700px] lg:w-[800px] transition-all duration-200 divide-x divide-gray-200 hover:shadow-lg">
         <div className="flex items-center w-3/12 px-3 gap-2">
-          <EnvironmentOutlined className="text-gray-500 text-lg" />
+          <EnvironmentOutlined />
           <Input
             placeholder="Where are you going?"
             value={location}
@@ -56,7 +56,7 @@ const SearchBar: React.FC = () => {
         </div>
 
         <div className="flex items-center w-5/12 px-3 gap-2">
-          <CalendarOutlined className="text-gray-500 text-lg" />
+          <CalendarOutlined />
           <RangePicker
             suffixIcon=""
             className="!border-none !shadow-none w-full [&>.ant-picker-suffix]:hidden"
@@ -69,7 +69,7 @@ const SearchBar: React.FC = () => {
         </div>
 
         <div className="flex items-center w-2/10 px-3 gap-2">
-          <UserOutlined className="text-gray-500 text-lg" />
+          <UserOutlined />
           <InputNumber
             min={1}
             value={guests}
@@ -92,6 +92,8 @@ const SearchBar: React.FC = () => {
 
       <div className="sm:hidden w-full">
         <Button
+          color="primary"
+          variant="outlined"
           block
           shape="round"
           icon={<SearchOutlined />}

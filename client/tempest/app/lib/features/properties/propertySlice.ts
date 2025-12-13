@@ -863,19 +863,21 @@ export const propertySlice = createSlice({
       .addCase(toggleFavorite.fulfilled, (state, action) => {
         const { propertyId } = action.payload;
 
-        const property = state.propertyList.data.find(
-          (p) => p.id === propertyId
-        );
-        if (property) property.liked = !property.liked;
+        const toggleInList = (list?: { data: any[] }) => {
+          const p = list?.data.find((x) => x.id === propertyId);
+          if (p) p.liked = !p.liked;
+        };
 
-        const userProperty = state.userPropertyList.data.find(
-          (p) => p.id === propertyId
-        );
-        if (userProperty) userProperty.liked = !userProperty.liked;
+        toggleInList(state.propertyList);
+        toggleInList(state.propertyList1);
+        toggleInList(state.propertyList2);
+        toggleInList(state.propertyList3);
+        toggleInList(state.userPropertyList);
 
         if (state.propertyDetail.data?.id === propertyId) {
           state.propertyDetail.data.liked = !state.propertyDetail.data.liked;
         }
+        state.propertyList.success = true;
       })
       .addCase(toggleFavorite.rejected, (state, action) => {
         state.propertyList.error = true;
