@@ -9,6 +9,7 @@ import Navbar from "./components/navbar/Navbar";
 import { InitUser } from "./users/InitUser";
 import Loading from "./components/common/Loading";
 import { ConfigProvider } from "antd";
+import Footer from "./components/footer/Footer";
 import NavbarMobile from "./components/navbar/NavbarMobile";
 
 const inter = Inter({
@@ -46,6 +47,7 @@ export default function RootLayout({
               <Navbar />
               <div>{children}</div>
               <div className="sm:hidden">{/* <NavbarMobile /> */}</div>
+              <Footer />
             </AntdRegistry>
           </StoreProvider>
           <ToastContainer
