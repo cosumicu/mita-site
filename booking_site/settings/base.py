@@ -30,6 +30,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+
+    'silk',
     
     'django_filters',
 
@@ -44,7 +46,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.profiles',
     'apps.properties',
-    'apps.ratings',
+    'apps.reviews',
     'apps.inquiries',
     'apps.chat',
     'apps.recommendations',
@@ -54,6 +56,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'silk.middleware.SilkyMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
