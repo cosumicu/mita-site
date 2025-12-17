@@ -21,7 +21,8 @@ class ConversationSerializer(serializers.ModelSerializer):
         ]
 
     def get_last_message(self, obj):
-        last_msg = obj.messages.order_by('-created_at').first()
+        # obj.messages.all() is already prefetched
+        last_msg = max(obj.messages.all(), key=lambda m: m.created_at, default=None)
         if last_msg:
             return MessageSerializer(last_msg).data
         return None
