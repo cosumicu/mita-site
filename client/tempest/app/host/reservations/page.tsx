@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { formatCurrency, formatDate } from "@/app/lib/utils/format";
 import { getHostReservationList } from "@/app/lib/features/properties/propertySlice";
-import { Table, Spin, Image, Tag, Button, Drawer } from "antd";
+import { Table, Spin, Image, Tag, Button, Drawer, Avatar } from "antd";
 import { useRouter } from "next/navigation";
 import ReservationDetailsDrawer from "@/app/components/drawer/ReservationDetailsDrawer";
+import Link from "next/link";
 
 export default function ReservationListPage() {
   const dispatch = useAppDispatch();
@@ -44,7 +45,7 @@ export default function ReservationListPage() {
       dataIndex: "property",
       render: (_: any, record: any) => (
         <div
-          className="flex items-center gap-3 cursor-pointer w-[300px]"
+          className="bg-red-100 flex items-center gap-3 cursor-pointer max-w-[300px]"
           onClick={() => router.push(`/properties/${record.property.id}`)}
         >
           <div>
@@ -70,6 +71,22 @@ export default function ReservationListPage() {
       ),
     },
     {
+      title: "Guest",
+      dataIndex: "user",
+      render: (_: any, record: any) => (
+        <Link href={`/users/profile/${record.user.id}`}>
+          <div className="bg-red-100 flex items-center gap-3 cursor-pointer max-w-[150px]">
+            <Avatar
+              size="large"
+              src={record.user.profile_picture_url}
+              className="shrink-0"
+            />
+            <span className="truncate">{record.user.username}</span>
+          </div>
+        </Link>
+      ),
+    },
+    {
       title: "Check-in",
       dataIndex: "start_date",
       render: (value: string) => formatDate(value),
@@ -79,14 +96,14 @@ export default function ReservationListPage() {
       dataIndex: "end_date",
       render: (value: string) => formatDate(value),
     },
+    // {
+    //   title: "Booked",
+    //   dataIndex: "created_at",
+    //   render: (value: string) => formatDate(value),
+    // },
+    // { title: "Guests", dataIndex: "guests", align: "center" as const },
     {
-      title: "Booked",
-      dataIndex: "created_at",
-      render: (value: string) => formatDate(value),
-    },
-    { title: "Guests", dataIndex: "guests", align: "center" as const },
-    {
-      title: "Confirmation Code",
+      title: "Ref. Code",
       dataIndex: "confirmation_code",
     },
     // {
