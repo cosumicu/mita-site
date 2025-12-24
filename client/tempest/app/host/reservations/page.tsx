@@ -45,7 +45,7 @@ export default function ReservationListPage() {
       dataIndex: "property",
       render: (_: any, record: any) => (
         <div
-          className="bg-red-100 flex items-center gap-3 cursor-pointer max-w-[300px]"
+          className="flex items-center gap-3 cursor-pointer max-w-[300px]"
           onClick={() => router.push(`/properties/${record.property.id}`)}
         >
           <div>
@@ -75,13 +75,15 @@ export default function ReservationListPage() {
       dataIndex: "user",
       render: (_: any, record: any) => (
         <Link href={`/users/profile/${record.user.id}`}>
-          <div className="bg-red-100 flex items-center gap-3 cursor-pointer max-w-[150px]">
+          <div className="flex items-center gap-3 cursor-pointer max-w-[150px]">
             <Avatar
               size="large"
               src={record.user.profile_picture_url}
               className="shrink-0"
             />
-            <span className="truncate">{record.user.username}</span>
+            <span className="text-black font-semibold truncate">
+              {record.user.username}
+            </span>
           </div>
         </Link>
       ),
