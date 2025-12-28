@@ -3,6 +3,7 @@ import authReducer from "./features/auth/authSlice";
 import userReducer from "./features/users/userSlice";
 import propertyReducer from "./features/properties/propertySlice";
 import messageReducer from "./features/messages/messageSlice";
+import analyticsReducer from "./features/analytics/analyticsSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -11,6 +12,7 @@ export const makeStore = () => {
       user: userReducer,
       property: propertyReducer,
       message: messageReducer,
+      analytics: analyticsReducer,
     },
   });
 };
