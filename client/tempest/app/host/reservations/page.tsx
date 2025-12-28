@@ -146,7 +146,7 @@ export default function ReservationListPage() {
             size="small"
             type="primary"
             onClick={() => {
-              setSelectedReservation(record);
+              setSelectedReservation(record.id);
               setIsReservationDetailsDrawerOpen(true);
             }}
           >
@@ -215,7 +215,7 @@ export default function ReservationListPage() {
         open={isReservationDetailsDrawerOpen}
       >
         {selectedReservation ? (
-          <ReservationDetailsDrawer reservation={selectedReservation} />
+          <ReservationDetailsDrawer reservationId={selectedReservation} />
         ) : (
           <Spin />
         )}

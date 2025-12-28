@@ -135,7 +135,18 @@ function ReservationDetailsDrawer({
     <div className="flex flex-col gap-4 p-2">
       {/* Property Header */}
       <div>
-        <p className="font-bold text-xl">{propertyTitle}</p>
+        <div className="flex justify-between items-start">
+          <p className="font-bold text-xl">{propertyTitle}</p>
+          <div className="flex ml-auto gap-2 my-2">
+            <Button type="primary" size="small">
+              Print
+            </Button>
+            <Button type="primary" size="small" danger>
+              Cancel
+            </Button>
+          </div>
+        </div>
+
         <p className="text-gray-600">{propertyLocation}</p>
       </div>
 
