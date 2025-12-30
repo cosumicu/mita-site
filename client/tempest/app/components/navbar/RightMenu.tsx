@@ -10,7 +10,7 @@ import {
   MailOutlined,
   SettingOutlined,
   LogoutOutlined,
-  GiftOutlined,
+  TagOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,7 @@ const items2: MenuItem[] = [
   {
     key: "gift-cards",
     label: "Gift Cards",
-    icon: <GiftOutlined />,
+    icon: <TagOutlined />,
   },
   { type: "divider" },
   {

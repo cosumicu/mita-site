@@ -122,7 +122,7 @@ export default function SearchContent() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-500">No properties found.</p>
+        <p className="h-screen text-gray-500">No properties found.</p>
       )}
     </div>
   );
