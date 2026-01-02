@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { formatCurrency, formatDate } from "@/app/lib/utils/format";
 import { getReservationList } from "@/app/lib/features/properties/propertySlice";
-import { Table, Spin, Image, Tag, Button, Drawer } from "antd";
+import { Table, Spin, Image, Tag, Button, Drawer, Segmented } from "antd";
 import { useRouter } from "next/navigation";
 import ReservationDetailsDrawer from "@/app/components/drawer/ReservationDetailsDrawer";
 
@@ -125,7 +125,7 @@ export default function ReservationListPage() {
           <Button
             variant="outlined"
             size="small"
-            type="primary"
+            color="primary"
             onClick={() => {
               setSelectedReservation(record.id); // store the clicked reservation
               setIsReservationDetailsDrawerOpen(true); // open drawer
@@ -172,8 +172,49 @@ export default function ReservationListPage() {
   };
 
   return (
-    <div className="px-4 sm:px-10">
-      <p className="my-4 font-semibold sm:text-xl">Reservations</p>
+    <div className="px-4 sm:px-10 space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <p className="font-semibold text-xl sm:text-3xl">Reservations</p>
+        </div>
+        <div className="flex gap-2">
+          <div className="flex gap-1 items-center">
+            <Button color="default" variant="filled" size="small">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="gray"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="icon icon-tabler icons-tabler-outline icon-tabler-download"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
+                <path d="M7 11l5 5l5 -5" />
+                <path d="M12 4l0 12" />
+              </svg>
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="">
+        <Segmented<string>
+          options={[
+            { label: "All", value: "1" },
+            { label: "Pending", value: "2" },
+            { label: "Approved", value: "3" },
+            { label: "Declined", value: "4" },
+            { label: "Expired", value: "5" },
+            { label: "Completed", value: "6" },
+          ]}
+          onChange={(value) => {}}
+        />
+      </div>
 
       <div className="overflow-x-auto">
         {" "}
@@ -184,6 +225,8 @@ export default function ReservationListPage() {
             current: currentPage,
             pageSize,
             total: count,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`,
           }}
           onChange={handleTableChange}
         />

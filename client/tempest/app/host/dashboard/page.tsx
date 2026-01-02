@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
-import { Segmented } from "antd";
+import { Button, Segmented } from "antd";
 import { useState } from "react";
 import {
   AreaChart,
@@ -37,10 +37,9 @@ const DashboardPage = () => {
   return (
     <div className="m-8">
       <div className="space-y-8">
-        <div className="flex gap-2 items-center">
-          <p className="font-semibold sm:text-3xl">Dashboard</p>
-          <p className="text-gray-500">Save Data</p>
-          <div>
+        <div className="flex justify-between items-center">
+          <p className="font-semibold text-xl sm:text-3xl">Dashboard</p>
+          <Button color="default" variant="filled" size="small">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -58,7 +57,7 @@ const DashboardPage = () => {
               <path d="M7 11l5 5l5 -5" />
               <path d="M12 4l0 12" />
             </svg>
-          </div>
+          </Button>
         </div>
         <div className="flex justify-end">
           <Segmented<Range>

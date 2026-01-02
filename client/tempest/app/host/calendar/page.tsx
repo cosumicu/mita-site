@@ -48,7 +48,8 @@ const HostCalendarPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="pb-10">
+    <div className="px-4 sm:px-10 space-y-6">
+      <p className="font-semibold text-xl sm:text-3xl">Host Calendar</p>
       <HostCalendar
         reservations={hostCalendarData}
         onDatesSet={handleDatesSet}

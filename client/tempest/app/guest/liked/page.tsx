@@ -37,10 +37,10 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="px-4 sm:px-10">
+    <div className="px-4 sm:px-10 space-y-6">
       {" "}
       {/* Mobile padding */}
-      <h2 className="font-bold my-4 text-lg sm:text-xl">My Favorites</h2>
+      <p className="font-semibold sm:text-xl">My Favorites</p>
       {/* Loading State */}
       {userLikesListLoading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
