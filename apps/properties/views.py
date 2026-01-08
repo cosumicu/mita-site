@@ -22,13 +22,13 @@ class PropertyFilter(django_filters.FilterSet):
     guests = django_filters.NumberFilter(field_name='guests', lookup_expr='gte')
     min_price_per_night = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='gte')
     max_price_per_night = django_filters.NumberFilter(field_name='price_per_night', lookup_expr='lte')
-
+    status = django_filters.CharFilter(field_name='status')
     start_date = django_filters.DateFilter(method='filter_by_dates')
     end_date = django_filters.DateFilter(method='filter_by_dates')
 
     class Meta:
         model = Property
-        fields = ['user', 'location', 'guests', 'min_price_per_night', 'max_price_per_night', 'start_date', 'end_date']
+        fields = ['user', 'location', 'guests', 'status', 'min_price_per_night', 'max_price_per_night', 'start_date', 'end_date']
 
     def filter_search(self, queryset, name, value):
         return queryset.filter(
@@ -254,6 +254,8 @@ class ReservationHostListView(generics.ListAPIView):
     serializer_class = ReservationSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_url_kwarg = 'property_id'
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = ReservationFilter
     pagination_class = PropertyPagination
 
     def get_queryset(self):

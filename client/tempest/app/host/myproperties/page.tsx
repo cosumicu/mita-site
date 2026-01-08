@@ -34,25 +34,18 @@ export default function MyPropertiesPage() {
   const [selectedProperty, setSelectedProperty] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
     if (user?.id) {
       dispatch(
         getUserPropertyList({
-          userId: user.id,
+          filters: { userId: user.id, status: statusFilter },
           pagination: { page: currentPage, page_size: pageSize },
         })
       );
     }
-  }, [dispatch, user, currentPage, pageSize]);
-
-  if (userPropertyListLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
-  }
+  }, [dispatch, user, statusFilter, currentPage, pageSize]);
 
   const columns = [
     {
@@ -228,12 +221,15 @@ export default function MyPropertiesPage() {
       <div className="">
         <Segmented<string>
           options={[
-            { label: "All", value: "1" },
-            { label: "Active", value: "2" },
-            { label: "Inactive", value: "3" },
-            { label: "Suspended", value: "4" },
+            { label: "All", value: "" },
+            { label: "Active", value: "ACTIVE" },
+            { label: "Inactive", value: "INACTIVE" },
+            { label: "Suspended", value: "SUSPENDED" },
           ]}
-          onChange={(value) => {}}
+          onChange={(value) => {
+            setCurrentPage(1);
+            setStatusFilter(value);
+          }}
         />
       </div>
 

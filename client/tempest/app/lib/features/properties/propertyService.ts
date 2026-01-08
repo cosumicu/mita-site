@@ -7,6 +7,7 @@ import {
   PaginationParams,
   PropertyTag,
   Review,
+  ReservationFilterParams,
 } from "../../definitions";
 
 const PROPERTY_BASE_URL = `${process.env.NEXT_PUBLIC_API_HOST}/properties`;
@@ -54,18 +55,21 @@ const getPropertyList3 = async (
 };
 
 const getUserPropertyList = async (
-  userId: string,
+  filters: PropertyFilterParams,
   pagination: PaginationParams
 ) => {
   const response = await api.get<Paginated<Property>>(PROPERTY_BASE_URL, {
-    params: { user: userId, ...pagination },
+    params: { ...filters, ...pagination },
   });
   return response.data;
 };
 
-const getReservationList = async (pagination: PaginationParams) => {
+const getReservationList = async (
+  filters: ReservationFilterParams,
+  pagination: PaginationParams
+) => {
   const response = await api.get<Paginated<Reservation>>(RESERVATION_BASE_URL, {
-    params: pagination,
+    params: { ...filters, ...pagination },
   });
   return response.data;
 };
@@ -77,11 +81,14 @@ const getReservationPropertyList = async (propertyId: string) => {
   return response.data;
 };
 
-const getHostReservationList = async (pagination: PaginationParams) => {
+const getHostReservationList = async (
+  filters: ReservationFilterParams,
+  pagination: PaginationParams
+) => {
   const response = await api.get<Paginated<Reservation>>(
     `${RESERVATION_BASE_URL}/host`,
     {
-      params: { ...pagination },
+      params: { ...filters, ...pagination },
     }
   );
   return response.data;

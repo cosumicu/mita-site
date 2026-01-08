@@ -24,18 +24,21 @@ export default function ReservationListPage() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
-    dispatch(getReservationList({ page: currentPage, page_size: pageSize }));
-  }, [dispatch, currentPage, pageSize]);
-
-  if (reservationListLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin size="large" />
-      </div>
+    dispatch(
+      getReservationList({
+        filters: {
+          status: statusFilter,
+        },
+        pagination: {
+          page: currentPage,
+          page_size: pageSize,
+        },
+      })
     );
-  }
+  }, [dispatch, statusFilter, currentPage, pageSize]);
 
   const columns = [
     {
@@ -205,14 +208,17 @@ export default function ReservationListPage() {
       <div className="">
         <Segmented<string>
           options={[
-            { label: "All", value: "1" },
-            { label: "Pending", value: "2" },
-            { label: "Approved", value: "3" },
-            { label: "Declined", value: "4" },
-            { label: "Expired", value: "5" },
-            { label: "Completed", value: "6" },
+            { label: "All", value: "" },
+            { label: "Pending", value: "PENDING" },
+            { label: "Approved", value: "APPROVED" },
+            { label: "Declined", value: "DECLINED" },
+            { label: "Expired", value: "EXPIRED" },
+            { label: "Completed", value: "COMPLETED" },
           ]}
-          onChange={(value) => {}}
+          onChange={(value) => {
+            setCurrentPage(1);
+            setStatusFilter(value);
+          }}
         />
       </div>
 
@@ -221,6 +227,7 @@ export default function ReservationListPage() {
         <Table
           columns={columns}
           dataSource={tableData}
+          loading={reservationListLoading}
           pagination={{
             current: currentPage,
             pageSize,

@@ -138,10 +138,16 @@ export type Paginated<T> = {
 // URL PARAMETERS
 
 export interface PropertyFilterParams {
+  userId?: string;
   location?: string;
+  status?: string;
   start_date?: string;
   end_date?: string;
   guests?: string;
+}
+
+export interface ReservationFilterParams {
+  status?: string;
 }
 
 export interface PaginationParams {

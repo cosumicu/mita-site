@@ -14,13 +14,11 @@ const selectPropertyLoading = createSelector(
     property.propertyList1.loading ||
     property.propertyList2.loading ||
     property.propertyList3.loading ||
-    property.userPropertyList.loading ||
     property.propertyDetail.loading ||
     property.createProperty.loading ||
     property.updateProperty.loading ||
     property.deleteProperty.loading ||
     property.likedList.loading ||
-    property.reservationList.loading ||
     property.reservationPropertyList.loading ||
     property.reservationRequestsList.loading
 );

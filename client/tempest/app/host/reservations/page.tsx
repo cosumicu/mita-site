@@ -28,6 +28,7 @@ export default function ReservationListPage() {
     loading: hostReservationListLoading,
   } = useAppSelector((state) => state.property.hostReservationList);
 
+  const [statusFilter, setStatusFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [isReservationDetailsDrawerOpen, setIsReservationDetailsDrawerOpen] =
@@ -36,17 +37,17 @@ export default function ReservationListPage() {
 
   useEffect(() => {
     dispatch(
-      getHostReservationList({ page: currentPage, page_size: pageSize })
+      getHostReservationList({
+        filters: {
+          status: statusFilter,
+        },
+        pagination: {
+          page: currentPage,
+          page_size: pageSize,
+        },
+      })
     );
-  }, [dispatch, currentPage, pageSize]);
-
-  if (hostReservationListLoading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <Spin size="large" />
-      </div>
-    );
-  }
+  }, [dispatch, statusFilter, currentPage, pageSize]);
 
   const columns = [
     {
@@ -234,22 +235,25 @@ export default function ReservationListPage() {
       <div className="">
         <Segmented<string>
           options={[
-            { label: "All", value: "1" },
-            { label: "Pending", value: "2" },
-            { label: "Approved", value: "3" },
-            { label: "Declined", value: "4" },
-            { label: "Expired", value: "5" },
-            { label: "Completed", value: "6" },
+            { label: "All", value: "" },
+            { label: "Pending", value: "PENDING" },
+            { label: "Approved", value: "APPROVED" },
+            { label: "Declined", value: "DECLINED" },
+            { label: "Expired", value: "EXPIRED" },
+            { label: "Completed", value: "COMPLETED" },
           ]}
-          onChange={(value) => {}}
+          onChange={(value) => {
+            setCurrentPage(1);
+            setStatusFilter(value);
+          }}
         />
       </div>
-
       <div className="overflow-x-auto">
         {" "}
         <Table
           columns={columns}
           dataSource={tableData}
+          loading={hostReservationListLoading}
           pagination={{
             current: currentPage,
             pageSize,

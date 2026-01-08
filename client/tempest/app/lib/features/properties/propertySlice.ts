@@ -9,6 +9,7 @@ import {
   PaginationParams,
   PropertyTag,
   Review,
+  ReservationFilterParams,
 } from "../../definitions";
 
 type AsyncState<T> = {
@@ -200,22 +201,25 @@ export const getPropertyList3 = createAsyncThunk<
 
 export const getUserPropertyList = createAsyncThunk<
   Paginated<Property>,
-  { userId: string; pagination: PaginationParams },
+  { filters: PropertyFilterParams; pagination: PaginationParams },
   { rejectValue: string }
->("property/getUserPropertyList", async ({ userId, pagination }, thunkAPI) => {
-  try {
-    const response = await propertyService.getUserPropertyList(
-      userId,
-      pagination
-    );
-    return response;
-  } catch (err) {
-    const error = err as AxiosError<{ message?: string }>;
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
-    );
+>(
+  "property/getUserPropertyList",
+  async ({ filters = {}, pagination = {} }, thunkAPI) => {
+    try {
+      const response = await propertyService.getUserPropertyList(
+        filters,
+        pagination
+      );
+      return response;
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
+    }
   }
-});
+);
 
 export const createProperty = createAsyncThunk<
   Property,
@@ -316,16 +320,22 @@ export const createReservation = createAsyncThunk<
 
 export const getReservationList = createAsyncThunk<
   Paginated<Reservation>,
-  PaginationParams,
+  { filters: ReservationFilterParams; pagination: PaginationParams },
   { rejectValue: string }
->("property/getReservationList", async (pagination, thunkAPI) => {
-  try {
-    const response = await propertyService.getReservationList(pagination);
-    return response;
-  } catch (err: any) {
-    return thunkAPI.rejectWithValue(err.message || "An error has occured.");
+>(
+  "property/getReservationList",
+  async ({ filters = {}, pagination = {} }, thunkAPI) => {
+    try {
+      const response = await propertyService.getReservationList(
+        filters,
+        pagination
+      );
+      return response;
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err.message || "An error has occured.");
+    }
   }
-});
+);
 
 export const getReservationPropertyList = createAsyncThunk<
   Reservation[],
@@ -407,19 +417,25 @@ export const createPropertyReview = createAsyncThunk<
 
 export const getHostReservationList = createAsyncThunk<
   Paginated<Reservation>,
-  PaginationParams,
+  { filters?: ReservationFilterParams; pagination?: PaginationParams },
   { rejectValue: string }
->("property/getHostReservationList", async (pagination, thunkAPI) => {
-  try {
-    const response = await propertyService.getHostReservationList(pagination);
-    return response;
-  } catch (err) {
-    const error = err as AxiosError<{ message?: string }>;
-    return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
-    );
+>(
+  "property/getHostReservationList",
+  async ({ filters = {}, pagination = {} }, thunkAPI) => {
+    try {
+      const response = await propertyService.getHostReservationList(
+        filters,
+        pagination
+      );
+      return response;
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message
+      );
+    }
   }
-});
+);
 
 export const getHostReservationPropertyList = createAsyncThunk<
   Paginated<Reservation>,
