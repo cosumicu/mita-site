@@ -25,9 +25,15 @@ function Properties() {
   );
 
   useEffect(() => {
-    dispatch(getPropertyList1({ filters: { location: "shanghai" } }));
-    dispatch(getPropertyList2({ filters: { location: "shenzhen" } }));
-    dispatch(getPropertyList3({ filters: { location: "beijing" } }));
+    dispatch(
+      getPropertyList1({ filters: { status: "ACTIVE", location: "shanghai" } })
+    );
+    dispatch(
+      getPropertyList2({ filters: { status: "ACTIVE", location: "shenzhen" } })
+    );
+    dispatch(
+      getPropertyList3({ filters: { status: "ACTIVE", location: "beijing" } })
+    );
   }, [dispatch, createPropertySuccess]);
 
   return (
