@@ -43,6 +43,8 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
   const [serviceFee, setServiceFee] = useState(0);
   const [totalPrice, setTotalPrice] = useState<number>(0);
 
+  const isPropertyActive = property.status === "ACTIVE";
+
   useEffect(() => {
     dispatch(getReservationPropertyList(property.id));
   }, [dispatch, property.id]);
@@ -226,6 +228,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
           type="primary"
           htmlType="submit"
           loading={reservationPropertyListLoading}
+          disabled={!isPropertyActive}
           className="!text-lg"
         >
           <p className="text-base flex items-center gap-1 justify-center">

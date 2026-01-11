@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Avatar, Drawer, Menu, Button, Modal } from "antd";
 import type { MenuProps } from "antd";
 import {
@@ -13,14 +13,16 @@ import {
   TagOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { useRouter } from "next/navigation";
-import RegisterForm from "../forms/RegisterForm";
-import LoginForm from "../forms/LoginForm";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import RegisterForm from "../modals/RegisterForm";
+import LoginForm from "../modals/LoginForm";
 import { logout, reset as resetAuth } from "../../lib/features/auth/authSlice";
-import { reset as resetUser } from "../../lib/features/users/userSlice";
+import {
+  getCurrentUser,
+  reset as resetUser,
+} from "../../lib/features/users/userSlice";
 import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { toast } from "react-toastify";
-import CreatePropertyModal from "../modals/CreatePropertyModal";
 import Link from "next/link";
 
 type MenuItem = Required<MenuProps>["items"][number];
@@ -120,14 +122,14 @@ const items1: MenuItem[] = [
 function RightMenu() {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const pathname = usePathname();
+
   const { user } = useAppSelector((state) => state.user);
   const [current, setCurrent] = useState("1");
 
   const [openMain, setOpenMain] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
-  // const [isCreatePropertyModalOpen, setIsCreatePropertyModalOpen] =
-  //   useState(false);
 
   const showMain = () => {
     setOpenMain(true);
@@ -156,10 +158,28 @@ function RightMenu() {
 
     switch (e.key) {
       case "login":
+        if (pathname === "/login") {
+          setOpenMain(false);
+          return;
+        }
+        if (pathname === "/register") {
+          router.push("/login");
+          setOpenMain(false);
+          return;
+        }
         showLogin();
         break;
 
       case "register":
+        if (pathname === "/register") {
+          setOpenMain(false);
+          return;
+        }
+        if (pathname === "/login") {
+          router.push("/register");
+          setOpenMain(false);
+          return;
+        }
         showRegister();
         break;
 
@@ -231,19 +251,35 @@ function RightMenu() {
     }
   };
 
+  const handleBecomeAHost = async () => {
+    try {
+      const freshUser = await dispatch(getCurrentUser()).unwrap();
+
+      if (freshUser.host_status === "INACTIVE") {
+        router.push("/host/create-listing");
+      } else {
+        router.push("/host/onboarding");
+      }
+    } catch (error) {
+      console.error("Something went wrong", error);
+    }
+  };
+
   return (
     <div className="flex items-center gap-1 sm:gap-4">
       {user ? (
         <>
-          {" "}
-          <Button
-            type="primary"
-            onClick={() => router.push("/host/create-listing")}
-            className="!hidden sm:!block px-6 py-2 !rounded-full tracking-wide"
-          >
-            <div>Hosting</div>
-          </Button>
-          <Link href={`/users/profile/${user.id}`}>
+          {["INACTIVE", "ONBOARDING"].includes(user?.host_status) && (
+            <Button
+              type="primary"
+              onClick={handleBecomeAHost}
+              className="!hidden sm:!block px-6 py-2 !rounded-full tracking-wide"
+            >
+              <div>Become a Host</div>
+            </Button>
+          )}
+
+          <Link href={`/users/profile/${user.user_id}`}>
             <Avatar
               className="!hidden sm:!inline-block"
               size={48}
@@ -279,57 +315,46 @@ function RightMenu() {
           mode="inline"
           items={user ? items1 : items2}
         />
-        <Drawer
-          title="Login"
-          width={320}
-          closable={false}
-          onClose={onCloseLogin}
-          open={openLogin}
-        >
-          {openLogin && (
-            <LoginForm
-              onSuccess={() => {
-                onCloseLogin();
-              }}
-            />
-          )}
-        </Drawer>
-
-        <Drawer
-          title="Register"
-          width={320}
-          closable={false}
-          onClose={onCloseRegister}
-          open={openRegister}
-        >
-          {openRegister && (
-            <RegisterForm
-              onSuccess={() => {
-                onCloseRegister();
-              }}
-            />
-          )}
-        </Drawer>
       </Drawer>
-      {/* <Modal
-        title={
-          <div style={{ textAlign: "center", width: "100%" }}>
-            Create Listing
-          </div>
-        }
-        open={isCreatePropertyModalOpen}
+      <Modal
+        title={<span className="block text-center font-semibold">Log in</span>}
+        open={openLogin}
+        onCancel={onCloseLogin}
         footer={null}
-        onCancel={() => {
-          setIsCreatePropertyModalOpen(false);
-        }}
-        width={1100}
         centered
         destroyOnHidden
       >
-        <CreatePropertyModal
-          onSuccess={() => setIsCreatePropertyModalOpen(false)}
-        />
-      </Modal> */}
+        {openLogin && (
+          <LoginForm
+            onSuccess={onCloseLogin}
+            onSwitchToRegister={() => {
+              onCloseLogin();
+              setOpenRegister(true);
+            }}
+          />
+        )}
+      </Modal>
+
+      <Modal
+        title={
+          <span className="block text-center font-semibold">Register</span>
+        }
+        open={openRegister}
+        onCancel={onCloseRegister}
+        footer={null}
+        centered
+        destroyOnHidden
+      >
+        {openRegister && (
+          <RegisterForm
+            onSuccess={onCloseRegister}
+            onSwitchToLogin={() => {
+              onCloseRegister();
+              setOpenLogin(true);
+            }}
+          />
+        )}
+      </Modal>
     </div>
   );
 }

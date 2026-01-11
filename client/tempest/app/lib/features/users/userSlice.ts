@@ -10,6 +10,7 @@ type UserState = {
   isLoading: boolean;
   isSuccess: boolean;
   message: string;
+  hasCheckedAuth: boolean;
 };
 
 const initialState: UserState = {
@@ -19,6 +20,7 @@ const initialState: UserState = {
   isLoading: false,
   isSuccess: false,
   message: "",
+  hasCheckedAuth: false,
 };
 
 export const getCurrentUser = createAsyncThunk<
@@ -63,6 +65,7 @@ export const userSlice = createSlice({
       state.isLoading = false;
       state.isSuccess = false;
       state.message = "";
+      state.hasCheckedAuth = false;
     },
   },
   extraReducers: (builder) => {
@@ -78,6 +81,7 @@ export const userSlice = createSlice({
           state.isSuccess = true;
           state.message = "";
           state.user = action.payload;
+          state.hasCheckedAuth = true;
         }
       )
       .addCase(getCurrentUser.rejected, (state, action) => {
@@ -85,6 +89,7 @@ export const userSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload as string;
+        state.hasCheckedAuth = true;
       })
       .addCase(getUserProfile.pending, (state) => {
         state.isLoading = true;

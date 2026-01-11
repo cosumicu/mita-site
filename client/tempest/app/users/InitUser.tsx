@@ -5,11 +5,13 @@ import { getCurrentUser } from "@/app/lib/features/users/userSlice";
 
 export function InitUser() {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.user);
+  const { hasCheckedAuth, isLoading } = useAppSelector((s) => s.user);
 
   useEffect(() => {
-    dispatch(getCurrentUser());
-  }, [dispatch]);
+    if (!hasCheckedAuth && !isLoading) {
+      dispatch(getCurrentUser());
+    }
+  }, [dispatch, hasCheckedAuth, isLoading]);
 
   return null;
 }

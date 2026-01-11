@@ -1,16 +1,13 @@
 import api from "../axiosInstance";
 import { User } from "../../definitions";
 
-const BASE_USER_URL = `${process.env.NEXT_PUBLIC_API_HOST}/profile`;
-const GET_CURRENT_USER_URL = `${BASE_USER_URL}/me`;
-
 const getCurrentUser = async (): Promise<User> => {
-  const response = await api.get<User>(GET_CURRENT_USER_URL);
+  const response = await api.get<User>("/profile/me");
   return response.data;
 };
 
 const getUserProfile = async (userId: string) => {
-  const response = await api.get<User>(`${BASE_USER_URL}/${userId}/`);
+  const response = await api.get<User>(`/profile/${userId}/`);
   return response.data;
 };
 

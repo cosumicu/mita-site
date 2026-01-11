@@ -37,7 +37,7 @@ function UserProfilePage() {
       dispatch(getUserProfile(id));
       dispatch(
         getUserPropertyList({
-          userId: id,
+          filters: { userId: id },
           pagination: { page: 1, page_size: 10 },
         })
       );

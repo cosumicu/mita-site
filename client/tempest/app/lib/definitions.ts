@@ -26,6 +26,7 @@ export interface LoginData {
 // USER TYPES
 export interface User {
   id: string;
+  user_id: string;
   username: string;
   first_name: string;
   last_name: string;
@@ -38,6 +39,8 @@ export interface User {
   city: string;
   rating: number;
   num_reviews: number;
+  host_status: string;
+  valid_id: boolean;
 }
 
 // PROPERTIES TYPES

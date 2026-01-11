@@ -39,13 +39,15 @@ export default function RootLayout({
           },
         }}
       >
-        <body className={`${inter.className} antialiased`}>
+        <body
+          className={`${inter.className} antialiased min-h-dvh flex flex-col`}
+        >
           <StoreProvider>
             <AntdRegistry>
               <Loading />
               <InitUser />
               <Navbar />
-              <div>{children}</div>
+              <div className="flex-1">{children}</div>
               <div className="sm:hidden">{/* <NavbarMobile /> */}</div>
               <Footer />
             </AntdRegistry>

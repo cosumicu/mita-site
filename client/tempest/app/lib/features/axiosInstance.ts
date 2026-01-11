@@ -5,7 +5,7 @@ import axios, {
   AxiosResponse,
 } from "axios";
 
-const REFRESH_URL = "auth/jwt/refresh/";
+const REFRESH_URL = "/auth/jwt/refresh/";
 
 const api: AxiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_HOST,

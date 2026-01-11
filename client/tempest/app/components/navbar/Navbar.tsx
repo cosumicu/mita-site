@@ -10,6 +10,7 @@ const Navbar = () => {
 
   if (
     pathname === "/host/create-listing" ||
+    pathname === "/host/onboarding" ||
     pathname.startsWith("/host/update-listing")
   ) {
     return null;
