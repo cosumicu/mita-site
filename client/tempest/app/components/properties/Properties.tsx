@@ -6,8 +6,6 @@ import {
   getPropertyList1,
   getPropertyList2,
   getPropertyList3,
-  createProperty,
-  resetPropertyListHome,
 } from "@/app/lib/features/properties/propertySlice";
 
 function Properties() {
@@ -35,10 +33,6 @@ function Properties() {
     dispatch(
       getPropertyList3({ filters: { status: "ACTIVE", location: "beijing" } })
     );
-
-    return () => {
-      dispatch(resetPropertyListHome());
-    };
   }, [dispatch, createPropertySuccess]);
 
   return (
