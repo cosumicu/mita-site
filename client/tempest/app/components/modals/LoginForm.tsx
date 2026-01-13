@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import SpinnerOverlay from "../common/SpinnerOverlay";
 
 type LoginFormProps = {
   onSuccess?: () => void;
@@ -19,7 +20,7 @@ function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   const searchParams = useSearchParams();
   const next = searchParams.get("next");
   const dispatch = useAppDispatch();
-  const { isError, isLoading, isSuccess, message } = useAppSelector(
+  const { isLoading, isSuccess, isError, message } = useAppSelector(
     (state) => state.auth
   );
   const [form] = Form.useForm();
@@ -29,13 +30,16 @@ function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
       dispatch(getCurrentUser());
       toast.success("Login Successful");
       dispatch(resetAuth());
-      if (onSuccess) onSuccess();
+      onSuccess?.();
     }
+  }, [dispatch, onSuccess, isSuccess]);
+
+  useEffect(() => {
     if (isError) {
       toast.error(message);
       dispatch(resetAuth());
     }
-  }, [isError, isSuccess, message, dispatch, onSuccess]);
+  }, [dispatch, isError, message]);
 
   const onFinish = async (formData: { email: string; password: string }) => {
     dispatch(login(formData));
@@ -43,6 +47,7 @@ function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
 
   return (
     <div className="mx-10">
+      {isLoading && <SpinnerOverlay />}
       <Form form={form} name="login" onFinish={onFinish}>
         <Form.Item
           name="email"

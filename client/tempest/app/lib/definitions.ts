@@ -30,6 +30,7 @@ export interface User {
   username: string;
   first_name: string;
   last_name: string;
+  full_name: string;
   email: string;
   phone_number: string;
   profile_picture_url: string;
@@ -141,7 +142,7 @@ export type Paginated<T> = {
 // URL PARAMETERS
 
 export interface PropertyFilterParams {
-  userId?: string;
+  user?: string;
   location?: string;
   status?: string;
   start_date?: string;

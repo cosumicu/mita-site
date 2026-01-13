@@ -273,7 +273,7 @@ function RightMenu() {
             <Button
               type="primary"
               onClick={handleBecomeAHost}
-              className="!hidden sm:!block px-6 py-2 !rounded-full tracking-wide"
+              className="px-6 py-2 tracking-wide"
             >
               <div>Become a Host</div>
             </Button>

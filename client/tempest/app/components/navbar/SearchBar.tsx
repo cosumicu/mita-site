@@ -21,7 +21,7 @@ const SearchBar: React.FC = () => {
     null,
     null,
   ]);
-  const [guests, setGuests] = useState<number>(1);
+  const [guests, setGuests] = useState<number | null>(null);
 
   const disabledDate = (current: Dayjs) => {
     // Disable all dates before today
@@ -42,11 +42,10 @@ const SearchBar: React.FC = () => {
   };
 
   return (
-    <>
+    <div className="min-w-[100px] p-1">
       {/* LARGE SCREENS */}
-      <div className="hidden sm:flex justify-center items-center bg-white rounded-full shadow-md px-3 py-2 w-[90%] sm:w-auto md:w-[700px] lg:w-[800px] transition-all duration-200 divide-x divide-gray-200 hover:shadow-lg">
-        <div className="flex items-center w-3/12 px-3 gap-2">
-          <EnvironmentOutlined />
+      <div className="hidden sm:flex bg-white p-2 rounded-xl shadow-sm transition-all duration-200 divide-x divide-gray-200 hover:shadow-lg">
+        <div className="flex-1">
           <Input
             placeholder="Where are you going?"
             value={location}
@@ -55,9 +54,9 @@ const SearchBar: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center w-5/12 px-3 gap-2">
-          <CalendarOutlined />
+        <div className="flex-1">
           <RangePicker
+            format="ddd, MMM D"
             suffixIcon=""
             className="!border-none !shadow-none w-full [&>.ant-picker-suffix]:hidden"
             onChange={(values) =>
@@ -68,29 +67,33 @@ const SearchBar: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center w-2/10 px-3 gap-2">
-          <UserOutlined />
+        <div className="flex-1">
           <InputNumber
             min={1}
             value={guests}
             onChange={(value) => setGuests(value || 1)}
-            className="!border-none !shadow-none w-full"
-            placeholder="Guests"
+            className="!border-none !w-[150px] "
+            placeholder="Add Guests"
           />
+          <span className="text-gray-400 text-sm pr-2">
+            {guests == null ? "" : guests === 1 ? "guest" : "guests"}
+          </span>
         </div>
 
-        <Button
-          type="primary"
-          shape="round"
-          icon={<SearchOutlined />}
-          onClick={onSearch}
-          className="ml-3 bg-rose-500 hover:bg-rose-600 border-none font-medium"
-        >
-          Search
-        </Button>
+        <div className="">
+          {" "}
+          <Button
+            type="primary"
+            icon={<SearchOutlined />}
+            onClick={onSearch}
+            className="ml-3 bg-rose-500 hover:bg-rose-600 border-none font-medium"
+          >
+            Search
+          </Button>
+        </div>
       </div>
 
-      <div className="sm:hidden w-full">
+      <div className="sm:hidden">
         <Button
           color="primary"
           variant="outlined"
@@ -149,7 +152,7 @@ const SearchBar: React.FC = () => {
           </div>
         </div>
       </Modal>
-    </>
+    </div>
   );
 };
 

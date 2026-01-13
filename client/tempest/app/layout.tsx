@@ -4,7 +4,7 @@ import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import StoreProvider from "./StoreProvider";
 import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 import Navbar from "./components/navbar/Navbar";
 import { InitUser } from "./users/InitUser";
 import Loading from "./components/common/Loading";
@@ -53,14 +53,16 @@ export default function RootLayout({
             </AntdRegistry>
           </StoreProvider>
           <ToastContainer
-            position="bottom-right"
+            position="top-center"
             autoClose={3000}
             newestOnTop={false}
-            closeOnClick={false}
+            closeOnClick={true}
+            closeButton={false}
             hideProgressBar={true}
             pauseOnFocusLoss
             pauseOnHover
             theme="light"
+            transition={Slide}
           />
         </body>
       </ConfigProvider>

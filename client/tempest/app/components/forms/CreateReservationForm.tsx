@@ -201,6 +201,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
             ]}
           >
             <RangePicker
+              format="ddd, MMM D"
               className="w-full"
               onChange={handleDateChange}
               disabledDate={disabledDate} // keeps existing visual greying
