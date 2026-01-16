@@ -33,7 +33,7 @@ urlpatterns = [
     path('reservation/<uuid:reservation_id>/decline/', DeclineReservationView.as_view(), name='reservation-decline'),
     path('likes/', UserFavoritesView.as_view(), name='user-favorites-list'),
     path('reservation/p/<uuid:property_id>', ReservationListProperty.as_view(), name='reservation-list-property'),
-    path('<uuid:id>/toggle-favorite/', ToggleFavoriteView.as_view(), name='toggle-favorite'),
+    path('<uuid:property_id>/toggle-favorite/', ToggleFavoriteView.as_view(), name='toggle-favorite'),
     path('tags/', PropertyTagListView.as_view(), name='tag-list'),
     path("<uuid:property_id>/status/", PropertyStatusUpdateView.as_view(), name="property-status-update",),
 ]

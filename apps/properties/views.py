@@ -145,7 +145,8 @@ class PropertyUpdateView(generics.UpdateAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertyCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
-    lookup_field = "property_id"
+    lookup_field = "id"
+    lookup_url_kwarg = "property_id"
 
     def get_object(self):
         obj = super().get_object()
@@ -157,7 +158,8 @@ class PropertyDeleteView(generics.DestroyAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertyCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
-    lookup_field = "property_id"
+    lookup_field = "id"
+    lookup_url_kwarg = "property_id"
 
     def get_object(self):
         obj = super().get_object()
@@ -277,13 +279,14 @@ class ReservationHostListView(generics.ListAPIView):
 
         property_id = self.kwargs.get(self.lookup_url_kwarg)
         if property_id:
-            queryset = Reservation.objects.filter(property__id=property_id)    
-        
+            queryset = queryset.filter(property__id=property_id)
+
         return queryset.order_by("-created_at")
+
 
 class PendingReservationListView(generics.ListAPIView):
     serializer_class = ReservationSerializer
-    permissions_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     pagination_class = PropertyPagination
 
     def get_queryset(self):
@@ -345,8 +348,8 @@ class UserFavoritesView(generics.ListAPIView):
 class ToggleFavoriteView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, id):
-        property = get_object_or_404(Property, id=id)
+    def post(self, request, property_id):
+        property = get_object_or_404(Property, id=property_id)
 
         like, created = PropertyLike.objects.get_or_create(
             property=property, user=request.user

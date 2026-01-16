@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from django.utils.timezone import now
+from django.utils import timezone
 
 from decimal import Decimal, ROUND_HALF_UP
 
@@ -10,8 +10,10 @@ def get_date_range(range: str):
     month = last 30 days (rolling, incl today)
     year  = year-to-date (Jan 1 -> today)
     """
-    today = now().date()
+
+    today = timezone.localdate()
     print(today)
+    
     if range == "week":
         start = today - timedelta(days=6)
         end = today

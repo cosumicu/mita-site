@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.db.models import Sum, Count
 from django.db.models.functions import TruncDate, Coalesce
-from django.utils.timezone import now
+from django.utils import timezone
 
 from apps.properties.models import (
     Property,
@@ -118,7 +118,7 @@ def get_host_dashboard(user, range: str):
     )
 
     # --------- TODAY CARDS ----------
-    today = now().date()
+    today = timezone.localdate()
 
     checkins = Reservation.objects.filter(
         property__user=user,
