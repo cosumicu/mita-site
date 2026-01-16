@@ -1,4 +1,4 @@
-# Mita site
+# Mita Site
 
 A full-stack booking platform where guests can browse listings, book stays, and hosts can create/manage properties and reservations.
 
@@ -39,7 +39,7 @@ A full-stack booking platform where guests can browse listings, book stays, and 
 ### System
 - Authentication (JWT)
 - Pagination and filtering
-- 
+
 ### Other features
 - Live chat with host/guest
 - Toasts
