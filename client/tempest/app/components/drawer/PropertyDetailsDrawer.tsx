@@ -100,8 +100,8 @@ function PropertyDetailsDrawer({ propertyId }: PropertyDetailsDrawerProps) {
   const reservationsCount = property.reservations_count || 0;
 
   // Safe access to nested properties with fallbacks
-  const hostName = property.user?.username || "Unknown Host";
-  const hostId = property.user?.id || "";
+  const hostName = property.user?.full_name || "Unknown Host";
+  const hostId = property.user?.user_id || "";
   const hostProfilePicture = property.user?.profile_picture_url || undefined;
   const tags: PropertyTag[] = property.tags || [];
   const isLiked = property.liked || false;

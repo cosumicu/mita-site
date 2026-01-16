@@ -147,7 +147,7 @@ function ReservationDetailsDrawer({
       </div>
       <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
         <div className="flex items-center">
-          <Link href={`/users/profile/${reservation.property.user.id}`}>
+          <Link href={`/users/profile/${reservation.property.user.user_id}`}>
             <Avatar
               size="large"
               src={reservation.property.user.profile_picture_url}
@@ -156,7 +156,7 @@ function ReservationDetailsDrawer({
 
           <div className="ml-3">
             <p className="font-semibold">
-              Hosted by {reservation.property.user.username}
+              Hosted by {reservation.property.user.full_name}
             </p>
             <p className="text-sm text-gray-500">
               {reservation.property.user.email}
@@ -168,12 +168,12 @@ function ReservationDetailsDrawer({
       <p className="font-bold text-lg">Guest</p>
       <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
         <div className="flex items-center">
-          <Link href={`/users/profile/${reservation.user.id}`}>
+          <Link href={`/users/profile/${reservation.user.user_id}`}>
             <Avatar size="large" src={reservation.user.profile_picture_url} />
           </Link>
 
           <div className="ml-3">
-            <p className="font-semibold">{reservation.user.username}</p>
+            <p className="font-semibold">{reservation.user.full_name}</p>
             <p className="text-sm text-gray-500">{reservation.user.email}</p>
           </div>
         </div>
@@ -320,7 +320,7 @@ function ReservationDetailsDrawer({
       {/* Review Section */}
       {reservation.status === "COMPLETED" &&
         !reservation.property.reviewed &&
-        user.user?.id !== reservation.property.user.id && (
+        user.user?.user_id !== reservation.property.user.user_id && (
           <Card className="shadow-sm bg-gradient-to-r from-gray-50 to-gray-100">
             <div className="text-center">
               <h3 className="text-lg font-semibold text-gray-800 mb-2">

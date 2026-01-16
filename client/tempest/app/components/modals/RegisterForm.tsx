@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import { Form, Input, Checkbox, Button } from "antd";
-import { MailOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
 import {
   register,
   reset as resetAuth,
@@ -39,7 +38,8 @@ function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
 
   const onFinish = async (formData: {
     email: string;
-    username: string;
+    first_name: string;
+    last_name: string;
     password: string;
     re_password: string;
   }) => {
@@ -56,31 +56,28 @@ function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
             { required: true, message: "Please input your E-mail!" },
           ]}
         >
-          <Input
-            prefix={<MailOutlined style={{ color: "rgba(0, 0, 0, 0.2)" }} />}
-            placeholder="Email"
-          />
+          <Input placeholder="Email" />
         </Form.Item>
 
-        <Form.Item
-          name="username"
-          rules={[{ required: true, message: "Please input your username!" }]}
-        >
-          <Input
-            prefix={<UserOutlined style={{ color: "rgba(0, 0, 0, 0.2)" }} />}
-            placeholder="Username"
-          />
-        </Form.Item>
+        <div className="flex gap-2">
+          <Form.Item
+            name="first_name"
+            rules={[{ required: true, message: "Please input your username!" }]}
+          >
+            <Input placeholder="First Name" />
+          </Form.Item>
+
+          <Form.Item name="last_name">
+            <Input placeholder="Last Name" />
+          </Form.Item>
+        </div>
 
         <Form.Item
           name="password"
           rules={[{ required: true, message: "Please input your password!" }]}
           hasFeedback
         >
-          <Input.Password
-            prefix={<LockOutlined style={{ color: "rgba(0, 0, 0, 0.2)" }} />}
-            placeholder="Password"
-          />
+          <Input.Password placeholder="Password" />
         </Form.Item>
 
         <Form.Item
@@ -101,10 +98,7 @@ function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
             }),
           ]}
         >
-          <Input.Password
-            prefix={<LockOutlined style={{ color: "rgba(0, 0, 0, 0.2)" }} />}
-            placeholder="Confirm Password"
-          />
+          <Input.Password placeholder="Confirm Password" />
         </Form.Item>
 
         <Form.Item

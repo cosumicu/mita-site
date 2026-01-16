@@ -6,7 +6,7 @@ import SearchSection from "./components/search/SearchSection";
 export default function Home() {
   return (
     <div className="ui-container space-y-4">
-      <div>
+      {/* <div>
         <Alert
           banner
           message={
@@ -26,7 +26,7 @@ export default function Home() {
             </Marquee>
           }
         />
-      </div>
+      </div> */}
 
       <div>
         <Properties />

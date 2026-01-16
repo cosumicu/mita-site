@@ -30,7 +30,7 @@ export default function UpdateListing() {
   if (!propertyDetail) return null;
 
   return (
-    <div className="max-w-4xl mx-auto px-4">
+    <div className="ui-container max-w-4xl mx-auto px-4">
       <PropertyForm
         mode="edit"
         initialValues={propertyDetail}

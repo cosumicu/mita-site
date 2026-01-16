@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { formatCurrency, formatDate } from "@/app/lib/utils/format";
-import { getUserPropertyList } from "@/app/lib/features/properties/propertySlice";
+import {
+  getUserPropertyList,
+  updatePropertyStatus,
+} from "@/app/lib/features/properties/propertySlice";
 import {
   Table,
   Spin,
@@ -13,9 +16,18 @@ import {
   Button,
   Drawer,
   Segmented,
+  Menu,
+  Dropdown,
 } from "antd";
 import { useRouter } from "next/navigation";
 import PropertyDetailsDrawer from "@/app/components/drawer/PropertyDetailsDrawer";
+import type { MenuProps } from "antd";
+import { toast } from "react-toastify";
+
+const STATUS_ITEMS: MenuProps["items"] = [
+  { key: "ACTIVE", label: "Published" },
+  { key: "INACTIVE", label: "Unpublish" },
+];
 
 export default function MyPropertiesPage() {
   const dispatch = useAppDispatch();
@@ -37,7 +49,7 @@ export default function MyPropertiesPage() {
   const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
-    if (user?.id) {
+    if (user?.user_id) {
       dispatch(
         getUserPropertyList({
           filters: { user: user.user_id, status: statusFilter },
@@ -46,6 +58,20 @@ export default function MyPropertiesPage() {
       );
     }
   }, [dispatch, user, statusFilter, currentPage, pageSize]);
+
+  const onStatusClick =
+    (record: any): MenuProps["onClick"] =>
+    async ({ key }) => {
+      try {
+        await dispatch(
+          updatePropertyStatus({ propertyId: record.id, status: key as string })
+        ).unwrap();
+
+        toast.success("Status updated!");
+      } catch (msg) {
+        toast.error(String(msg || "Failed to update status"));
+      }
+    };
 
   const columns = [
     {
@@ -122,41 +148,55 @@ export default function MyPropertiesPage() {
       key: "action",
       align: "center" as const,
       render: (_: any, record: any) => (
-        <div className="flex gap-4">
+        <div className="flex gap-4" onClick={(e) => e.stopPropagation()}>
           <Button
             variant="outlined"
             size="small"
             color="primary"
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               setSelectedProperty(record);
               setIsPropertyDetailsDrawerOpen(true);
             }}
           >
             <p className="text-xs">Details</p>
           </Button>
-          <button
-            onClick={() => {
-              console.log("");
+
+          <Dropdown
+            trigger={["click"]}
+            placement="bottomRight"
+            menu={{
+              items: STATUS_ITEMS,
+              onClick: onStatusClick(record), // ✅ uses your thunk-based handler
             }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="icon icon-tabler icons-tabler-outline icon-tabler-dots"
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
+              aria-label="More actions"
             >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-              <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-              <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
-            </svg>
-          </button>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="icon icon-tabler icons-tabler-outline icon-tabler-dots"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                <path d="M12 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                <path d="M19 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+              </svg>
+            </button>
+          </Dropdown>
         </div>
       ),
     },
@@ -178,6 +218,15 @@ export default function MyPropertiesPage() {
         <div className="flex justify-between items-center">
           <div>
             <p className="font-semibold text-xl sm:text-2xl">Listings</p>
+          </div>
+          <div className="ml-auto mx-2">
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => router.push("/host/create-listing")}
+            >
+              + Create Listing
+            </Button>
           </div>
           <div className="flex gap-2">
             <div className="flex gap-1 items-center">
@@ -204,19 +253,21 @@ export default function MyPropertiesPage() {
           </div>
         </div>
 
-        <div className="">
-          <Segmented<string>
-            options={[
-              { label: "All", value: "" },
-              { label: "Active", value: "ACTIVE" },
-              { label: "Inactive", value: "INACTIVE" },
-              { label: "Suspended", value: "SUSPENDED" },
-            ]}
-            onChange={(value) => {
-              setCurrentPage(1);
-              setStatusFilter(value);
-            }}
-          />
+        <div className="max-w-full overflow-x-auto whitespace-nowrap [-webkit-overflow-scrolling:touch] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="inline-block">
+            <Segmented<string>
+              options={[
+                { label: "All", value: "" },
+                { label: "Active", value: "ACTIVE" },
+                { label: "Inactive", value: "INACTIVE" },
+                { label: "Suspended", value: "SUSPENDED" },
+              ]}
+              onChange={(value) => {
+                setCurrentPage(1);
+                setStatusFilter(value);
+              }}
+            />
+          </div>{" "}
         </div>
 
         <div className="overflow-x-auto">

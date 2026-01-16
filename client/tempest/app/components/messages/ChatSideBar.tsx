@@ -36,7 +36,7 @@ export default function ChatSidebar({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center px-4 bg-white shadow-sm h-[72px]">
+      <div className="flex items-center px-4 sm:px-8 bg-white shadow-sm h-[72px]">
         <p className="font-semibold text-xl sm:text-2xl">Inbox</p>
       </div>
 
@@ -66,7 +66,7 @@ export default function ChatSidebar({
                 <div className="flex-1 min-w-0">
                   <div className="flex">
                     <p className="font-semibold text-gray-800 truncate max-w-[150]">
-                      {other.username}
+                      {other.full_name}
                     </p>
                     <div className="ml-auto">
                       <p className="text-sm text-gray-500">

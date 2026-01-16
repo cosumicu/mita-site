@@ -216,7 +216,7 @@ const DashboardPage = () => {
                     Reservations created
                   </p>
 
-                  <div className="w-full h-[300px]">
+                  <div className="w-full h-[300px] bg-secondary p-4 rounded-xl">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={bookingsData}>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -255,7 +255,7 @@ const DashboardPage = () => {
                   </h3>
                   <p className="text-sm text-gray-500 mb-3">PHP (₱)</p>
 
-                  <div className="w-full h-[300px]">
+                  <div className="w-full h-[300px] bg-secondary p-4 rounded-xl">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={revenueData}>
                         <CartesianGrid strokeDasharray="3 3" />

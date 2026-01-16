@@ -7,15 +7,18 @@ import { formatCurrency } from "@/app/lib/utils/format";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { toggleFavorite } from "@/app/lib/features/properties/propertySlice";
 import { Property } from "@/app/lib/definitions";
+import { useRouter } from "next/navigation";
 
 type PropertyListProps = {
+  q: string;
   label: string;
   properties: Property[];
   loading: boolean;
 };
 
-const PropertyList = ({ label, properties, loading }: PropertyListProps) => {
+const PropertyList = ({ q, label, properties, loading }: PropertyListProps) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const { user } = useAppSelector((state) => state.user);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -78,8 +81,14 @@ const PropertyList = ({ label, properties, loading }: PropertyListProps) => {
 
   return (
     <div className="relative space-y-2 sm:space-y-4">
-      <div className="flex justify-between items-center">
-        <span className="font-bold">{label}</span>
+      <div className="flex gap-2">
+        <p className="font-bold">{label}</p>
+        <button
+          className="font-bold"
+          onClick={() => router.push(`/s?location=${q}`)}
+        >
+          ›
+        </button>
       </div>
 
       {canLeft && (

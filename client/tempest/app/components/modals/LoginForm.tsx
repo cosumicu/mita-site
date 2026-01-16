@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import { Form, Input, Button, Divider } from "antd";
-import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { login, reset as resetAuth } from "@/app/lib/features/auth/authSlice";
 import { getCurrentUser } from "@/app/lib/features/users/userSlice";
 import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
@@ -56,20 +55,14 @@ function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
             { required: true, message: "Please input your E-mail!" },
           ]}
         >
-          <Input
-            prefix={<MailOutlined style={{ color: "rgba(0, 0, 0, 0.2)" }} />}
-            placeholder="Email"
-          />
+          <Input placeholder="Email" />
         </Form.Item>
 
         <Form.Item
           name="password"
           rules={[{ required: true, message: "Please input your password!" }]}
         >
-          <Input.Password
-            prefix={<LockOutlined style={{ color: "rgba(0, 0, 0, 0.2)" }} />}
-            placeholder="Password"
-          />
+          <Input.Password placeholder="Password" />
         </Form.Item>
 
         <Form.Item>

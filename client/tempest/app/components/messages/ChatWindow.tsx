@@ -111,8 +111,8 @@ export default function ChatWindow({ conversation, onBack }: Props) {
               />
               <h2 className="font-semibold text-gray-800 text-lg truncate">
                 {conversation.landlord.id === user?.user_id
-                  ? conversation.guest.username
-                  : conversation.landlord.username}
+                  ? conversation.guest.full_name
+                  : conversation.landlord.full_name}
               </h2>
             </>
           )}

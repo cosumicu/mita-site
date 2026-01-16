@@ -10,7 +10,7 @@ export default function ChatLayout() {
   );
 
   return (
-    <div className="fixed left-0 right-0 top-[100px] bottom-15 sm:bottom-1 flex bg-gradient-to-br from-gray-50 to-white">
+    <div className="fixed left-0 right-0 top-[72px] bottom-15 sm:bottom-1 flex bg-gradient-to-br from-gray-50 to-white">
       {/* LEFT — Chat List */}
       <div
         className={`absolute inset-0 md:static transform transition-transform duration-300 md:w-[25%] bg-gradient-to-b from-gray-100 to-gray-200 shadow-inner z-10 ${

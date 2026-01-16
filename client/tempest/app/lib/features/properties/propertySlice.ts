@@ -1062,9 +1062,17 @@ export const propertySlice = createSlice({
         state.updatePropertyStatus.success = false;
         state.updatePropertyStatus.message = "";
       })
-      .addCase(updatePropertyStatus.fulfilled, (state) => {
+      .addCase(updatePropertyStatus.fulfilled, (state, action) => {
         state.updatePropertyStatus.loading = false;
         state.updatePropertyStatus.success = true;
+
+        const { propertyId, status } = action.payload;
+
+        const list = state.userPropertyList?.data;
+        if (Array.isArray(list)) {
+          const item = list.find((p: any) => p.id === propertyId);
+          if (item) item.status = status;
+        }
       })
       .addCase(updatePropertyStatus.rejected, (state, action) => {
         state.updatePropertyStatus.loading = false;

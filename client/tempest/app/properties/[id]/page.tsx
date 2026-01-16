@@ -6,6 +6,8 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   getPropertyDetail,
   getPropertyReviews,
+  resetPropertyDetail,
+  resetPropertyReviews,
   toggleFavorite,
 } from "@/app/lib/features/properties/propertySlice";
 import { Avatar, Button, Modal, Divider, Spin } from "antd";
@@ -45,6 +47,9 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
 
   useEffect(() => {
     if (!id) return;
+
+    dispatch(resetPropertyDetail());
+    dispatch(resetPropertyReviews());
 
     setRequestedId(id);
 
@@ -215,13 +220,13 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
           {/* Host info */}
           <div className="flex items-center">
             <Link
-              href={`/users/profile/${property.user.id}`}
+              href={`/users/profile/${property.user.user_id}`}
               className="flex items-center gap-3"
             >
               <Avatar size={56} src={property.user.profile_picture_url} />
               <div>
                 <p className="font-medium">
-                  Hosted by {property.user.username}
+                  Hosted by {property.user.full_name || property.user.username}
                 </p>
                 <p className="text-sm text-gray-600">{property.user.email}</p>
               </div>
