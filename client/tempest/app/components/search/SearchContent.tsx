@@ -27,7 +27,7 @@ export default function SearchContent() {
   const guests = searchParams.get("guests") || "";
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(50);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -40,7 +40,7 @@ export default function SearchContent() {
       getPropertyList({
         filters: queryParams,
         pagination: { page: currentPage, page_size: pageSize },
-      })
+      }),
     );
   }, [dispatch, location, start_date, end_date, guests, currentPage, pageSize]);
 
