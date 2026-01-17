@@ -34,7 +34,13 @@ export default function SearchContent() {
   }, [location, start_date, end_date, guests]);
 
   useEffect(() => {
-    const queryParams = { location, start_date, end_date, guests };
+    const queryParams = {
+      status: "ACTIVE",
+      location,
+      start_date,
+      end_date,
+      guests,
+    };
 
     dispatch(
       getPropertyList({

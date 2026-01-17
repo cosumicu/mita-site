@@ -80,43 +80,43 @@ function Properties() {
   return (
     <div className="space-y-4">
       <PropertyList
-        searchParams={{ status: "ACTIVE", location: FEATURED.k1 }}
+        searchParams={{ location: FEATURED.k1 }}
         label={`Stay in ${FEATURED.k1}`}
         properties={propertyList1.data}
         loading={propertyList1.loading}
       />
       <PropertyList
-        searchParams={{ status: "ACTIVE", location: FEATURED.k2 }}
+        searchParams={{ location: FEATURED.k2 }}
         label={`Stay in ${FEATURED.k2} this weekend`}
         properties={propertyList2.data}
         loading={propertyList2.loading}
       />
       <PropertyList
-        searchParams={{ status: "ACTIVE", location: FEATURED.k3 }}
+        searchParams={{ location: FEATURED.k3 }}
         label={`Popular in ${FEATURED.k3}`}
         properties={propertyList3.data}
         loading={propertyList3.loading}
       />
       <PropertyList
-        searchParams={{ status: "ACTIVE", location: FEATURED.k4 }}
+        searchParams={{ location: FEATURED.k4 }}
         label={`Recommended in ${FEATURED.k4}`}
         properties={propertyList4.data}
         loading={propertyList4.loading}
       />
       <PropertyList
-        searchParams={{ status: "ACTIVE", location: FEATURED.k5 }}
+        searchParams={{ location: FEATURED.k5 }}
         label={`Top stays in ${FEATURED.k5}`}
         properties={propertyList5.data}
         loading={propertyList5.loading}
       />
       <PropertyList
-        searchParams={{ status: "ACTIVE", ordering: "-likes_count" }}
+        searchParams={{ ordering: "-likes_count" }}
         label={"Guest Favorites"}
         properties={propertyList6.data}
         loading={propertyList6.loading}
       />
       <PropertyList
-        searchParams={{ status: "ACTIVE", ordering: "-reservations_count" }}
+        searchParams={{ ordering: "-reservations_count" }}
         label={"Highly booked"}
         properties={propertyList7.data}
         loading={propertyList7.loading}
