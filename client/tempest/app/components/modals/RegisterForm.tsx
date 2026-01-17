@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import SpinnerOverlay from "../common/SpinnerOverlay";
 
 type RegisterFormProps = {
   onSuccess?: () => void;
@@ -22,7 +23,7 @@ function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
   const dispatch = useAppDispatch();
   const [form] = Form.useForm();
   const { isError, isLoading, isSuccess, message } = useAppSelector(
-    (state) => state.auth
+    (state) => state.auth,
   );
 
   useEffect(() => {
@@ -48,6 +49,7 @@ function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
 
   return (
     <div className="mx-10">
+      {isLoading && <SpinnerOverlay />}
       <Form form={form} name="register" onFinish={onFinish}>
         <Form.Item
           name="email"
@@ -92,7 +94,7 @@ function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
                   return Promise.resolve();
                 }
                 return Promise.reject(
-                  new Error("The two passwords do not match!")
+                  new Error("The two passwords do not match!"),
                 );
               },
             }),

@@ -20,7 +20,7 @@ function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
   const next = searchParams.get("next");
   const dispatch = useAppDispatch();
   const { isLoading, isSuccess, isError, message } = useAppSelector(
-    (state) => state.auth
+    (state) => state.auth,
   );
   const [form] = Form.useForm();
 
