@@ -17,27 +17,33 @@ const FEATURED = {
 function Properties() {
   const dispatch = useAppDispatch();
   const { data: propertyList1, loading: propertyList1Loading } = useAppSelector(
-    (state) => state.property.propertyList1
+    (state) => state.property.propertyList1,
   );
   const { data: propertyList2, loading: propertyList2Loading } = useAppSelector(
-    (state) => state.property.propertyList2
+    (state) => state.property.propertyList2,
   );
   const { data: propertyList3, loading: propertyList3Loading } = useAppSelector(
-    (state) => state.property.propertyList3
+    (state) => state.property.propertyList3,
   );
   const { success: createPropertySuccess } = useAppSelector(
-    (state) => state.property.createProperty
+    (state) => state.property.createProperty,
   );
 
   useEffect(() => {
     dispatch(
-      getPropertyList1({ filters: { status: "ACTIVE", location: FEATURED.k1 } })
+      getPropertyList1({
+        filters: { status: "ACTIVE", location: FEATURED.k1 },
+      }),
     );
     dispatch(
-      getPropertyList2({ filters: { status: "ACTIVE", location: FEATURED.k2 } })
+      getPropertyList2({
+        filters: { status: "ACTIVE", location: FEATURED.k2 },
+      }),
     );
     dispatch(
-      getPropertyList3({ filters: { status: "ACTIVE", location: FEATURED.k3 } })
+      getPropertyList3({
+        filters: { status: "ACTIVE", location: FEATURED.k3 },
+      }),
     );
   }, [dispatch, createPropertySuccess]);
 
@@ -57,7 +63,7 @@ function Properties() {
       />
       <PropertyList
         q={FEATURED.k3}
-        label={`Popular in ${FEATURED.k2}`}
+        label={`Popular in ${FEATURED.k3}`}
         properties={propertyList3}
         loading={propertyList3Loading}
       />
