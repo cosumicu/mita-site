@@ -42,7 +42,7 @@ export default function ChatWindow({ conversation, onBack }: Props) {
     dispatch(getConversationMessages(conversationId));
 
     const ws = new WebSocket(
-      `${process.env.NEXT_PUBLIC_API_HOST_WEB_SOCKET}/ws/chat/${conversationId}/`
+      `${process.env.NEXT_PUBLIC_API_HOST_WEB_SOCKET}/ws/chat/${conversationId}/`,
     );
     ws.onopen = () => console.log("WebSocket connected!");
     ws.onclose = () => console.log("WebSocket closed.");
@@ -72,7 +72,7 @@ export default function ChatWindow({ conversation, onBack }: Props) {
         conversation_id: conversationId,
         sender_id: user.user_id,
         text,
-      })
+      }),
     );
     setText("");
   };
@@ -104,13 +104,13 @@ export default function ChatWindow({ conversation, onBack }: Props) {
               <Avatar
                 size="large"
                 src={
-                  conversation.landlord.id === user?.user_id
+                  conversation.landlord.user_id === user?.user_id
                     ? conversation.guest.profile_picture_url
                     : conversation.landlord.profile_picture_url
                 }
               />
               <h2 className="font-semibold text-gray-800 text-lg truncate">
-                {conversation.landlord.id === user?.user_id
+                {conversation.landlord.user_id === user?.user_id
                   ? conversation.guest.full_name
                   : conversation.landlord.full_name}
               </h2>
