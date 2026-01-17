@@ -35,7 +35,7 @@ export default function UserProfilePage() {
       getUserPropertyList({
         filters: { user: id },
         pagination: { page: 1, page_size: 10 },
-      })
+      }),
     );
   }, [id, dispatch]);
 
@@ -100,6 +100,7 @@ export default function UserProfilePage() {
 
       <div>
         <PropertyList
+          q=""
           label="User Listings"
           properties={userPropertyList}
           loading={userPropertyListLoading}

@@ -23,13 +23,13 @@ export default function HostOnboardingPage() {
   } = useAppSelector((state) => state.user);
 
   const { data, loading, error, message } = useAppSelector(
-    (state) => state.property.userPropertyList
+    (state) => state.property.userPropertyList,
   );
 
   const [activating, setActivating] = useState(false);
   const [activateError, setActivateError] = useState<string | null>(null);
 
-  const userId = user?.user_id ?? user?.id ?? null;
+  const userId = user?.user_id ?? user?.user_id ?? null;
 
   // Prevent repeated fetches for same userId (dev strict mode + rerenders)
   const lastFetchedUserId = useRef<string | number | null>(null);
@@ -94,7 +94,7 @@ export default function HostOnboardingPage() {
       getUserPropertyList({
         filters: { user: userId, status: "" },
         pagination: { page: 1, page_size: 10 },
-      })
+      }),
     );
   }, [dispatch, userId]);
 
@@ -107,14 +107,14 @@ export default function HostOnboardingPage() {
         updatePropertyStatus({
           propertyId: latestProperty.id,
           status: "ACTIVE",
-        })
+        }),
       ).unwrap();
       await dispatch(updateMyHostStatus({ host_status: "ACTIVE" })).unwrap();
 
       router.push("/host/dashboard");
     } catch (e: any) {
       setActivateError(
-        e?.response?.data?.detail || e?.message || "Failed to activate host."
+        e?.response?.data?.detail || e?.message || "Failed to activate host.",
       );
     } finally {
       setActivating(false);
@@ -190,8 +190,8 @@ export default function HostOnboardingPage() {
                   status: hasProfileReqs
                     ? "finish"
                     : hasListing
-                    ? "process"
-                    : "wait",
+                      ? "process"
+                      : "wait",
                   description: (
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
@@ -259,8 +259,8 @@ export default function HostOnboardingPage() {
                 {user?.host_status === "ACTIVE"
                   ? "You are already an active host."
                   : canActivate
-                  ? "Ready to activate your host account."
-                  : "Complete all steps to enable activation."}
+                    ? "Ready to activate your host account."
+                    : "Complete all steps to enable activation."}
               </div>
 
               <Button
@@ -320,7 +320,7 @@ export default function HostOnboardingPage() {
                             <span className="text-gray-500">
                               ₱
                               {Number(
-                                latestProperty.price_per_night
+                                latestProperty.price_per_night,
                               ).toLocaleString()}
                               /night
                             </span>
@@ -338,7 +338,7 @@ export default function HostOnboardingPage() {
                           type="primary"
                           onClick={() =>
                             router.push(
-                              `/host/update-listing/${latestProperty.id}/`
+                              `/host/update-listing/${latestProperty.id}/`,
                             )
                           }
                         >

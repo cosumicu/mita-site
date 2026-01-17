@@ -59,7 +59,7 @@ export const getCurrentUser = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message || "Failed to fetch user"
+      error.response?.data?.message || error.message || "Failed to fetch user",
     );
   }
 });
@@ -75,7 +75,7 @@ export const getUserProfile = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message || "Failed to fetch user"
+      error.response?.data?.message || error.message || "Failed to fetch user",
     );
   }
 });
@@ -162,7 +162,7 @@ export const userSlice = createSlice({
           state.message = "";
           state.user = action.payload;
           state.hasCheckedAuth = true;
-        }
+        },
       )
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.isLoading = false;
@@ -184,7 +184,7 @@ export const userSlice = createSlice({
           state.userDetail.success = true;
           state.userDetail.message = "";
           state.userDetail.data = action.payload;
-        }
+        },
       )
       .addCase(getUserProfile.rejected, (state, action) => {
         state.userDetail.loading = false;
@@ -205,7 +205,7 @@ export const userSlice = createSlice({
         (state, action: PayloadAction<User>) => {
           state.updateProfile.loading = false;
           state.updateProfile.success = true;
-        }
+        },
       )
       .addCase(updateMyProfile.rejected, (state, action) => {
         state.updateProfile.loading = false;
@@ -252,10 +252,10 @@ export const userSlice = createSlice({
           }
 
           // also keep userDetail in sync if you're showing profile page
-          if (state.userDetail.data?.id === action.payload.id) {
+          if (state.userDetail.data?.user_id === action.payload.user_id) {
             state.userDetail.data = action.payload;
           }
-        }
+        },
       )
       .addCase(updateMyHostStatus.rejected, (state, action) => {
         state.updateHostStatus.loading = false;
