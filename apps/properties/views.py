@@ -10,6 +10,7 @@ from django.utils import timezone
 from datetime import datetime, timedelta
 import django_filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 
 from .models import Property, Reservation, PropertyView, PropertyLike, ReservationStatus, PropertyTag, PropertyStatus
 from .pagination import PropertyPagination
@@ -56,12 +57,15 @@ class ReservationFilter(django_filters.FilterSet):
     status = django_filters.CharFilter(field_name='status')
 
 class PropertyListView(generics.ListAPIView):
-    queryset = Property.objects.all().order_by('-created_at')
+    queryset = Property.objects.all()
     serializer_class = PropertyListSerializer
     permission_classes = [permissions.AllowAny]
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_class = PropertyFilter
     pagination_class = PropertyPagination
+
+    ordering_fields = ["likes_count", "reservations_count", "views_count", "created_at"]
+    ordering = ["-created_at"]
 
 class PropertyDetailView(generics.RetrieveAPIView):
     serializer_class = PropertyDetailSerializer
