@@ -9,7 +9,7 @@ services:
       - static_volume:/app/static
       - media_volume:/app/media
     env_file:
-      - .env.prod
+      - .env
     restart: always
     depends_on:
       - db
@@ -116,6 +116,7 @@ services:
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
+      - /root/nginx/certs:/etc/nginx/certs:ro
     build:
       context: ./docker/local/nginx
       dockerfile: Dockerfile
