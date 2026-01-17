@@ -18,6 +18,7 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import {
   updateMyProfile,
   resetUpdateProfile,
+  getCurrentUser,
 } from "@/app/lib/features/users/userSlice";
 import { toast } from "react-toastify";
 import SpinnerOverlay from "../common/SpinnerOverlay";
@@ -71,7 +72,7 @@ export default function UpdateProfileModal({
               url: user.profile_picture_url,
             },
           ]
-        : []
+        : [],
     );
 
     setValidIdList([]);
@@ -84,6 +85,7 @@ export default function UpdateProfileModal({
   useEffect(() => {
     if (updateProfile.success) {
       dispatch(resetUpdateProfile());
+      dispatch(getCurrentUser());
       onSuccess?.();
       toast.success("Profile updated!");
     }
