@@ -10,13 +10,18 @@ import { Property } from "@/app/lib/definitions";
 import { useRouter } from "next/navigation";
 
 type PropertyListProps = {
-  q: string;
+  searchParams?: Record<string, string | number | boolean | null | undefined>;
   label: string;
   properties: Property[];
   loading: boolean;
 };
 
-const PropertyList = ({ q, label, properties, loading }: PropertyListProps) => {
+const PropertyList = ({
+  searchParams,
+  label,
+  properties,
+  loading,
+}: PropertyListProps) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { user } = useAppSelector((state) => state.user);
@@ -25,6 +30,12 @@ const PropertyList = ({ q, label, properties, loading }: PropertyListProps) => {
 
   const [canLeft, setCanLeft] = useState(false);
   const [canRight, setCanRight] = useState(false);
+
+  const hasSearch =
+    !!searchParams &&
+    Object.values(searchParams).some(
+      (v) => v !== null && v !== undefined && v !== "",
+    );
 
   const updateButtons = useCallback(() => {
     const el = scrollRef.current;
@@ -79,16 +90,30 @@ const PropertyList = ({ q, label, properties, loading }: PropertyListProps) => {
 
   const showButtons = canLeft || canRight;
 
+  const toSearchUrl = (params: PropertyListProps["searchParams"]) => {
+    const sp = new URLSearchParams();
+
+    Object.entries(params ?? {}).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === "") return;
+      sp.set(key, String(value));
+    });
+
+    const qs = sp.toString();
+    return qs ? `/s?${qs}` : "/s";
+  };
+
   return (
     <div className="relative space-y-2 sm:space-y-4">
       <div className="flex gap-2">
         <p className="font-bold">{label}</p>
-        <button
-          className="font-bold"
-          onClick={() => router.push(`/s?location=${q}`)}
-        >
-          ›
-        </button>
+        {hasSearch && (
+          <button
+            className="font-bold"
+            onClick={() => router.push(toSearchUrl(searchParams))}
+          >
+            ›
+          </button>
+        )}
       </div>
 
       {canLeft && (

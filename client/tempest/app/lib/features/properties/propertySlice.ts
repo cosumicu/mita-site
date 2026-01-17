@@ -44,6 +44,10 @@ type PropertyState = {
   propertyList1: PaginatedAsyncState<Property>;
   propertyList2: PaginatedAsyncState<Property>;
   propertyList3: PaginatedAsyncState<Property>;
+  propertyList4: PaginatedAsyncState<Property>;
+  propertyList5: PaginatedAsyncState<Property>;
+  propertyList6: PaginatedAsyncState<Property>;
+  propertyList7: PaginatedAsyncState<Property>;
   userPropertyList: PaginatedAsyncState<Property>;
   reservationList: PaginatedAsyncState<Reservation>;
   likedList: AsyncState<Property[]>;
@@ -93,6 +97,10 @@ const initialState: PropertyState = {
   propertyList1: initialPaginatedAsyncState(),
   propertyList2: initialPaginatedAsyncState(),
   propertyList3: initialPaginatedAsyncState(),
+  propertyList4: initialPaginatedAsyncState(),
+  propertyList5: initialPaginatedAsyncState(),
+  propertyList6: initialPaginatedAsyncState(),
+  propertyList7: initialPaginatedAsyncState(),
   userPropertyList: initialPaginatedAsyncState(),
   reservationList: initialPaginatedAsyncState(),
   reservationPropertyList: initialAsyncState([]),
@@ -126,16 +134,16 @@ export const getPropertyList = createAsyncThunk<
     try {
       const response = await propertyService.getPropertyList(
         filters,
-        pagination
+        pagination,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const getPropertyList1 = createAsyncThunk<
@@ -148,16 +156,16 @@ export const getPropertyList1 = createAsyncThunk<
     try {
       const response = await propertyService.getPropertyList1(
         filters,
-        pagination
+        pagination,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const getPropertyList2 = createAsyncThunk<
@@ -170,16 +178,16 @@ export const getPropertyList2 = createAsyncThunk<
     try {
       const response = await propertyService.getPropertyList2(
         filters,
-        pagination
+        pagination,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const getPropertyList3 = createAsyncThunk<
@@ -192,16 +200,104 @@ export const getPropertyList3 = createAsyncThunk<
     try {
       const response = await propertyService.getPropertyList3(
         filters,
-        pagination
+        pagination,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
+);
+
+export const getPropertyList4 = createAsyncThunk<
+  Paginated<Property>,
+  { filters?: PropertyFilterParams; pagination?: PaginationParams } | void,
+  { rejectValue: string }
+>(
+  "property/getPropertyList4",
+  async ({ filters = {}, pagination = {} } = {}, thunkAPI) => {
+    try {
+      const response = await propertyService.getPropertyList4(
+        filters,
+        pagination,
+      );
+      return response;
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message,
+      );
+    }
+  },
+);
+
+export const getPropertyList5 = createAsyncThunk<
+  Paginated<Property>,
+  { filters?: PropertyFilterParams; pagination?: PaginationParams } | void,
+  { rejectValue: string }
+>(
+  "property/getPropertyList5",
+  async ({ filters = {}, pagination = {} } = {}, thunkAPI) => {
+    try {
+      const response = await propertyService.getPropertyList5(
+        filters,
+        pagination,
+      );
+      return response;
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message,
+      );
+    }
+  },
+);
+
+export const getPropertyList6 = createAsyncThunk<
+  Paginated<Property>,
+  { filters?: PropertyFilterParams; pagination?: PaginationParams } | void,
+  { rejectValue: string }
+>(
+  "property/getPropertyList6",
+  async ({ filters = {}, pagination = {} } = {}, thunkAPI) => {
+    try {
+      const response = await propertyService.getPropertyList6(
+        filters,
+        pagination,
+      );
+      return response;
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message,
+      );
+    }
+  },
+);
+
+export const getPropertyList7 = createAsyncThunk<
+  Paginated<Property>,
+  { filters?: PropertyFilterParams; pagination?: PaginationParams } | void,
+  { rejectValue: string }
+>(
+  "property/getPropertyList7",
+  async ({ filters = {}, pagination = {} } = {}, thunkAPI) => {
+    try {
+      const response = await propertyService.getPropertyList7(
+        filters,
+        pagination,
+      );
+      return response;
+    } catch (err) {
+      const error = err as AxiosError<{ message?: string }>;
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message,
+      );
+    }
+  },
 );
 
 export const getUserPropertyList = createAsyncThunk<
@@ -214,16 +310,16 @@ export const getUserPropertyList = createAsyncThunk<
     try {
       const response = await propertyService.getUserPropertyList(
         filters,
-        pagination
+        pagination,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const createProperty = createAsyncThunk<
@@ -237,7 +333,7 @@ export const createProperty = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -253,7 +349,7 @@ export const getPropertyDetail = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -269,7 +365,7 @@ export const getReservationDetail = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -285,7 +381,7 @@ export const updateProperty = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -301,7 +397,7 @@ export const deleteProperty = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -318,7 +414,7 @@ export const createReservation = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -333,13 +429,13 @@ export const getReservationList = createAsyncThunk<
     try {
       const response = await propertyService.getReservationList(
         filters,
-        pagination
+        pagination,
       );
       return response;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(err.message || "An error has occured.");
     }
-  }
+  },
 );
 
 export const getReservationPropertyList = createAsyncThunk<
@@ -348,14 +444,13 @@ export const getReservationPropertyList = createAsyncThunk<
   { rejectValue: string }
 >("property/getReservationPropertyList", async (propertyId, thunkAPI) => {
   try {
-    const response = await propertyService.getReservationPropertyList(
-      propertyId
-    );
+    const response =
+      await propertyService.getReservationPropertyList(propertyId);
     return response;
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -371,7 +466,7 @@ export const getPropertyTags = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -386,16 +481,16 @@ export const getPropertyReviews = createAsyncThunk<
     try {
       const response = await propertyService.getPropertyReviews(
         propertyId,
-        pagination
+        pagination,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const createPropertyReview = createAsyncThunk<
@@ -408,16 +503,16 @@ export const createPropertyReview = createAsyncThunk<
     try {
       const response = await propertyService.createPropertyReview(
         propertyId,
-        formData
+        formData,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const getHostReservationList = createAsyncThunk<
@@ -430,16 +525,16 @@ export const getHostReservationList = createAsyncThunk<
     try {
       const response = await propertyService.getHostReservationList(
         filters,
-        pagination
+        pagination,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const getHostReservationPropertyList = createAsyncThunk<
@@ -452,16 +547,16 @@ export const getHostReservationPropertyList = createAsyncThunk<
     try {
       const response = await propertyService.getHostReservationPropertyList(
         propertyId,
-        pagination
+        pagination,
       );
       return response;
     } catch (err) {
       const error = err as AxiosError<{ message?: string }>;
       return thunkAPI.rejectWithValue(
-        error.response?.data?.message || error.message
+        error.response?.data?.message || error.message,
       );
     }
-  }
+  },
 );
 
 export const getReservationRequestsList = createAsyncThunk<
@@ -479,10 +574,10 @@ export const getReservationRequestsList = createAsyncThunk<
       return response;
     } catch (err: any) {
       return thunkAPI.rejectWithValue(
-        err.message || "Failed to fetch reservations"
+        err.message || "Failed to fetch reservations",
       );
     }
-  }
+  },
 );
 
 export const approveReservation = createAsyncThunk<
@@ -496,7 +591,7 @@ export const approveReservation = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -512,7 +607,7 @@ export const declineReservation = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -528,7 +623,7 @@ export const getUserLikesList = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -545,7 +640,7 @@ export const toggleFavorite = createAsyncThunk<
   } catch (err) {
     const error = err as AxiosError<{ message?: string }>;
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || error.message
+      error.response?.data?.message || error.message,
     );
   }
 });
@@ -563,7 +658,7 @@ export const updatePropertyStatus = createAsyncThunk<
     return thunkAPI.rejectWithValue(
       error.response?.data?.message ||
         error.message ||
-        "Failed to update status"
+        "Failed to update status",
     );
   }
 });
@@ -579,6 +674,10 @@ export const propertySlice = createSlice({
       state.propertyList1 = initialPaginatedAsyncState();
       state.propertyList2 = initialPaginatedAsyncState();
       state.propertyList3 = initialPaginatedAsyncState();
+      state.propertyList4 = initialPaginatedAsyncState();
+      state.propertyList5 = initialPaginatedAsyncState();
+      state.propertyList6 = initialPaginatedAsyncState();
+      state.propertyList7 = initialPaginatedAsyncState();
     },
     resetUserPropertyList: (state) => {
       state.userPropertyList = initialPaginatedAsyncState();
@@ -648,14 +747,14 @@ export const propertySlice = createSlice({
           state.propertyList.count = action.payload.count;
           state.propertyList.next = action.payload.next;
           state.propertyList.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getPropertyList.rejected, (state, action) => {
         state.propertyList.loading = false;
         state.propertyList.error = true;
         state.propertyList.message = action.payload as string;
       })
-      // GET PROPERTY LIST
+      // GET PROPERTY LIST 1
       .addCase(getPropertyList1.pending, (state) => {
         state.propertyList1.loading = true;
       })
@@ -668,14 +767,14 @@ export const propertySlice = createSlice({
           state.propertyList1.count = action.payload.count;
           state.propertyList1.next = action.payload.next;
           state.propertyList1.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getPropertyList1.rejected, (state, action) => {
         state.propertyList1.loading = false;
         state.propertyList1.error = true;
         state.propertyList1.message = action.payload as string;
       })
-      // GET PROPERTY LIST
+      // GET PROPERTY LIST 2
       .addCase(getPropertyList2.pending, (state) => {
         state.propertyList2.loading = true;
       })
@@ -688,14 +787,14 @@ export const propertySlice = createSlice({
           state.propertyList2.count = action.payload.count;
           state.propertyList2.next = action.payload.next;
           state.propertyList2.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getPropertyList2.rejected, (state, action) => {
         state.propertyList2.loading = false;
         state.propertyList2.error = true;
         state.propertyList2.message = action.payload as string;
       })
-      // GET PROPERTY LIST
+      // GET PROPERTY LIST 3
       .addCase(getPropertyList3.pending, (state) => {
         state.propertyList3.loading = true;
       })
@@ -708,13 +807,96 @@ export const propertySlice = createSlice({
           state.propertyList3.count = action.payload.count;
           state.propertyList3.next = action.payload.next;
           state.propertyList3.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getPropertyList3.rejected, (state, action) => {
         state.propertyList3.loading = false;
         state.propertyList3.error = true;
         state.propertyList3.message = action.payload as string;
       })
+      // GET PROPERTY LIST 4
+      .addCase(getPropertyList4.pending, (state) => {
+        state.propertyList4.loading = true;
+      })
+      .addCase(
+        getPropertyList4.fulfilled,
+        (state, action: PayloadAction<Paginated<Property>>) => {
+          state.propertyList4.loading = false;
+          state.propertyList4.success = true;
+          state.propertyList4.data = action.payload.results;
+          state.propertyList4.count = action.payload.count;
+          state.propertyList4.next = action.payload.next;
+          state.propertyList4.previous = action.payload.previous;
+        },
+      )
+      .addCase(getPropertyList4.rejected, (state, action) => {
+        state.propertyList4.loading = false;
+        state.propertyList4.error = true;
+        state.propertyList4.message = action.payload as string;
+      })
+
+      // GET PROPERTY LIST 5
+      .addCase(getPropertyList5.pending, (state) => {
+        state.propertyList5.loading = true;
+      })
+      .addCase(
+        getPropertyList5.fulfilled,
+        (state, action: PayloadAction<Paginated<Property>>) => {
+          state.propertyList5.loading = false;
+          state.propertyList5.success = true;
+          state.propertyList5.data = action.payload.results;
+          state.propertyList5.count = action.payload.count;
+          state.propertyList5.next = action.payload.next;
+          state.propertyList5.previous = action.payload.previous;
+        },
+      )
+      .addCase(getPropertyList5.rejected, (state, action) => {
+        state.propertyList5.loading = false;
+        state.propertyList5.error = true;
+        state.propertyList5.message = action.payload as string;
+      })
+
+      // GET PROPERTY LIST 6
+      .addCase(getPropertyList6.pending, (state) => {
+        state.propertyList6.loading = true;
+      })
+      .addCase(
+        getPropertyList6.fulfilled,
+        (state, action: PayloadAction<Paginated<Property>>) => {
+          state.propertyList6.loading = false;
+          state.propertyList6.success = true;
+          state.propertyList6.data = action.payload.results;
+          state.propertyList6.count = action.payload.count;
+          state.propertyList6.next = action.payload.next;
+          state.propertyList6.previous = action.payload.previous;
+        },
+      )
+      .addCase(getPropertyList6.rejected, (state, action) => {
+        state.propertyList6.loading = false;
+        state.propertyList6.error = true;
+        state.propertyList6.message = action.payload as string;
+      })
+      // GET PROPERTY LIST 7
+      .addCase(getPropertyList7.pending, (state) => {
+        state.propertyList7.loading = true;
+      })
+      .addCase(
+        getPropertyList7.fulfilled,
+        (state, action: PayloadAction<Paginated<Property>>) => {
+          state.propertyList7.loading = false;
+          state.propertyList7.success = true;
+          state.propertyList7.data = action.payload.results;
+          state.propertyList7.count = action.payload.count;
+          state.propertyList7.next = action.payload.next;
+          state.propertyList7.previous = action.payload.previous;
+        },
+      )
+      .addCase(getPropertyList7.rejected, (state, action) => {
+        state.propertyList7.loading = false;
+        state.propertyList7.error = true;
+        state.propertyList7.message = action.payload as string;
+      })
+
       // GET USER PROPERTY LIST
       .addCase(getUserPropertyList.pending, (state) => {
         state.userPropertyList.loading = true;
@@ -728,7 +910,7 @@ export const propertySlice = createSlice({
           state.userPropertyList.count = action.payload.count;
           state.userPropertyList.next = action.payload.next;
           state.userPropertyList.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getUserPropertyList.rejected, (state, action) => {
         state.userPropertyList.loading = false;
@@ -745,7 +927,7 @@ export const propertySlice = createSlice({
           state.createProperty.loading = false;
           state.createProperty.success = true;
           state.createProperty.data = action.payload;
-        }
+        },
       )
       .addCase(createProperty.rejected, (state, action) => {
         state.createProperty.loading = false;
@@ -762,7 +944,7 @@ export const propertySlice = createSlice({
           state.propertyDetail.loading = false;
           state.propertyDetail.success = true;
           state.propertyDetail.data = action.payload;
-        }
+        },
       )
       .addCase(getPropertyDetail.rejected, (state, action) => {
         state.propertyDetail.loading = false;
@@ -779,7 +961,7 @@ export const propertySlice = createSlice({
           state.reservationDetail.loading = false;
           state.reservationDetail.success = true;
           state.reservationDetail.data = action.payload;
-        }
+        },
       )
       .addCase(getReservationDetail.rejected, (state, action) => {
         state.reservationDetail.loading = false;
@@ -796,7 +978,7 @@ export const propertySlice = createSlice({
           state.updateProperty.loading = false;
           state.updateProperty.success = true;
           state.updateProperty.data = action.payload;
-        }
+        },
       )
       .addCase(updateProperty.rejected, (state, action) => {
         state.updateProperty.loading = false;
@@ -813,7 +995,7 @@ export const propertySlice = createSlice({
           state.deleteProperty.loading = false;
           state.deleteProperty.success = true;
           state.deleteProperty.data = action.payload;
-        }
+        },
       )
       .addCase(deleteProperty.rejected, (state, action) => {
         state.deleteProperty.loading = false;
@@ -830,7 +1012,7 @@ export const propertySlice = createSlice({
           state.createReservation.loading = false;
           state.createReservation.success = true;
           state.createReservation.data = action.payload;
-        }
+        },
       )
       .addCase(createReservation.rejected, (state, action) => {
         state.createReservation.loading = false;
@@ -850,7 +1032,7 @@ export const propertySlice = createSlice({
           state.reservationList.count = action.payload.count;
           state.reservationList.next = action.payload.next;
           state.reservationList.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getReservationList.rejected, (state, action) => {
         state.reservationList.loading = false;
@@ -870,7 +1052,7 @@ export const propertySlice = createSlice({
           state.hostReservationList.count = action.payload.count;
           state.hostReservationList.next = action.payload.next;
           state.hostReservationList.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getHostReservationList.rejected, (state, action) => {
         state.hostReservationList.loading = false;
@@ -890,7 +1072,7 @@ export const propertySlice = createSlice({
           state.hostReservationPropertyList.count = action.payload.count;
           state.hostReservationPropertyList.next = action.payload.next;
           state.hostReservationPropertyList.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getHostReservationPropertyList.rejected, (state, action) => {
         state.hostReservationPropertyList.loading = false;
@@ -907,7 +1089,7 @@ export const propertySlice = createSlice({
           state.reservationPropertyList.loading = false;
           state.reservationPropertyList.success = true;
           state.reservationPropertyList.data = action.payload;
-        }
+        },
       )
       .addCase(getReservationPropertyList.rejected, (state, action) => {
         state.reservationPropertyList.loading = false;
@@ -927,7 +1109,7 @@ export const propertySlice = createSlice({
           state.reservationRequestsList.count = action.payload.count;
           state.reservationRequestsList.next = action.payload.next;
           state.reservationRequestsList.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getReservationRequestsList.rejected, (state, action) => {
         state.reservationRequestsList.loading = false;
@@ -970,7 +1152,7 @@ export const propertySlice = createSlice({
           state.likedList.loading = false;
           state.likedList.success = true;
           state.likedList.data = action.payload;
-        }
+        },
       )
       .addCase(getUserLikesList.rejected, (state, action) => {
         state.likedList.loading = false;
@@ -987,7 +1169,7 @@ export const propertySlice = createSlice({
           state.propertyTagList.loading = false;
           state.propertyTagList.success = true;
           state.propertyTagList.data = action.payload;
-        }
+        },
       )
       .addCase(getPropertyTags.rejected, (state, action) => {
         state.propertyTagList.loading = false;
@@ -1007,7 +1189,7 @@ export const propertySlice = createSlice({
           state.propertyReviews.count = action.payload.count;
           state.propertyReviews.next = action.payload.next;
           state.propertyReviews.previous = action.payload.previous;
-        }
+        },
       )
       .addCase(getPropertyReviews.rejected, (state, action) => {
         state.propertyReviews.loading = false;
@@ -1023,7 +1205,7 @@ export const propertySlice = createSlice({
         (state, action: PayloadAction<void>) => {
           state.createPropertyReview.loading = false;
           state.createPropertyReview.success = true;
-        }
+        },
       )
       .addCase(createPropertyReview.rejected, (state, action) => {
         state.createPropertyReview.loading = false;

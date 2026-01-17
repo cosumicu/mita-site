@@ -148,6 +148,7 @@ export interface PropertyFilterParams {
   start_date?: string;
   end_date?: string;
   guests?: string;
+  ordering?: string;
 }
 
 export interface ReservationFilterParams {
