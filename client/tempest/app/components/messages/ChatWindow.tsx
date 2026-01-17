@@ -7,7 +7,7 @@ import {
   getConversationMessages,
 } from "@/app/lib/features/messages/messageSlice";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Avatar, Button, Spin } from "antd";
+import { Avatar, Drawer } from "antd";
 import ChatReservationDetailsDrawer from "./ChatReservationDetailsDrawer";
 import { formatTimeV2 } from "@/app/lib/utils/format";
 
@@ -16,25 +16,27 @@ type Props = {
   onBack?: () => void;
 };
 
-const WEB_SOCKET_URL = `${process.env.NEXT_PUBLIC_API_HOST_WEB_SOCKET}/properties`;
-
 export default function ChatWindow({ conversation, onBack }: Props) {
   const { user } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
-  const {
-    data: messageList,
-    loading: messageListLoading,
-    success: messageListSuccess,
-  } = useAppSelector((state) => state.message.messageList);
-  const [
-    isChatReservationDetailsDrawerOpen,
-    setIsChatReservationDetailsDrawerOpen,
-  ] = useState(true);
+  const { data: messageList } = useAppSelector(
+    (state) => state.message.messageList,
+  );
+
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const [text, setText] = useState("");
   const socketRef = useRef<WebSocket | null>(null);
 
   const conversationId = conversation?.id || null;
+
+  // ✅ reservation panel state
+  const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+
+  // Optional: when you switch conversations on mobile, start closed
+  useEffect(() => {
+    setIsReservationOpen(false);
+  }, [conversationId]);
 
   useEffect(() => {
     if (!conversationId) return;
@@ -44,21 +46,11 @@ export default function ChatWindow({ conversation, onBack }: Props) {
     const ws = new WebSocket(
       `${process.env.NEXT_PUBLIC_API_HOST_WEB_SOCKET}/ws/chat/${conversationId}/`,
     );
-    ws.onopen = () => console.log("WebSocket connected!");
-    ws.onclose = () => console.log("WebSocket closed.");
-    ws.onerror = (e) => console.error("WebSocket error:", e);
 
-    // This block of code is a listener
-    // Every time backend call [chat_message], this code runs
-    // NOTE:
-    // websockets always returns a string, therefore, we parse it
-    // ======================================================
-    ws.onmessage = (event) => {
-      // const { type, ...message } = JSON.parse(event.data);
+    ws.onmessage = () => {
       dispatch(getConversationMessages(conversationId));
       dispatch(getConversationList());
     };
-    // ======================================================
 
     socketRef.current = ws;
     return () => ws.close();
@@ -83,12 +75,16 @@ export default function ChatWindow({ conversation, onBack }: Props) {
 
   if (!conversation) return null;
 
+  const other =
+    conversation.landlord.user_id === user?.user_id
+      ? conversation.guest
+      : conversation.landlord;
+
   return (
     <div className="flex w-full h-full">
-      {/* Chat window */}
       <div
         className={`flex flex-col transition-all duration-300 ${
-          isChatReservationDetailsDrawerOpen ? "w-[75%]" : "w-full"
+          showDetails ? "w-[60%]" : "w-full"
         } bg-gradient-to-br from-white to-gray-50`}
       >
         {/* Header */}
@@ -97,28 +93,21 @@ export default function ChatWindow({ conversation, onBack }: Props) {
             onClick={onBack}
             className="md:hidden p-2 rounded-full hover:bg-gray-100 active:scale-95 transition-transform"
           >
-            <ArrowLeftOutlined size={20} />
+            <ArrowLeftOutlined />
           </button>
-          {conversation && (
-            <>
-              <Avatar
-                size="large"
-                src={
-                  conversation.landlord.user_id === user?.user_id
-                    ? conversation.guest.profile_picture_url
-                    : conversation.landlord.profile_picture_url
-                }
-              />
-              <h2 className="font-semibold text-gray-800 text-lg truncate">
-                {conversation.landlord.user_id === user?.user_id
-                  ? conversation.guest.full_name
-                  : conversation.landlord.full_name}
-              </h2>
-            </>
-          )}
-          {conversation && (
-            <div className="flex gap-2 ml-auto">
-              <button className="bg-gray-100 rounded-[6px] p-1.5 hover:bg-gray-200 transition">
+
+          <Avatar size="large" src={other.profile_picture_url} />
+          <h2 className="font-semibold text-gray-800 text-lg truncate">
+            {other.full_name}
+          </h2>
+
+          <div className="ml-auto flex items-center gap-2">
+            {!showDetails && (
+              <button
+                onClick={() => setShowDetails(true)}
+                className="hidden md:inline-flex bg-gray-100 rounded-[6px] p-1.5 hover:bg-gray-200 transition"
+                aria-label="Show details"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -129,18 +118,22 @@ export default function ChatWindow({ conversation, onBack }: Props) {
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="icon icon-tabler icons-tabler-outline icon-tabler-exclamation-circle"
                 >
-                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                  <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
-                  <path d="M12 9v4" />
-                  <path d="M12 16v.01" />
+                  <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                  <path d="M16 3v4" />
+                  <path d="M8 3v4" />
+                  <path d="M4 11h16" />
                 </svg>
               </button>
-              {!isChatReservationDetailsDrawerOpen && (
+            )}
+
+            {/* ✅ Open reservation details on mobile */}
+            {conversation?.reservation && (
+              <div className="flex gap-2">
                 <button
-                  className="bg-gray-100 rounded-[6px] p-1.5 hover:bg-gray-200 transition"
-                  onClick={() => setIsChatReservationDetailsDrawerOpen(true)}
+                  className="bg-gray-100 rounded-[6px] p-1.5 hover:bg-gray-200 transition md:hidden"
+                  onClick={() => setIsReservationOpen(true)}
+                  aria-label="Open reservation details"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -152,35 +145,21 @@ export default function ChatWindow({ conversation, onBack }: Props) {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    className="icon icon-tabler icons-tabler-outline icon-tabler-calendar-week"
                   >
-                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                     <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
                     <path d="M16 3v4" />
                     <path d="M8 3v4" />
                     <path d="M4 11h16" />
-                    <path d="M7 14h.013" />
-                    <path d="M10.01 14h.005" />
-                    <path d="M13.01 14h.005" />
-                    <path d="M16.015 14h.005" />
-                    <path d="M13.015 17h.005" />
-                    <path d="M7.01 17h.005" />
-                    <path d="M10.01 17h.005" />
                   </svg>
                 </button>
-              )}
-            </div>
-          )}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {/* {messageListLoading && (
-            <div className="flex h-full items-center justify-center">
-              <Spin size="large" />
-            </div>
-          )} */}
-          {messageList.map((msg) => {
+          {messageList.map((msg: any) => {
             const isMe = msg.sender.user_id === user?.user_id;
             return (
               <div
@@ -212,11 +191,11 @@ export default function ChatWindow({ conversation, onBack }: Props) {
                     </span>
                   </div>
                 </div>
-                <div className="mb-auto">
-                  {isMe && (
+                {isMe && (
+                  <div className="mb-auto">
                     <Avatar size="large" src={msg.sender.profile_picture_url} />
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             );
           })}
@@ -224,7 +203,7 @@ export default function ChatWindow({ conversation, onBack }: Props) {
         </div>
 
         {/* Input */}
-        <div className="bg-gray p-4 flex items-center gap-3">
+        <div className="bg-transparent px-4 py-3 flex items-center gap-3">
           <input
             type="text"
             value={text}
@@ -233,22 +212,34 @@ export default function ChatWindow({ conversation, onBack }: Props) {
             className="flex-1 border border-gray-300 rounded-full px-5 py-2 focus:outline-none focus:ring-2 focus:ring-primary placeholder-gray-400"
             placeholder="Type a message..."
           />
-          {/* <button
-            onClick={handleSend}
-            className="bg-primary p-3 rounded-full active:scale-95 transition-transform flex items-center justify-center"
-          ></button> */}
         </div>
       </div>
 
-      {/* Reservation panel */}
-      {isChatReservationDetailsDrawerOpen && conversation && (
+      {/* ✅ Desktop: keep your current right panel */}
+      {showDetails && conversation?.reservation && (
         <div className="w-[40%] border-l border-gray-200 h-full overflow-y-auto">
           <ChatReservationDetailsDrawer
             conversation={conversation}
-            onClose={() => setIsChatReservationDetailsDrawerOpen(false)}
+            onClose={() => setShowDetails(false)} // ✅ hides panel when X clicked
           />
         </div>
       )}
+
+      {/* ✅ Mobile: Drawer instead of side panel */}
+      <Drawer
+        open={isReservationOpen}
+        onClose={() => setIsReservationOpen(false)}
+        placement="right"
+        width="90%"
+        className="md:hidden"
+        title="Reservation details"
+        destroyOnClose
+      >
+        <ChatReservationDetailsDrawer
+          conversation={conversation}
+          onClose={() => setIsReservationOpen(false)}
+        />
+      </Drawer>
     </div>
   );
 }

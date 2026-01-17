@@ -28,13 +28,13 @@ function ChatReservationDetailsDrawer({
   if (!conversation || !conversation.reservation) return null;
   const reservation = conversation.reservation;
   return (
-    <div className="flex flex-col gap-4 p-2 mt-2">
+    <div className="flex flex-col gap-4 md:mt-2 md:p-2">
       <div className="flex">
         <div>
           <p className="font-bold text-xl">{reservation.property.title}</p>
           <p className="text-gray-600">{reservation.property.location}</p>
         </div>
-        <div className="ml-auto" onClick={onClose}>
+        <div className="ml-auto hidden md:block" onClick={onClose}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -61,14 +61,14 @@ function ChatReservationDetailsDrawer({
         />
       </div>
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-center sm:justify-start w-full py-2">
+        <div className="flex items-center sm:justify-start w-full py-2">
           <Link href={`/users/profile/${reservation.property.user.user_id}`}>
             <Avatar
               size="large"
               src={reservation.property.user.profile_picture_url}
             />
           </Link>
-          <div className="ml-2">
+          <div className="ml-2 font-semibold">
             <p>{`Hosted by ${reservation.property.user.full_name}`}</p>
           </div>
         </div>
