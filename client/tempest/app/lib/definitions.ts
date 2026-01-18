@@ -176,6 +176,7 @@ export type HostCalendarEvent = {
   status: string;
   property_id: string;
   guest: string;
+  guest_profile_picture: string;
   confirmation_code: string;
 };
 

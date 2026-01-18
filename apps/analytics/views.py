@@ -39,6 +39,7 @@ class HostCalendarAPIView(APIView):
                 "status": r.status,
                 "property_id": r.property.id,
                 "guest": r.user.get_full_name(),
+                "guest_profile_picture": r.user.profile.profile_picture_url(),
                 "confirmation_code": r.confirmation_code,
             }
             for r in reservations

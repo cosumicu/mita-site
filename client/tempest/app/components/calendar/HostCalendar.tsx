@@ -39,11 +39,12 @@ export default function HostCalendar({ reservations, onDatesSet }: Props) {
           status: r.status,
           property_id: r.property_id,
           guest: r.guest,
+          guest_profile_picture_url: r.guest_profile_picture,
           confirmation_code: r.confirmation_code,
           reservationData: r,
         },
       })),
-    [reservations]
+    [reservations],
   );
 
   // Handle date range changes (month navigation)
@@ -98,13 +99,24 @@ export default function HostCalendar({ reservations, onDatesSet }: Props) {
         eventDisplay="block"
         // Optional: Tooltip showing actual dates
         eventContent={(arg) => {
-          return {
-            html: `
-              <div class="fc-event-title">
-                ${arg.event.title}
-              </div>
-            `,
-          };
+          const name = arg.event.extendedProps.guest as string;
+          const avatarUrl = arg.event.extendedProps
+            .guest_profile_picture_url as string | undefined;
+
+          return (
+            <div className="flex items-center gap-2 min-w-0">
+              <img
+                src={avatarUrl || "/default_profile_picture.jpg"}
+                alt={name}
+                className="h-5 w-5 rounded-full object-cover flex-shrink-0"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src =
+                    "/default_profile_picture.jpg";
+                }}
+              />
+              <span className="truncate text-[12px] leading-tight">{name}</span>
+            </div>
+          );
         }}
       />
 
