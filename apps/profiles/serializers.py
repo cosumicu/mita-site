@@ -70,6 +70,25 @@ class ProfileSerializer(serializers.ModelSerializer):
 class ProfileUpdateSerializer(serializers.ModelSerializer):
     phone_number = PhoneNumberField(required=False)
 
+    first_name = serializers.CharField(
+        source="user.first_name",
+        required=False,      # missing on PATCH is ok
+        allow_blank=False,   # but if provided, cannot be ""
+        trim_whitespace=True,
+    )
+    last_name = serializers.CharField(
+        source="user.last_name",
+        required=False,
+        allow_blank=False,
+        trim_whitespace=True,
+    )
+    username = serializers.CharField(
+        source="user.username",
+        required=False,
+        allow_blank=False,
+        trim_whitespace=True,
+    )
+
     class Meta:
         model = Profile
         fields = [
@@ -79,12 +98,49 @@ class ProfileUpdateSerializer(serializers.ModelSerializer):
             "gender",
             "city",
             "valid_id",
+            "first_name",
+            "last_name",
+            "username",
         ]
 
     def validate_gender(self, value):
         if value not in dict(Gender.choices):
             raise serializers.ValidationError("Invalid gender.")
         return value
+
+    def validate(self, attrs):
+        """
+        If this is NOT partial (i.e. PUT), enforce required user fields.
+        PATCH won't require them; missing means "keep current".
+        """
+        if not getattr(self, "partial", False):
+            user_data = attrs.get("user", {})
+            required = ["first_name", "last_name", "username"]
+            missing = [f for f in required if not user_data.get(f)]
+            if missing:
+                raise serializers.ValidationError(
+                    {f: ["This field is required."] for f in missing}
+                )
+        return attrs
+
+    def update(self, instance, validated_data):
+        user_data = validated_data.pop("user", None)
+
+        # update profile fields
+        instance = super().update(instance, validated_data)
+
+        # update user fields ONLY if provided (PATCH keeps current automatically)
+        if user_data:
+            user = instance.user
+            updated = []
+            for field, value in user_data.items():
+                # allow_blank=False already prevents "" if provided
+                setattr(user, field, value)
+                updated.append(field)
+            if updated:
+                user.save(update_fields=updated)
+
+        return instance
 
 class ProfileHostStatusUpdateSerializer(serializers.ModelSerializer):
     host_status = serializers.ChoiceField(choices=HostStatus.choices)
