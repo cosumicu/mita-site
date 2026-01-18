@@ -11,6 +11,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = env("SECRET_KEY")
 
+ADMIN_URL = env("ADMIN_URL", default="admin/").strip("/") + "/"
+
 #django-insecure-hh2(ofx#8vf&0)(0)0p1#oxcoz#3!34-qpb-#xy1a&l$pt#)8c
 
 DEBUG = env("DEBUG")

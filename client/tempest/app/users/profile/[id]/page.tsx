@@ -33,7 +33,7 @@ export default function UserProfilePage() {
     dispatch(getUserProfile(id));
     dispatch(
       getUserPropertyList({
-        filters: { user: id },
+        filters: { user: id, status: "ACTIVE" },
         pagination: { page: 1, page_size: 10 },
       }),
     );
@@ -100,7 +100,7 @@ export default function UserProfilePage() {
 
       <div>
         <PropertyList
-          searchParams={{ status: "ACTIVE" }}
+          searchParams={{ user: id, status: "ACTIVE" }}
           label="User Listings"
           properties={userPropertyList}
           loading={userPropertyListLoading}

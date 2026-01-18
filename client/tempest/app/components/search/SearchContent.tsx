@@ -63,7 +63,7 @@ export default function SearchContent() {
   const total = propertyList.count;
 
   if (propertyList.loading)
-    return <ListingLoading title="Search Results"></ListingLoading>;
+    return <ListingLoading title="Search Results" count={30}></ListingLoading>;
 
   return (
     <div className="ui-container ui-main-content">

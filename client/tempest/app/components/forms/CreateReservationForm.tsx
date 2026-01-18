@@ -68,7 +68,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
         current.isSame(range.start, "day") ||
         current.isSame(range.end, "day") ||
         (current.isAfter(range.start, "day") &&
-          current.isBefore(range.end, "day"))
+          current.isBefore(range.end, "day")),
     );
 
     return isPast || isReserved;
@@ -90,12 +90,23 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
 
   useEffect(() => {
     if (createReservationSuccess) {
-      toast.success("Reservation created successfully");
+      if (property.is_instant_booking) {
+        toast.success("Reservation successful");
+      } else {
+        toast.success(
+          "Request sent to the host. You'll be notified once it's approved",
+        );
+      }
+
       form.resetFields();
       setNights(0);
+      setTaxAmount(0);
+      setServiceFee(0);
       setTotalPrice(0);
+
       dispatch(resetCreateReservation());
     }
+
     if (createReservationError) {
       toast.error(createReservationMessage);
       dispatch(resetCreateReservation());
@@ -175,8 +186,8 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                   if (dayjs(start).isSame(dayjs(end), "day")) {
                     return Promise.reject(
                       new Error(
-                        "Check-out date must be at least one day after check-in."
-                      )
+                        "Check-out date must be at least one day after check-in.",
+                      ),
                     );
                   }
 
@@ -184,14 +195,14 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                   const hasOverlap = reservedRanges.some(
                     (range) =>
                       dayjs(start).isBefore(range.end.add(1, "day")) &&
-                      dayjs(end).isAfter(range.start.subtract(1, "day"))
+                      dayjs(end).isAfter(range.start.subtract(1, "day")),
                   );
 
                   if (hasOverlap) {
                     return Promise.reject(
                       new Error(
-                        "Selected dates overlap with existing reservations."
-                      )
+                        "Selected dates overlap with existing reservations.",
+                      ),
                     );
                   }
 
@@ -283,7 +294,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                   {formatCurrency(
                     Number(property.price_per_night) *
                       nights *
-                      Number(property.monthly_discount_rate)
+                      Number(property.monthly_discount_rate),
                   )}
                 </div>
               </div>
@@ -303,7 +314,7 @@ function CreateReservationForm({ property }: CreateReservationFormProps) {
                     {formatCurrency(
                       Number(property.price_per_night) *
                         nights *
-                        Number(property.weekly_discount_rate)
+                        Number(property.weekly_discount_rate),
                     )}
                   </div>
                 </div>

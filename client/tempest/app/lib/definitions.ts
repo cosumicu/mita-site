@@ -163,7 +163,6 @@ export interface PaginationParams {
 export interface PropertyTag {
   value: number;
   label: string;
-  description: string;
 }
 
 // ANALYTICS

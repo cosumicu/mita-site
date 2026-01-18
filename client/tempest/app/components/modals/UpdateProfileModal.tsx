@@ -258,11 +258,7 @@ export default function UpdateProfileModal({
           <Button onClick={onCancel} disabled={updateProfile?.loading}>
             Cancel
           </Button>
-          <Button
-            type="primary"
-            onClick={handleSubmit}
-            loading={updateProfile?.loading}
-          >
+          <Button type="primary" onClick={handleSubmit}>
             Save changes
           </Button>
         </div>

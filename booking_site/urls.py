@@ -21,7 +21,7 @@ from django.conf.urls.static import static
 from apps.users.views import LoginView, LogoutView, CookieTokenRefreshView
 
 urlpatterns = [
-    path('mita/', admin.site.urls),
+    path(settings.ADMIN_URL, admin.site.urls),
     path("api/v1/auth/jwt/create/", LoginView.as_view(), name="user-login"),
     path("api/v1/auth/jwt/logout/", LogoutView.as_view(), name="user-logout"),
     path("api/v1/auth/jwt/refresh/", CookieTokenRefreshView.as_view(), name="jwt-refresh"),
