@@ -345,6 +345,7 @@ export default function PropertyForm({
             <div className="flex justify-center items-center py-10">
               <Radio.Group
                 size="large"
+                buttonStyle="solid"
                 value={state.category || undefined}
                 onChange={(e) => setField("category", e.target.value)}
               >
@@ -397,8 +398,9 @@ export default function PropertyForm({
                   <label className="block mb-1">Description</label>
                   <TextArea
                     rows={10}
-                    style={{ resize: "none" }}
                     value={state.description}
+                    maxLength={255}
+                    showCount
                     onChange={(e) => setField("description", e.target.value)}
                   />
                   {errors.description && (
@@ -484,7 +486,7 @@ export default function PropertyForm({
                   mode="multiple"
                   allowClear
                   style={{ width: "100%" }}
-                  placeholder="Select property tags"
+                  placeholder="Select Tags"
                   options={tagOptions}
                   loading={propertyTagListLoading}
                   value={state.tags as any}
@@ -672,7 +674,7 @@ export default function PropertyForm({
             />
           </div>
 
-          <div className="bg-secondary py-4">
+          <div className="ui-container bg-secondary py-4">
             <div className="w-full flex justify-around items-center">
               <div>
                 {current > 0 && (

@@ -56,6 +56,22 @@ body {
   transform-origin: center !important;
 }
 
+.ant-radio-button-wrapper {
+  border-radius: 8 !important;
+}
+
+.ant-radio-button-wrapper:first-child {
+  border-radius: 8 !important;
+  border-start-start-radius: 0 !important;
+  border-end-start-radius: 0 !important;
+}
+
+.ant-radio-button-wrapper:last-child {
+  border-radius: 8 !important;
+  border-start-end-radius: 0 !important;
+  border-end-end-radius: 0 !important;
+}
+
 /* NProgress styles */
 #nprogress {
   pointer-events: none;
@@ -80,7 +96,9 @@ body {
   border-radius: 50%;
   cursor: pointer;
   color: white;
-  transition: color 0.18s ease, transform 0.12s ease;
+  transition:
+    color 0.18s ease,
+    transform 0.12s ease;
   background: transparent;
 }
 
@@ -91,7 +109,9 @@ body {
   border-radius: 50%;
   cursor: pointer;
   color: white;
-  transition: color 0.18s ease, transform 0.12s ease;
+  transition:
+    color 0.18s ease,
+    transform 0.12s ease;
   background: transparent;
 }
 
