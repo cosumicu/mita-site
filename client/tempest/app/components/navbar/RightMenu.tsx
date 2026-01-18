@@ -6,11 +6,7 @@ import type { MenuProps } from "antd";
 import {
   MenuOutlined,
   QuestionCircleOutlined,
-  UserOutlined,
-  SettingOutlined,
-  LogoutOutlined,
   TagOutlined,
-  PlusOutlined,
 } from "@ant-design/icons";
 import { useRouter, usePathname } from "next/navigation";
 import RegisterForm from "../modals/RegisterForm";
@@ -31,13 +27,12 @@ const items2: MenuItem[] = [
   { key: "help", label: "Help & Support", icon: <QuestionCircleOutlined /> },
   { key: "gift-cards", label: "Gift Cards", icon: <TagOutlined /> },
   { type: "divider" },
-  { key: "login", label: "Login", icon: <UserOutlined /> },
-  { key: "register", label: "Register", icon: <PlusOutlined /> },
+  { key: "login", label: "Login" },
+  { key: "register", label: "Register" },
   { type: "divider" },
   {
     key: "settings",
     label: "Settings",
-    icon: <SettingOutlined />,
     children: [
       { key: "language", label: "Language" },
       { key: "theme", label: "Theme" },
@@ -104,11 +99,10 @@ function RightMenu() {
       label: "Account",
       type: "group",
       children: [
-        { key: "settings", label: "Settings", icon: <SettingOutlined /> },
+        { key: "settings", label: "Settings" },
         {
           key: "logout",
           label: "Logout",
-          icon: <LogoutOutlined />,
           className: "text-red-500 font-semibold",
         },
       ],
@@ -232,7 +226,7 @@ function RightMenu() {
         getUserPropertyList({
           filters: { user: freshUser.user_id, status: "" },
           pagination: { page: 1, page_size: 1 },
-        })
+        }),
       ).unwrap();
 
       const hasListing = (res?.results?.length ?? 0) > 0;
