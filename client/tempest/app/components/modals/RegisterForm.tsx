@@ -50,7 +50,12 @@ function RegisterForm({ onSuccess, onSwitchToLogin }: RegisterFormProps) {
   return (
     <div className="mx-10">
       {isLoading && <SpinnerOverlay />}
-      <Form form={form} name="register" onFinish={onFinish}>
+      <Form
+        form={form}
+        name="register"
+        onFinish={onFinish}
+        validateTrigger="onFinish"
+      >
         <Form.Item
           name="email"
           rules={[
