@@ -1,14 +1,35 @@
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useAppSelector } from "@/app/lib/hooks";
 import ChatSidebar from "./ChatSideBar";
 import ChatWindow from "./ChatWindow";
 
-type Conversation = any; // replace with your real type
+type Conversation = any;
 
 export default function ChatLayout() {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const {
+    user,
+    isLoading: userLoading,
+    hasCheckedAuth,
+  } = useAppSelector((state) => state.user);
+
   const [selectedConversation, setSelectedConversation] =
     useState<Conversation | null>(null);
+
+  // ✅ Same auth gate logic as FavoritesPage
+  useEffect(() => {
+    if (!hasCheckedAuth || userLoading) return;
+
+    if (!user) {
+      router.replace(`/login?next=${encodeURIComponent(pathname || "/chat")}`);
+      return;
+    }
+  }, [user, userLoading, hasCheckedAuth, router, pathname]);
 
   const handleSelectConversation = useCallback((conv: Conversation) => {
     setSelectedConversation(conv);
@@ -34,11 +55,12 @@ export default function ChatLayout() {
       : `${base} translate-x-full md:translate-x-0`;
   }, [selectedConversation]);
 
+  if (!hasCheckedAuth || userLoading) return null;
+  if (!user) return null;
+
   return (
     <div className="fixed inset-x-0 top-[72px] bottom-15 sm:bottom-1 bg-gradient-to-br from-gray-50 to-white">
-      {/* container wrapper */}
       <div className="mx-auto h-full w-full max-w-[1440px] md:flex">
-        {/* LEFT — Chat List */}
         <aside className={sidebarClassName}>
           <ChatSidebar
             onSelectConversation={handleSelectConversation}
@@ -46,7 +68,6 @@ export default function ChatLayout() {
           />
         </aside>
 
-        {/* RIGHT — Chat Window */}
         <main className={windowClassName}>
           <ChatWindow conversation={selectedConversation} onBack={handleBack} />
         </main>

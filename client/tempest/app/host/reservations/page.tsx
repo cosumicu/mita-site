@@ -52,7 +52,7 @@ export default function ReservationListPage() {
       getHostReservationList({
         filters: { status: statusFilter },
         pagination: { page: currentPage, page_size: pageSize },
-      })
+      }),
     );
   }, [
     dispatch,
@@ -99,7 +99,7 @@ export default function ReservationListPage() {
       title: "Guest",
       dataIndex: "user",
       render: (_: any, record: any) => (
-        <Link href={`/users/profile/${record.user.id}`}>
+        <Link href={`/users/profile/${record.user.user_id}`}>
           <div className="flex items-center gap-3 cursor-pointer max-w-[150px]">
             <Avatar
               size="large"
@@ -107,7 +107,7 @@ export default function ReservationListPage() {
               className="shrink-0"
             />
             <span className="text-black font-semibold truncate">
-              {record.user.username}
+              {record.user.full_name}
             </span>
           </div>
         </Link>

@@ -1,7 +1,10 @@
 "use client";
 
 import { useAppSelector, useAppDispatch } from "@/app/lib/hooks";
-import { getConversationList } from "@/app/lib/features/messages/messageSlice";
+import {
+  getConversationList,
+  resetConversationList,
+} from "@/app/lib/features/messages/messageSlice";
 import { useEffect } from "react";
 import { Avatar, Spin } from "antd";
 import { formatTimeV2 } from "@/app/lib/utils/format";
@@ -19,20 +22,13 @@ export default function ChatSidebar({
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.user);
   const { data: conversationList, loading } = useAppSelector(
-    (state) => state.message.conversationList
+    (state) => state.message.conversationList,
   );
 
   useEffect(() => {
+    dispatch(resetConversationList());
     dispatch(getConversationList());
   }, [dispatch]);
-
-  // if (loading) {
-  //   return (
-  //     <div className="flex h-full items-center justify-center">
-  //       <Spin size="large" />
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="flex flex-col h-full">
