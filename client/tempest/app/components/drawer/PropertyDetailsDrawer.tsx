@@ -14,6 +14,7 @@ import { useAppDispatch, useAppSelector } from "@/app/lib/hooks";
 import { getPropertyDetail } from "@/app/lib/features/properties/propertySlice";
 import { useRouter } from "next/navigation";
 import DeletePropertyConfirmationModal from "../modals/DeletePropertyConfirmationModal";
+import { PropertyTag } from "@/app/lib/definitions";
 
 interface PropertyDetailsDrawerProps {
   propertyId: string;
@@ -27,12 +28,6 @@ const statusColorMap: Record<string, string> = {
   SUSPENDED: "red",
   ARCHIVED: "purple",
 };
-
-interface PropertyTag {
-  value: number;
-  label: string;
-  description: string | null;
-}
 
 function PropertyDetailsDrawer({ propertyId }: PropertyDetailsDrawerProps) {
   const dispatch = useAppDispatch();
@@ -89,10 +84,10 @@ function PropertyDetailsDrawer({ propertyId }: PropertyDetailsDrawerProps) {
   // Parse string values to numbers
   const pricePerNight = parseFloat(property.price_per_night?.toString() || "0");
   const weeklyDiscountRate = parseFloat(
-    property.weekly_discount_rate?.toString() || "0"
+    property.weekly_discount_rate?.toString() || "0",
   );
   const monthlyDiscountRate = parseFloat(
-    property.monthly_discount_rate?.toString() || "0"
+    property.monthly_discount_rate?.toString() || "0",
   );
   const cleaningFee = parseFloat(property.cleaning_fee?.toString() || "0");
   const viewsCount = property.views_count || 0;
@@ -350,7 +345,7 @@ function PropertyDetailsDrawer({ propertyId }: PropertyDetailsDrawerProps) {
                 <span className="font-semibold text-green-600">
                   ₱
                   {formatCurrency(
-                    pricePerNight * 30 * (1 - monthlyDiscountRate)
+                    pricePerNight * 30 * (1 - monthlyDiscountRate),
                   )}
                 </span>
               </div>
