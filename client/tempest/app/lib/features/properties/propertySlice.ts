@@ -1226,6 +1226,10 @@ export const propertySlice = createSlice({
         toggleInList(state.propertyList1);
         toggleInList(state.propertyList2);
         toggleInList(state.propertyList3);
+        toggleInList(state.propertyList4);
+        toggleInList(state.propertyList5);
+        toggleInList(state.propertyList6);
+        toggleInList(state.propertyList7);
         toggleInList(state.userPropertyList);
 
         if (state.propertyDetail.data?.id === propertyId) {
