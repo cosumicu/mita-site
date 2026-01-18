@@ -54,7 +54,7 @@ export default function MyPropertiesPage() {
         getUserPropertyList({
           filters: { user: user.user_id, status: statusFilter },
           pagination: { page: currentPage, page_size: pageSize },
-        })
+        }),
       );
     }
   }, [dispatch, user, statusFilter, currentPage, pageSize]);
@@ -64,7 +64,10 @@ export default function MyPropertiesPage() {
     async ({ key }) => {
       try {
         await dispatch(
-          updatePropertyStatus({ propertyId: record.id, status: key as string })
+          updatePropertyStatus({
+            propertyId: record.id,
+            status: key as string,
+          }),
         ).unwrap();
 
         toast.success("Status updated!");
@@ -139,7 +142,7 @@ export default function MyPropertiesPage() {
       // TODO: Add instant booking feature
       render: () => (
         <div onClick={(e) => e.stopPropagation()}>
-          <Switch size="small" />
+          <Switch size="small" disabled />
         </div>
       ),
     },

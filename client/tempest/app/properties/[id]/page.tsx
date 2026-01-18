@@ -30,7 +30,7 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
 
   const { user } = useAppSelector((state) => state.user);
   const { propertyDetail, propertyReviews, updateProperty } = useAppSelector(
-    (state) => state.property
+    (state) => state.property,
   );
 
   const property = propertyDetail.data;
@@ -58,7 +58,7 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
       getPropertyReviews({
         propertyId: id,
         pagination: { page: 1, page_size: 10 },
-      })
+      }),
     );
   }, [dispatch, id, updateProperty.success]);
 
@@ -75,6 +75,22 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
     e.stopPropagation();
 
     dispatch(toggleFavorite(propertyId));
+  };
+
+  const handleShare = async () => {
+    const url = window.location.href;
+
+    if (!navigator.clipboard?.writeText) {
+      toast.info("Copy not supported here. Please copy from the address bar.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Share link copied");
+    } catch {
+      toast.error("Couldn’t copy link. Please copy it manually.");
+    }
   };
 
   if (isLoading) {
@@ -110,11 +126,13 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
           </p>
         </div>
         {user && (
-          <div className="sm:block sm:flex gap-2 items-center">
+          <div className="flex gap-2 items-center">
             <Button
-              type="default"
+              color="primary"
+              variant="filled"
               size="small"
               className="flex items-center gap-2"
+              onClick={handleShare}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +141,7 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="gray"
-                strokeWidth="2"
+                strokeWidth="1"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 className="icon icon-tabler icon-tabler-share"
@@ -139,7 +157,8 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
             </Button>
 
             <Button
-              type="default"
+              color="primary"
+              variant="filled"
               size="small"
               onClick={(e) => handleToggleFavorite(e, property.id)}
             >
@@ -155,7 +174,7 @@ function PropertyDetailPage({ params }: { params: Promise<{ id: string }> }) {
                   viewBox="0 0 24 24"
                   fill={property.liked ? "currentColor" : "none"}
                   stroke={property.liked ? "currentColor" : "gray"}
-                  strokeWidth="2"
+                  strokeWidth="1"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   className="icon icon-tabler icon-tabler-heart transition-transform duration-150"

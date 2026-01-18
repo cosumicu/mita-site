@@ -104,7 +104,7 @@ function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
         </Divider>
       </Form>
       <div className="space-y-6">
-        <Button block>
+        <Button block disabled>
           {/* Google official logo (SVG) */}
           <img
             src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -114,7 +114,7 @@ function LoginForm({ onSuccess, onSwitchToRegister }: LoginFormProps) {
           />
           <span>Continue with Google</span>
         </Button>
-        <Button block>
+        <Button block disabled>
           {/* Tumblr logo */}
           <img
             src="https://www.svgrepo.com/show/118687/tumblr-logo.svg"
