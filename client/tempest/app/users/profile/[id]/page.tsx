@@ -100,7 +100,7 @@ export default function UserProfilePage() {
 
       <div>
         <PropertyList
-          q=""
+          searchParams={{ status: "ACTIVE" }}
           label="User Listings"
           properties={userPropertyList}
           loading={userPropertyListLoading}
