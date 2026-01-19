@@ -7,6 +7,14 @@ from .services import get_host_dashboard
 
 from apps.properties.models import Reservation
 
+from django.utils.dateparse import parse_date
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from apps.properties.models import Reservation, ReservationStatus
+
+
 class HostCalendarAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -17,33 +25,40 @@ class HostCalendarAPIView(APIView):
         if not start or not end:
             return Response(
                 {"detail": "start and end query params are required"},
-                status=400
+                status=400,
             )
 
         reservations = (
-            Reservation.objects
-            .filter(
+            Reservation.objects.filter(
                 property__user=request.user,
+                status__in=[ReservationStatus.APPROVED, ReservationStatus.ONGOING, ReservationStatus.COMPLETED],
                 start_date__lte=end,
                 end_date__gte=start,
             )
-            .select_related("property", "user")
+            .select_related("property", "user", "user__profile")
         )
 
-        return Response([
-            {
-                "id": r.id,
-                "title": f"{r.property.title}",
-                "start": r.start_date,
-                "end": r.end_date,
-                "status": r.status,
-                "property_id": r.property.id,
-                "guest": r.user.get_full_name(),
-                "guest_profile_picture": r.user.profile.profile_picture_url(),
-                "confirmation_code": r.confirmation_code,
-            }
-            for r in reservations
-        ])
+        return Response(
+            [
+                {
+                    "id": r.id,
+                    "title": f"{r.property.title}",
+                    "start": r.start_date,
+                    "end": r.end_date,
+                    "status": r.status,
+                    "property_id": r.property.id,
+                    "guest": r.user.get_full_name(),
+                    "guest_profile_picture": (
+                        r.user.profile.profile_picture_url()
+                        if hasattr(r.user, "profile") and r.user.profile
+                        else None
+                    ),
+                    "confirmation_code": r.confirmation_code,
+                }
+                for r in reservations
+            ]
+        )
+
 
 class HostDashboardAPIView(APIView):
     permission_classes = [IsAuthenticated]
