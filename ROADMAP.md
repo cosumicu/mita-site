@@ -13,6 +13,7 @@ This roadmap outlines the planned direction for Mita Site. Items may shift as pr
 ## 2) Features
 
 - OAuth
+- Advance search
 - Implement a lightweight algorithm for recommendations
 - Multiple images for listings
 - Cancellation rules
@@ -23,6 +24,7 @@ This roadmap outlines the planned direction for Mita Site. Items may shift as pr
 
 ## 3) Others
 
+- Fix dashboard
 - Tests
 - Security
 - graphql support ??
