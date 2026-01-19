@@ -25,21 +25,24 @@ export default function SearchContent() {
   const start_date = searchParams.get("start_date") || "";
   const end_date = searchParams.get("end_date") || "";
   const guests = searchParams.get("guests") || "";
+  const userId = searchParams.get("user") || "";
+  const status = searchParams.get("status") || "ACTIVE";
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [location, start_date, end_date, guests]);
+  }, [location, start_date, end_date, guests, userId, status]);
 
   useEffect(() => {
-    const queryParams = {
-      status: "ACTIVE",
+    const queryParams: any = {
+      status,
       location,
       start_date,
       end_date,
       guests,
+      ...(userId ? { user: userId } : {}),
     };
 
     dispatch(
@@ -48,7 +51,17 @@ export default function SearchContent() {
         pagination: { page: currentPage, page_size: pageSize },
       }),
     );
-  }, [dispatch, location, start_date, end_date, guests, currentPage, pageSize]);
+  }, [
+    dispatch,
+    location,
+    start_date,
+    end_date,
+    guests,
+    userId,
+    status,
+    currentPage,
+    pageSize,
+  ]);
 
   useEffect(() => {
     if (propertyList.error) toast.error(propertyList.message);

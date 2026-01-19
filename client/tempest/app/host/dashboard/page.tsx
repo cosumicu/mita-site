@@ -47,12 +47,12 @@ const DashboardPage = () => {
 
   const bookingsData = useMemo(
     () => dashboard.data?.charts?.bookings ?? [],
-    [dashboard.data]
+    [dashboard.data],
   );
 
   const revenueData = useMemo(
     () => dashboard.data?.charts?.revenue ?? [],
-    [dashboard.data]
+    [dashboard.data],
   );
 
   if (dashboard.loading) {
@@ -145,7 +145,7 @@ const DashboardPage = () => {
                   <p>Occupancy Rate (Today)</p>
                   <p className="text-3xl font-semibold my-2">
                     {(dashboard.data.today?.occupancy_rate_today ?? 0).toFixed(
-                      2
+                      2,
                     )}
                     %
                   </p>
@@ -173,7 +173,7 @@ const DashboardPage = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div className="bg-white rounded-xl p-4 border border-gray-200 border-l-4 border-l-primary shadow-lg">
-                  <p>Total Revenue</p>
+                  <p>Net Revenue</p>
                   <p className="text-3xl font-semibold my-2">
                     {peso(dashboard.data.stats.total_income)}
                   </p>
