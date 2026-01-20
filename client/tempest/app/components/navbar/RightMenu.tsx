@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from "../../lib/hooks";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { getUserPropertyList } from "@/app/lib/features/properties/propertySlice";
+import LogoutConfirmation from "../modals/LogoutConfirmation";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -51,6 +52,7 @@ function RightMenu() {
   const [openMain, setOpenMain] = useState(false);
   const [openLogin, setOpenLogin] = useState(false);
   const [openRegister, setOpenRegister] = useState(false);
+  const [openLogout, setOpenLogout] = useState(false);
 
   const isHostActive = user?.host_status === "ACTIVE";
 
@@ -199,10 +201,7 @@ function RightMenu() {
         break;
 
       case "logout":
-        await dispatch(logout());
-        dispatch(resetUser());
-        dispatch(resetAuth());
-        toast.success("Logout successful");
+        setOpenLogout(true);
         break;
 
       default:
@@ -323,6 +322,21 @@ function RightMenu() {
             }}
           />
         )}
+      </Modal>
+
+      <Modal
+        title={<span className="block text-center font-semibold">Logout</span>}
+        open={openLogout}
+        onCancel={() => setOpenLogout(false)}
+        footer={null}
+        centered
+        width="auto"
+        destroyOnHidden
+      >
+        <LogoutConfirmation
+          onSuccess={() => setOpenLogout(false)}
+          onClose={() => setOpenLogout(false)}
+        ></LogoutConfirmation>
       </Modal>
     </div>
   );
