@@ -289,6 +289,7 @@ function RightMenu() {
         onCancel={onCloseLogin}
         footer={null}
         centered
+        width="full"
         destroyOnHidden
       >
         {openLogin && (
@@ -325,7 +326,11 @@ function RightMenu() {
       </Modal>
 
       <Modal
-        title={<span className="block text-center font-semibold">Logout</span>}
+        title={
+          <span className="block text-center font-semibold">
+            Are you sure you want to logout?
+          </span>
+        }
         open={openLogout}
         onCancel={() => setOpenLogout(false)}
         footer={null}
